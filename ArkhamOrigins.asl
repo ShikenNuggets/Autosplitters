@@ -1,5 +1,5 @@
 /**********************************************
- * Batman: Arkham Origins Autosplitter v1.6.4 *
+ * Batman: Arkham Origins Autosplitter v1.6.5 *
  * Groundwork laid by darkid                  *
  * Memory addresses found by JohnStephenEvil  *
  * Code by ShikenNuggets and GreenBat         *
@@ -49,6 +49,7 @@ split{
 	int cooldown = 10000;
 	
 	//Experimental Any% Features
+	if(settings["any%"] && vars.ccount == 4) {vars.lcount = 4;} // Ensures that even if you get extra loads before getting to bane's hideout it won't screw up the counters
 	if(settings["any%"] && vars.lcount == 4 && vars.ccount < 5){
 		cooldown = 1000; //Alt way of forcing the fast travel cutscene after bane's hideout to split by making the cooldown 1s
 	}else if(settings["any%"] && vars.lcount == 9){
