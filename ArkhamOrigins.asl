@@ -1,5 +1,5 @@
 /**********************************************
- * Batman: Arkham Origins Autosplitter v1.6.5 *
+ * Batman: Arkham Origins Autosplitter v1.7.0 *
  * Groundwork laid by darkid                  *
  * Memory addresses found by JohnStephenEvil  *
  * Code by ShikenNuggets and GreenBat         *
@@ -19,8 +19,8 @@ startup{
 	settings.SetToolTip("any%", @"Disables the cooldown for specific splits & extends it for other splits (Use at your own risk)");
 	settings.SetToolTip("sp", @"Add a 10 second cooldown after auto-splits to prevent unwanted splits");
 	vars.t = 0;
-	vars.lcount = 0; //Increments when a load happens (only if "Split on loading" is true)
-	vars.ccount = 0; //Increments when a cutscene happens (only if "Split on cutscenes" is true)
+	vars.lcount = 0; //Increments when a load happens (only if "Split on Loading" is true)
+	vars.ccount = 0; //Increments when a cutscene happens (only if "Split on Cutscenes" is true)
 	vars.state = 0;
 }
 
@@ -32,24 +32,30 @@ update{
 	}else if(vars.state != 0 && old.m == 0 && current.m == 1){
 		vars.state = 0; //Returned to the menu
 	}
+	
+	//Stores the current phase the timer is in (Running or NotRunning)
+	current.timerPhase = timer.CurrentPhase;
+	
+	//When the timer resets, reset the counters
+	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning" ){
+		vars.lcount = 0;
+		vars.ccount = 0;
+	}
 }
 
 start{
 	if(vars.state == 2){
 		vars.state = 3;
-
-		//Reset the counters (Only works if autostart is enabled)
-		vars.lcount = 0;
-		vars.ccount = 0;
 		return true;
 	}
 }
 
 split{
 	int cooldown = 10000;
-	
+	int globalcount = vars.ccount + vars.lcount;
+
 	//Experimental Any% Features
-	if(settings["any%"] && vars.ccount == 4) {vars.lcount = 4;} // Ensures that even if you get extra loads before getting to bane's hideout it won't screw up the counters
+	if(settings["any%"] && vars.ccount == 4 && globalcount > 8) {vars.lcount = 4;} // Ensures that even if you get extra loads before getting to bane's hideout it won't screw up the counters
 	if(settings["any%"] && vars.lcount == 4 && vars.ccount < 5){
 		cooldown = 1000; //Alt way of forcing the fast travel cutscene after bane's hideout to split by making the cooldown 1s
 	}else if(settings["any%"] && vars.lcount == 9){
