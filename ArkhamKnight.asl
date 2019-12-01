@@ -1,7 +1,6 @@
 /*********************************************
- * Batman: Arkham Knight Auto-splitter v1.0  *
- * Memory addresses found by JohnStephenEvil *
- * Code by JohnStephenEvil and ShikenNuggets *
+ * Batman: Arkham Knight Auto Splitter v1.0  *
+ * By JohnStephenEvil and ShikenNuggets      *
  *********************************************/
 
 state("BatmanAK"){
