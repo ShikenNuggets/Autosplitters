@@ -1,15 +1,20 @@
-//Batman: Arkham City Autosplitter 2.1
-//Originally created by darkid, updated by ShikenNuggets
-//Has the functionality to split on pre-rendered cutscenes and load zones
-//Load removal functionality exists but has been removed until we can confirm that it works properly
+//Batman: Arkham City Autosplitter 2.2
+//Originally created by darkid, updated by ShikenNuggets and JohnStephenEvil
+//Can split on pre-rendered cutscenes and load zones
 
-state("BatmanAC"){
+state("BatmanAC", "Steam"){
 	int cutscenePlaying : "BatmanAC.exe", 0x12CAB74; //Out-of engine cutscenes
 	int inMainMenu : "BatmanAC.exe", 0x151BF2C;
 	int isLoading : "BatmanAC.exe", 0x1179F90; //Loading via black screen, i.e. area change
-	int isRestartingCheckpoint : "BatmanAC.exe", 0x12D0848, 0x90, 0x788, 0x17C, 0x314, 0x14; //Holds 1 if restarting, any value o.w.
-	int fightingClayface : "BatmanAC.exe", 0x151BBF4;
-	int cutsceneSkippable : "BatmanAC.exe", 0x012D086C, 0x70, 0x7D0, 0x130;
+	//int isRestartingCheckpoint : "BatmanAC.exe", 0x12D0848, 0x90, 0x788, 0x17C, 0x314, 0x14; //Holds 1 if restarting, any value o.w.
+	//int fightingClayface : "BatmanAC.exe", 0x151BBF4;
+	//int cutsceneSkippable : "BatmanAC.exe", 0x012D086C, 0x70, 0x7D0, 0x130;
+}
+
+state("BatmanAC", "Epic"){
+	int cutscenePlaying : "BatmanAC.exe", 0x12B55D4;
+	int inMainMenu : "BatmanAC.exe", 0x150BA2C;
+	int isLoading : "BatmanAC.exe", 0x1164F90;
 }
 
 startup{
@@ -21,6 +26,15 @@ startup{
 }
 
 init{
+	switch(modules.First().ModuleMemorySize){
+		case 0x194F000:
+			version = "Steam";
+			break;
+		case 0x18AC000:
+			version = "Epic";
+			break;
+	}
+	
 	vars.state = 0;
 	//Constants to define states
 	vars.MENU_STATE = 0;
@@ -53,28 +67,8 @@ split{
 		return true;
 	}
 	
-	//Split on Cutscene End
-	//if(old.cutscenePlaying == 1 && current.cutscenePlaying == 0){
-	//	return true;
-	//}
-	
 	//Split on Loading Start
 	if(settings["splitOnLoads"] && old.isLoading == 0 && current.isLoading == 1){
 		return true;
 	}
-	
-	//Split on Loading End
-	//if(old.isLoading == 1 && current.isLoading == 0){
-	//	return true;
-	//}
-	
-	//Split on Restarting Checkpoint Start
-	//if(settings["splitOnReload"] && old.isRestartingCheckpoint == 0 && current.isRestartingCheckpoint == 1){
-	//	return true;
-	//}
-	
-	//Split on Restarting Checkpoint End
-	//if(old.isRestartingCheckpoint == 1 && current.isRestartingCheckpoint == 0){
-	//	return true;
-	//}
 }
