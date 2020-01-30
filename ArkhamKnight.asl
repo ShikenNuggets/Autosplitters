@@ -3,8 +3,23 @@
  * By JohnStephenEvil and ShikenNuggets      *
  *********************************************/
 
-state("BatmanAK"){
+state("BatmanAK", "Steam"){
 	int mainStory : 0x3197080, 0x0, 0x9C, 0x5AC, 0x614, 0x4EC; //Main Story Progression
+}
+
+state("BatmanAK", "Epic"){
+	int mainStory : 0x03796FFC, 0x5C, 0x914, 0x2A4, 0x4EC;
+}
+
+init{
+	switch(modules.First().ModuleMemorySize){
+		case 0x8CD2000:
+			version = "Steam";
+			break;
+		case 0x440B000:
+			version = "Epic";
+			break;
+	}
 }
 
 startup{
