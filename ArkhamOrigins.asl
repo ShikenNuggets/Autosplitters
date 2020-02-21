@@ -51,14 +51,12 @@ start{
 }
 
 split{
-	int cooldown = 10000;
+	int cooldown = 3000;
 	int globalcount = vars.ccount + vars.lcount;
 
 	//Experimental Any% Features
 	if(settings["any%"] && vars.ccount == 4 && globalcount > 8) {vars.lcount = 4;} // Ensures that even if you get extra loads before getting to bane's hideout it won't screw up the counters
-	if(settings["any%"] && vars.lcount == 4 && vars.ccount < 5){
-		cooldown = 1000; //Alt way of forcing the fast travel cutscene after bane's hideout to split by making the cooldown 1s
-	}else if(settings["any%"] && vars.lcount == 9){
+	if(settings["any%"] && vars.lcount == 9){
 		cooldown = 90000; //Increases the cooldown for the split inside the sewers
 	}
 	
