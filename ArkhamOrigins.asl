@@ -62,8 +62,8 @@ split{
 		cooldown = 90000; //Increases the cooldown for the split inside the sewers
 	}
 	
-	//Disable cooldown if we're not using it, or if we're using Any% and we just left the sewers
-	if(settings["sp"] && (!settings["any%"] || vars.ccount != 7)){
+	//Disable cooldown if we're not using it
+	if(settings["sp"]){
 		if((settings["sc"] && old.c == 1 && current.c == 0) || (settings["sl"] && old.l == 1 && current.l == 0)){
 			vars.t = Environment.TickCount;
 			return false;
