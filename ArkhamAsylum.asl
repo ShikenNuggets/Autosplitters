@@ -1,15 +1,15 @@
 /********************************************
- * Batman: Arkham Asylum Auto-splitter v1.1 *
+ * Batman: Arkham Asylum Auto-splitter v1.2 *
  ********************************************/
 
 state("ShippingPC-BmGame"){
 	int mainMenu		: 0x022C2DA4;
 	string30 lastRoom	: 0x022B5504, 0xC, 0x1C, 0x1A8, 0xB0, 0x35C, 0x400, 0x5C, 0x0;
 	int batclaw			: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6DC;
+	int lineLauncher	: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6E4;
 	int gel				: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6EC;
 	byte showHUD		: 0x022B5504, 0xC, 0x1C, 0x39C, 0x1CC;
 	byte openingDoor	: 0x022B5504, 0xC, 0x1C, 0x682;
-	byte usingMixBin	: 0x022B5504, 0xC, 0x1C, 0x683;
 	string30 roomName	: 0x022B5504, 0xC, 0x1C, 0x74C, 0x0; // Current area, with some exceptions
 	int cutscenePlaying	: "binkw32.dll", 0x000233F0; // Cutscene Videos
 }
@@ -96,16 +96,8 @@ split{
 		return true; // Leaving Elevator
 	}else if(current.roomName == "Overworld_A2" && old.gel != current.gel){
 		return true; // Batmobile
-	}else if(current.roomName == "Garden_B3"){
-		if(old.cutscenePlaying == 1 && current.cutscenePlaying == 0){
-			vars.flag2 = 0; // Reset flag when entering Titan room
-		}else if(old.usingMixBin == current.usingMixBin - 1){
-			if(vars.flag2 == 1){
-				vars.flag2++;
-				return true; // Line Launcher
-			}
-			vars.flag2++;
-		}
+	}else if(current.roomName == "Garden_B3" && old.lineLauncher != current.lineLauncher){
+		return true; // Line Launcher
 	}else if(current.roomName == "Cave_B1_Desc" && old.batclaw != current.batclaw){
 		if(vars.flag4 == 0){
 			vars.flag4 = 1;
