@@ -1,10 +1,10 @@
 /********************************************
- * Batman: Arkham Asylum Auto-splitter v1.2 *
+ * Batman: Arkham Asylum Auto-splitter v1.3 *
  ********************************************/
 
 state("ShippingPC-BmGame"){
 	int mainMenu		: 0x022C2DA4;
-	string30 lastRoom	: 0x022B5504, 0xC, 0x1C, 0x1A8, 0xB0, 0x35C, 0x400, 0x5C, 0x0;
+	string30 lastRoom	: 0x022B5504, 0xC, 0x1C, 0x1A8, 0xB0, 0x35C, 0x400, 0x5C, 0x0; // Last area saved in
 	int batclaw			: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6DC;
 	int lineLauncher	: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6E4;
 	int gel				: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6EC;
@@ -96,7 +96,7 @@ split{
 		return true; // Leaving Elevator
 	}else if(current.roomName == "Overworld_A2" && old.gel != current.gel){
 		return true; // Batmobile
-	}else if(current.roomName == "Garden_B3" && old.lineLauncher != current.lineLauncher){
+	}else if(current.lastRoom == "Garden_B5" && old.lineLauncher != current.lineLauncher){
 		return true; // Line Launcher
 	}else if(current.roomName == "Cave_B1_Desc" && old.batclaw != current.batclaw){
 		if(vars.flag4 == 0){
