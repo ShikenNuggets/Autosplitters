@@ -1,10 +1,13 @@
 /*********************************************
- * Batman: Arkham Knight Auto Splitter v1.11 *
+ * Batman: Arkham Knight Auto Splitter v1.12 *
  * By JohnStephenEvil and ShikenNuggets      *
  *********************************************/
 
 state("BatmanAK", "Steam"){
 	int mainStory : 0x3197080, 0x0, 0x9C, 0x5AC, 0x614, 0x4EC; //Main Story Progression
+	int freeze : 0x031921B8, 0xA0, 0x34, 0x9C, 0x5AC, 0x614, 0xA14, 0x8C8;
+	int ras : 0x031921B8, 0xA0, 0x34, 0x9C, 0x5AC, 0x614, 0xA14, 0x9F0;
+	int hatter : 0x031921B8, 0xA0, 0x34, 0x9C, 0x5AC, 0x614, 0xA14, 0x95C;
 }
 
 state("BatmanAK", "Epic"){
@@ -48,5 +51,14 @@ split{
 		if(settings["highDetail"] || vars.splitPoints.Contains(current.mainStory)){
 			return true;
 		}
+	}
+	
+	//Season of Infamy
+	if(old.freeze != current.freeze && current.freeze != 6){
+		return true;
+	}else if(old.ras != current.ras){
+		return true;
+	}else if(old.hatter != current.hatter){
+		return true;
 	}
 }
