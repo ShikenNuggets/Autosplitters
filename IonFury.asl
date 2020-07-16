@@ -7,8 +7,8 @@ state("fury", "1.02a"){
 }
 
 state("fury", "public-beta"){
-	string13 map : "fury.exe", 0x2DE2166;
-	int levelIGT : "fury.exe", 0x472F20;
+	string13 map : "fury.exe", 0x2D0CAE6;
+	int levelIGT : "fury.exe", 0x470020;
 }
 
 state("fury_nodrm"){
@@ -17,13 +17,13 @@ state("fury_nodrm"){
 }
 
 init{
-	print(modules.First().ModuleMemorySize.ToString());
+	//print(modules.First().ModuleMemorySize.ToString());
 	switch(modules.First().ModuleMemorySize){
 		case 0x2E83000:
 			print("1.02a");
 			version = "1.02a";
 			break;
-		case 0x2F12000:
+		case 0x2E3D000:
 			print("public-beta");
 			version = "public-beta";
 			break;
