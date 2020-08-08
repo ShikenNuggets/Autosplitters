@@ -3,25 +3,27 @@
 //Can split on pre-rendered cutscenes and load zones
 
 state("BatmanAC", "Steam"){
-	int isReloading      : 0x011711E8;
-	int isLoading        : 0x01179F90; // Loading via black screen, i.e. area change
-	int skin             : 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x270, 0x2D0, 0x15C;
-	string30 character   : 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x270, 0x450, 0x0; // Intentionally cut short for custom skins
-	byte clayface        : 0x01263118, 0x20, 0x8C, 0xBEC, 0xE26;
-	int cutscenePlaying  : 0x012CAB74; // Video cutscenes
-	int fightingClayface : 0x0151BBF4;
-	int inMainMenu       : 0x0151BF2C;
+	int isReloading			: 0x011711E8;
+	int isLoading			: 0x01179F90; // Loading via black screen, i.e. area change
+	int skin				: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x270, 0x2D0, 0x15C;
+	string50 character		: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x270, 0x450, 0x0;
+	byte clayface			: 0x01263118, 0x20, 0x8C, 0xBEC, 0xE26;
+	int cutscenePlaying		: 0x012CAB74; // Video cutscenes
+	int fightingClayface	: 0x0151BBF4;
+	int inMainMenu			: 0x0151BF2C;
+	byte chapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 }
 
 state("BatmanAC", "Epic"){
-	int isReloading      : 0x0115C1E8;
-	int isLoading        : 0x01164F90;
-	int skin             : 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x270, 0x2D0, 0x15C;
-	string30 character   : 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x270, 0x450, 0x0;
-	byte clayface        : 0x0124DD38, 0x20, 0x8C, 0xBEC, 0xE26;
-	int cutscenePlaying  : 0x012B55D4;
-	int fightingClayface : 0x0150B52C;
-	int inMainMenu       : 0x0150BA2C;
+	int isReloading			: 0x0115C1E8;
+	int isLoading			: 0x01164F90;
+	int skin				: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x270, 0x2D0, 0x15C;
+	string50 character		: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x270, 0x450, 0x0;
+	byte clayface			: 0x0124DD38, 0x20, 0x8C, 0xBEC, 0xE26;
+	int cutscenePlaying		: 0x012B55D4;
+	int fightingClayface	: 0x0150B52C;
+	int inMainMenu			: 0x0150BA2C;
+	byte chapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 }
 
 startup{
@@ -61,7 +63,7 @@ update{
 }
 
 start{
-	if(vars.state == 2){
+	if(vars.state == 2 && current.chapter == 1){
 		vars.state = 3;
 		return true;
 	}
@@ -74,10 +76,18 @@ split{
 	if(settings["splitOnLoads"] && old.isLoading == 0 && current.isLoading == 1){
 		return true;
 	}
-	if(settings["splitOnBatsuit"] && old.character == "Playable_BruceW" && current.character == "Playable_Batman"){
+	if(settings["splitOnBatsuit"] && old.character.Contains("Playable_BruceW") && current.character.Contains("Playable_Batman")){
 		return true;
 	}
 	if(settings["splitOnClayface"] && current.fightingClayface == 1 && old.clayface == current.clayface - 32){
+		return true;
+	}
+	
+	//HQR
+	if(old.character.Contains("Playable_Robin") && current.character.Contains("Playable_Batman") && current.chapter != 2){
+		return true;
+	}
+	if(old.character.Contains("Playable_Batman") && current.character.Contains("Playable_Robin")){
 		return true;
 	}
 }
