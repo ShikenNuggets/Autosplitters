@@ -1,5 +1,5 @@
 /********************************************
- * Batman: Arkham Asylum Auto-splitter v1.3 *
+ * Batman: Arkham Asylum Auto-splitter v1.4 *
  ********************************************/
 
 state("ShippingPC-BmGame"){
@@ -17,10 +17,9 @@ state("ShippingPC-BmGame"){
 startup{
 	vars.shouldStart = 0;
 	vars.flag1 = 0; // Heart Attack
-	vars.flag2 = 0; // Line Launcher
+	vars.flag2 = 0; // Batclaw Skip
 	vars.flag3 = 0; // Double Titan
 	vars.flag4 = 0; // Bat-Better-Claw
-	vars.flag5 = 0; // Batclaw Skip
 }
 
 update{
@@ -30,7 +29,6 @@ update{
 		vars.flag2 = 0;
 		vars.flag3 = 0;
 		vars.flag4 = 0;
-		vars.flag5 = 0;
 	}
 	
 	if(old.mainMenu == 44 && current.mainMenu == 43 && vars.shouldStart == 0){
@@ -74,7 +72,7 @@ split{
 			return true; // Harley
 		}else if(current.roomName == "Garden_B7"){
 			return true; // Ivy
-		}else if(current.roomName == "Visitor_C1"){
+		}else if(current.roomName == "Visitor_C1" || current.roomName == "Visitor_B1"){
 			if(vars.flag3 == 1){
 				vars.flag3++;
 				return true; // Double Titan
@@ -83,10 +81,11 @@ split{
 		}
 	}else if(old.roomName == "Medical_S1" && current.roomName == "Medical_B5"){
 		return true; // Scarecrow 1
-	}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.flag5 == 0){
-		vars.flag5 = 1;
+	}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.flag2 == 0){
+		vars.flag2 = 1;
 		return true; // Batclaw Skip, does not split in NMS
 	}else if(old.roomName == "Admin_C1" && current.roomName == "Overworld_A3"){
+		vars.flag2 = 0; // Reset Batclaw Skip flag, in case not first try
 		return true; // Bell Skip (Leaving the Mansion)
 	}else if(old.roomName == "Cave_C1_Desc" && current.roomName == "Cave_B5"){
 		return true; // Croc Start
