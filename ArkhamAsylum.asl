@@ -86,6 +86,10 @@ split{
 	}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.flag2 == 0){
 		vars.flag2 = 1;
 		return true; // Batclaw Skip, does not split in NMS
+	}else if(old.roomName == "Admin_B1" && current.roomName == "Admin_C9"){
+		return true; //Wayne Manor (NMS)
+	}else if(old.roomName == "Admin_S2" && current.roomName == "Admin_A"){
+		return true; //End Scarecrow 2 (NMS)
 	}else if(old.roomName == "Admin_C1" && current.roomName == "Overworld_A3"){
 		vars.flag2 = 0; // Reset Batclaw Skip flag, in case not first try
 		return true; // Bell Skip (Leaving the Mansion)
