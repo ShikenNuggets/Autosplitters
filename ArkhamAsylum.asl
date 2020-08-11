@@ -1,5 +1,5 @@
 /********************************************
- * Batman: Arkham Asylum Auto-splitter v1.4 *
+ * Batman: Arkham Asylum Auto-splitter v1.5 *
  ********************************************/
 
 state("ShippingPC-BmGame"){
