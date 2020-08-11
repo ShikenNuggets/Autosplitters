@@ -70,6 +70,8 @@ split{
 		}else if(current.roomName == "Cell_B1"){
 			vars.flag4 = 0; // Reset Bat-Better-Claw flag, in case NMS
 			return true; // Harley
+		}else if(current.roomName == "Cave_B5"){
+			return true; //Croc Start for NMS
 		}else if(current.roomName == "Garden_B7"){
 			return true; // Ivy
 		}else if(current.roomName == "Visitor_C1" || current.roomName == "Visitor_B1"){
