@@ -7,8 +7,8 @@ state("fury", "1.02a"){
 }
 
 state("fury", "public-beta"){
-	string13 map : "fury.exe", 0x2D0CAE6;
-	int levelIGT : "fury.exe", 0x470020;
+	string13 map : "fury.exe", 0x2D0EA26;
+	int levelIGT : "fury.exe", 0x471DA0;
 }
 
 state("fury_nodrm"){
@@ -23,7 +23,7 @@ init{
 			print("1.02a");
 			version = "1.02a";
 			break;
-		case 0x2E3D000:
+		case 0x2E3F000:
 			print("public-beta");
 			version = "public-beta";
 			break;
