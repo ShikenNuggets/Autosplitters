@@ -1,10 +1,11 @@
 /********************************************
- * Batman: Arkham Asylum Auto-splitter v1.5 *
+ * Batman: Arkham Asylum Auto-splitter v1.6 *
  ********************************************/
 
 state("ShippingPC-BmGame"){
 	int mainMenu		: 0x022C2DA4;
 	string30 lastRoom	: 0x022B5504, 0xC, 0x1C, 0x1A8, 0xB0, 0x35C, 0x400, 0x5C, 0x0; // Last area saved in
+	float batmanX		: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x54;
 	int batclaw			: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6DC;
 	int lineLauncher	: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6E4;
 	int gel				: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6EC;
@@ -83,7 +84,7 @@ split{
 		}
 	}else if(old.roomName == "Medical_S1" && current.roomName == "Medical_B5"){
 		return true; // Scarecrow 1
-	}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.flag2 == 0){
+	}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.flag2 == 0 && current.batmanX > 0){
 		vars.flag2 = 1;
 		return true; // Batclaw Skip, does not split in NMS
 	}else if(old.roomName == "Admin_B1" && current.roomName == "Admin_C9"){
@@ -91,7 +92,6 @@ split{
 	}else if(old.roomName == "Admin_S2" && current.roomName == "Admin_A"){
 		return true; //End Scarecrow 2 (NMS)
 	}else if(old.roomName == "Admin_C1" && current.roomName == "Overworld_A3"){
-		vars.flag2 = 0; // Reset Batclaw Skip flag, in case not first try
 		return true; // Bell Skip (Leaving the Mansion)
 	}else if(old.roomName == "Cave_C1_Desc" && current.roomName == "Cave_B5"){
 		return true; // Croc Start
