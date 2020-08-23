@@ -20,16 +20,19 @@ startup{
 }
 
 update{
-	if(old.mainMenu == 44 && current.mainMenu == 43 && vars.shouldStart == 0){
-		vars.shouldStart = 1; // Left Main Menu
-	}else if(current.lastRoom == "Max_C0" && old.cutscenePlaying == 1 && current.cutscenePlaying == 0 && vars.shouldStart == 1){
-		vars.shouldStart = 2; // Cutscene Ended, in Intro Walk Area
-	}else if(current.lastRoom == "Max_B3" && old.showHUD == current.showHUD - 2 && vars.shouldStart == 1){
-		vars.shouldStart = 2; // Entered Intro Fight Area, HUD was allocated
-	}
-	
-	if(current.mainMenu == 44 && vars.shouldStart != 0){
-		vars.shouldStart = 0;
+	//Asylum Autostart Logic
+	if(game.ProcessName.ToLower() == "shippingpc-bmgame"){
+		if(old.mainMenu == 44 && current.mainMenu == 43 && vars.shouldStart == 0){
+			vars.shouldStart = 1; // Left Main Menu
+		}else if(current.lastRoom == "Max_C0" && old.cutscenePlaying == 1 && current.cutscenePlaying == 0 && vars.shouldStart == 1){
+			vars.shouldStart = 2; // Cutscene Ended, in Intro Walk Area
+		}else if(current.lastRoom == "Max_B3" && old.showHUD == current.showHUD - 2 && vars.shouldStart == 1){
+			vars.shouldStart = 2; // Entered Intro Fight Area, HUD was allocated
+		}
+		
+		if(current.mainMenu == 44 && vars.shouldStart != 0){
+			vars.shouldStart = 0;
+		}
 	}
 }
 
