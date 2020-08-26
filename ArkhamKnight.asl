@@ -1,5 +1,5 @@
 /***************************************************
- * Batman: Arkham Knight Auto Splitter v1.19	   *
+ * Batman: Arkham Knight Auto Splitter v1.20	   *
  * By JohnStephenEvil, ShikenNuggets, and GreenBat *
  **************************************************/
 
@@ -41,6 +41,8 @@ state("BatmanAK", "Steam"){
 	string50 sideMission17Name	: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0xA14, 0x9DC, 0x0;
 	byte sideMission18			: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0xA14, 0xA69;
 	string50 sideMission18Name	: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
+	string50 currentLevel		: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0x18C, 0x0;
+	int jokerPunches			: 0x03197080, 0x30, 0x84, 0xA9C, 0x1AA8;
 }
 
 state("BatmanAK", "Epic"){
@@ -87,6 +89,8 @@ startup{
 	settings.Add("highDetail", false, "High Detail Mode [Not Recommended]");
 	settings.SetToolTip("highDetail", "Use every possible split point. Not recommended");
 	settings.Add("sideMissions", false, "Side Missions");
+	settings.Add("splitOnJoker", false, "Split at the end of Any%");
+	settings.SetToolTip("splitOnJoker", "Only works for Steam version (for now)");
 
 	vars.splitPoints = new List<int>{
 		5, 10, 16, 20, 24, 26, 28, 31, 34, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
@@ -131,7 +135,7 @@ split{
 		if(settings["highDetail"] || vars.splitPoints.Contains(current.mainStory)){
 			return true;
 		}
-	}else if (settings["sideMissions"]){
+	}else if(settings["sideMissions"]){
 		if(vars.sideMissionNames.Contains(current.sideMission1Name) && vars.individualHighest[0] < current.sideMission1){
 			vars.individualHighest[0] = current.sideMission1;
 			return true;
@@ -185,6 +189,11 @@ split{
 			return true;
 		}else if(vars.sideMissionNames.Contains(current.sideMission18Name) && vars.individualHighest[17] < current.sideMission18){
 			vars.individualHighest[17] = current.sideMission18;
+			return true;
+		}
+	}
+	if(settings["splitOnJoker"]){
+		if(current.currentLevel == "JokerBoss_B2" && old.jokerPunches > current.jokerPunches){
 			return true;
 		}
 	}
