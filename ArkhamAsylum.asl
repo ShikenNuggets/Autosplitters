@@ -1,10 +1,10 @@
 /********************************************
- * Batman: Arkham Asylum Auto-splitter v1.6 *
+ * Batman: Arkham Asylum Auto-splitter v1.7 *
  ********************************************/
 
-state("ShippingPC-BmGame"){
+state("ShippingPC-BmGame", "Steam"){
 	int mainMenu		: 0x022C2DA4;
-	string30 lastRoom	: 0x022B5504, 0xC, 0x1C, 0x1A8, 0xB0, 0x35C, 0x400, 0x5C, 0x0; // Last area saved in
+	string30 lastRoom	: 0x022B5504, 0xC, 0x1C, 0xB0, 0x35C, 0x400, 0x5C, 0x0; // Last area saved in
 	float batmanX		: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x54;
 	int batclaw			: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6DC;
 	int lineLauncher	: 0x022B5504, 0xC, 0x1C, 0x1A8, 0x6E4;
@@ -15,12 +15,36 @@ state("ShippingPC-BmGame"){
 	int cutscenePlaying	: "binkw32.dll", 0x000233F0; // Cutscene Videos
 }
 
+state("ShippingPC-BmGame", "Epic"){
+	int mainMenu		: 0x02252CF4;
+	string30 lastRoom	: 0x02245454, 0xC, 0x1C, 0xB0, 0x35C, 0x400, 0x5C, 0x0;
+	float batmanX		: 0x02245454, 0xC, 0x1C, 0x1A8, 0x54;
+	int batclaw			: 0x02245454, 0xC, 0x1C, 0x1A8, 0x6DC;
+	int lineLauncher	: 0x02245454, 0xC, 0x1C, 0x1A8, 0x6E4;
+	int gel				: 0x02245454, 0xC, 0x1C, 0x1A8, 0x6EC;
+	byte showHUD		: 0x02245454, 0xC, 0x1C, 0x39C, 0x1CC;
+	byte openingDoor	: 0x02245454, 0xC, 0x1C, 0x682;
+	string30 roomName	: 0x02245454, 0xC, 0x1C, 0x74C, 0x0;
+	int cutscenePlaying	: "binkw32.dll", 0x000233F0;
+}
+
 startup{
 	vars.shouldStart = 0;
 	vars.flag1 = 0; // Heart Attack
 	vars.flag2 = 0; // Batclaw Skip
 	vars.flag3 = 0; // Double Titan
 	vars.flag4 = 0; // Bat-Better-Claw
+}
+
+init{
+	switch(modules.First().ModuleMemorySize){
+		case 0x026B3000:
+			version = "Steam";
+			break;
+		case 0x02641000:
+			version = "Epic";
+			break;
+	}
 }
 
 update{
