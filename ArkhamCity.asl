@@ -11,6 +11,7 @@ state("BatmanAC", "Steam"){
 	int cutscenePlaying		: 0x012CAB74; // Video cutscenes
 	int fightingClayface	: 0x0151BBF4;
 	int inMainMenu			: 0x0151BF2C;
+	string50 currentLevel	: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x98, 0x0;
 	byte chapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 }
 
@@ -23,6 +24,7 @@ state("BatmanAC", "Epic"){
 	int cutscenePlaying		: 0x012B55D4;
 	int fightingClayface	: 0x0150B52C;
 	int inMainMenu			: 0x0150BA2C;
+	string50 currentLevel	: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x98, 0x0;
 	byte chapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 }
 
@@ -76,10 +78,10 @@ split{
 	if(settings["splitOnLoads"] && old.isLoading == 0 && current.isLoading == 1){
 		return true;
 	}
-	if(settings["splitOnBatsuit"] && old.character.Contains("Playable_BruceW") && current.character.Contains("Playable_Batman")){
+	if(settings["splitOnBatsuit"] && old.character.Contains("Playable_BruceWayne") && current.character.Contains("Playable_Batman")){
 		return true;
 	}
-	if(settings["splitOnClayface"] && current.fightingClayface == 1 && old.clayface == current.clayface - 32){
+	if(settings["splitOnClayface"] && current.currentLevel.Contains("Under_S2") && old.clayface == current.clayface - 32){
 		return true;
 	}
 	
