@@ -44,6 +44,9 @@ init{
 		case 0x194F000:
 			version = "Steam";
 			break;
+		case 0x18C5000: //GOG
+			version = "Steam";
+			break;
 		case 0x18AC000:
 			version = "Epic";
 			break;
