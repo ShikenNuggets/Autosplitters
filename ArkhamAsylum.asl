@@ -1,5 +1,5 @@
 /********************************************
- * Batman: Arkham Asylum Auto-splitter v1.7 *
+ * Batman: Arkham Asylum Auto-splitter v1.8 *
  ********************************************/
 
 state("ShippingPC-BmGame", "Steam"){
@@ -34,6 +34,7 @@ startup{
 	vars.flag2 = 0; // Batclaw Skip
 	vars.flag3 = 0; // Double Titan
 	vars.flag4 = 0; // Bat-Better-Claw
+	vars.flag5 = 0; // Scarecrow 1, if you reload
 }
 
 init{
@@ -108,6 +109,8 @@ split{
 		}
 	}else if(old.roomName == "Medical_S1" && current.roomName == "Medical_B5"){
 		return true; // Scarecrow 1
+	}else if(string.IsNullOrWhiteSpace(old.roomName) && current.roomName == "Medical_B5"){
+		return true; // Scarecrow 1, if you reload
 	}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.flag2 == 0 && current.batmanX > 0){
 		vars.flag2 = 1;
 		return true; // Batclaw Skip, does not split in NMS
