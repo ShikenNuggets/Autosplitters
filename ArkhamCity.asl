@@ -100,7 +100,7 @@ split{
 	if(old.isLoading == 0 && current.isLoading == 1){
 		if(old.currentLevel.Contains("MadHatter_01")){
 			return true; //Split on leaving Mad Hatter
-		}else if(old.currentLevel.Contains("Church") && current.currentChapter > 2){
+		}else if(old.currentLevel.Contains("Church") && current.chapter > 2){
 			return true; //Split on leaving Church revisit (Riddler)
 		}
 	}
