@@ -167,12 +167,100 @@ init{
 update{
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
-		vars.highestPercent = current.storyPercentage; // When the timer starts, reset this thing
-		vars.individualHighest = new List<byte>{current.sideMission1, current.sideMission2, current.sideMission3, current.sideMission4,
-			current.sideMission5, current.sideMission6, current.sideMission7, current.sideMission8, current.sideMission9,
-			current.sideMission10, current.sideMission11, current.sideMission12, current.sideMission13, current.sideMission14,
-			current.sideMission15, current.sideMission16, current.sideMission17, current.sideMission18
-		};
+		// When the timer starts, reset these things
+		vars.highestPercent = current.storyPercentage;
+		
+		vars.individualHighest = new List<byte>();
+		if(vars.sideMissionNames.Contains(current.sideMission1Name)){
+			vars.individualHighest.Add(current.sideMission1);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission2Name)){
+			vars.individualHighest.Add(current.sideMission2);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission3Name)){
+			vars.individualHighest.Add(current.sideMission3);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission4Name)){
+			vars.individualHighest.Add(current.sideMission4);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission5Name)){
+			vars.individualHighest.Add(current.sideMission5);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission6Name)){
+			vars.individualHighest.Add(current.sideMission6);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission7Name)){
+			vars.individualHighest.Add(current.sideMission7);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission8Name)){
+			vars.individualHighest.Add(current.sideMission8);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission9Name)){
+			vars.individualHighest.Add(current.sideMission9);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission10Name)){
+			vars.individualHighest.Add(current.sideMission10);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission11Name)){
+			vars.individualHighest.Add(current.sideMission11);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission12Name)){
+			vars.individualHighest.Add(current.sideMission12);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission13Name)){
+			vars.individualHighest.Add(current.sideMission13);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission14Name)){
+			vars.individualHighest.Add(current.sideMission14);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission15Name)){
+			vars.individualHighest.Add(current.sideMission15);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission16Name)){
+			vars.individualHighest.Add(current.sideMission16);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission17Name)){
+			vars.individualHighest.Add(current.sideMission17);
+		}else{
+			vars.individualHighest.Add(0);
+		}
+		if(vars.sideMissionNames.Contains(current.sideMission18Name)){
+			vars.individualHighest.Add(current.sideMission18);
+		}else{
+			vars.individualHighest.Add(0);
+		}
 	}
 }
 
