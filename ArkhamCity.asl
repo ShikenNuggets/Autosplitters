@@ -34,7 +34,7 @@ startup{
 	settings.Add("splitOnCutscene", true, "Split on Cutscenes");
 	settings.Add("splitOnLoads", false, "Split on Loading [Not Recommended]");
 	settings.SetToolTip("splitOnLoads", "This will give you more split points, but loads can happen at unexpected times so you need to be paying attention to LiveSplit for the entire run.");
-	settings.Add("splitOnBatsuit", false, "Split on Batsuit");
+	settings.Add("splitOnBatsuit", true, "Split on Batsuit");
 	settings.Add("splitOnClayface", false, "Split on Clayface");
 	settings.Add("startAfterSkin", false, "Start After Skin Select");
 	vars.state = 0;
