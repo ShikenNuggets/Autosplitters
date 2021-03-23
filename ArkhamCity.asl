@@ -32,7 +32,8 @@ startup{
 	// Settings to allow users to specify what values should be used for splitting
 	// Default is just cutscenes since that's the easiest and probably most popular method
 	settings.Add("splitOnCutscene", true, "Split on Cutscenes");
-	settings.Add("splitOnLoads", false, "Split on Loading");
+	settings.Add("splitOnLoads", false, "Split on Loading [Not Recommended]");
+	settings.SetToolTip("splitOnLoads", "This will give you more split points, but loads can happen at unexpected times so you need to be paying attention to LiveSplit for the entire run.");
 	settings.Add("splitOnBatsuit", false, "Split on Batsuit");
 	settings.Add("splitOnClayface", false, "Split on Clayface");
 	settings.Add("startAfterSkin", false, "Start After Skin Select");
