@@ -133,7 +133,7 @@ startup{
 	settings.Add("highDetail", false, "High Detail Mode [Not Recommended]");
 	settings.SetToolTip("highDetail", "Use every possible split point. Not recommended");
 	settings.Add("sideMissions", false, "Side Missions");
-	settings.Add("splitOnJoker", false, "Split at the end of Any%");
+	settings.Add("splitOnJoker", false, "Split at the end of the Main Story");
 
 	vars.splitPoints = new List<int>{
 		5, 10, 16, 20, 24, 26, 28, 31, 34, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
