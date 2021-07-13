@@ -148,6 +148,10 @@ split{
 			return true; //Batsuit
 		}else if(current.chapter == 7 && old.character.Contains("Playable_Catwoman") && current.character.Contains("Playable_Batman")){
 			return true; //After Cat 3
+		}else if(old.character.Contains("Playable_Batman") && current.character.Contains("Playable_Robin")){
+			return true; //HQR
+		}else if(old.character.Contains("Playable_Robin") && current.character.Contains("Playable_Batman")){
+			return true; //HQR
 		}
 		
 		if(current.currentLevel.Contains("Under_S2") && old.clayface == current.clayface - 32){
