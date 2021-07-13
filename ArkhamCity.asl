@@ -91,6 +91,11 @@ start{
 
 split{
 	if(settings["2021mode"]){
+		//This value should be reset before anything else happens
+		if(old.chapter != current.chapter){
+			vars.cutscenesThisChapter = 0;
+		}
+		
 		//---Cutscenes---
 		if(old.cutscenePlaying == 0 && current.cutscenePlaying == 1){
 			vars.cutscenesThisChapter++;
@@ -98,6 +103,8 @@ split{
 				//Ignore Courthouse 1 and 2
 			}else if(current.chapter == 3 && current.subChapter == 1 && old.currentLevel.Contains("Steel_") && vars.cutscenesThisChapter > 1){
 				//Ignore second cutscene in Steel Mill, but ONLY if we're in the Steel Mill (i.e. not w/Cat)
+			}else if(current.chapter == 3 && current.subChapter == 3 && current.lastDoorRoom.Contains("Museum_B1")){
+				//Ignore Gladiator Pit cutscene
 			}else{
 				return true; //Split on all other cutscenes
 			}
@@ -115,10 +122,6 @@ split{
 		}
 		
 		//---Chapter Changes---
-		if(old.chapter != current.chapter){
-			vars.cutscenesThisChapter = 0;
-		}
-		
 		if(current.chapter == 3 && old.subChapter == 2 && current.subChapter == 3){
 			return true; //Start Jammers
 		}else if(current.chapter == 4 && old.subChapter == 1 && current.subChapter == 2){
@@ -128,11 +131,17 @@ split{
 		//---Area Changes---
 		if(current.chapter == 3 && current.subChapter == 3 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Museum_")){
 			return true; //Enter Museum 2 after jammers (not ideal but I can't figure out a better split point)
+		}else if(current.chapter == 6 && current.subChapter == 1 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Steel_C4")){
+			return true; //Enter Steel Mill 2 (but only if not doing Steel Mill 2 skip)
+		}else if(current.chapter == 7 && current.subChapter == 1 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Under_B5")){
+			return true; //Enter Underground after Hugo monologue
 		}
 		
 		//---Other---
 		if(old.character.Contains("Playable_BruceWayne") && current.character.Contains("Playable_Batman")){
 			return true; //Batsuit
+		}else if(current.chapter == 7 && old.character.Contains("Playable_Catwoman") && current.character.Contains("Playable_Batman")){
+			return true; //After Cat 3
 		}
 		
 		if(current.currentLevel.Contains("Under_S2") && old.clayface == current.clayface - 32){
