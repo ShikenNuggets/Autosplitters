@@ -119,6 +119,10 @@ split{
 			if(current.chapter == 3 && current.subChapter == 2 && old.currentLevel.Contains("GCPD_")){
 				return true; //Exit GCPD 1
 			}
+			
+			if(current.chapter == 3 && current.subChapter == 2 && old.lastDoorRoom.Contains("Museum_S1")){
+				return true; //Grundy Skip/Jammer Skip
+			}
 		}
 		
 		//---Chapter Changes---
@@ -126,6 +130,8 @@ split{
 			return true; //Start Jammers
 		}else if(current.chapter == 4 && old.subChapter == 1 && current.subChapter == 2){
 			return true; //Enter Fiona Predator
+		}else if(old.chapter < 6 && current.chapter == 7){
+			return true; //NG+ skip
 		}
 		
 		//---Area Changes---
