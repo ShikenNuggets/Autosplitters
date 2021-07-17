@@ -105,6 +105,8 @@ split{
 				//Ignore second cutscene in Steel Mill, but ONLY if we're in the Steel Mill (i.e. not w/Cat)
 			}else if(current.chapter == 3 && current.subChapter == 3 && current.lastDoorRoom.Contains("Museum_B1")){
 				//Ignore Gladiator Pit cutscene
+			}else if(current.chapter == 8 && current.subChapter == 0 && current.lastDoorRoom.Contains("Under_S2")){
+				//Ignore Clayface cutscene
 			}else{
 				return true; //Split on all other cutscenes
 			}
@@ -122,6 +124,12 @@ split{
 			
 			if(current.chapter == 3 && current.subChapter == 2 && old.lastDoorRoom.Contains("Museum_S1")){
 				return true; //Grundy Skip/Jammer Skip
+			}
+			
+			if(old.lastDoorRoom.Contains("PDLCSM")){
+				return true; //Exit Steel Mill (HQR)
+			}else if(current.chapter == 2 && current.subChapter == 2 && old.lastDoorRoom.Contains("PDLCOW_")){
+				return true; //Enter Hideout (HQR)
 			}
 		}
 		
@@ -141,6 +149,8 @@ split{
 			return true; //Enter Steel Mill 2 (but only if not doing Steel Mill 2 skip)
 		}else if(current.chapter == 7 && current.subChapter == 1 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Under_B5")){
 			return true; //Enter Underground after Hugo monologue
+		}else if(current.chapter == 3 && old.lastDoorRoom.Contains("PDLCIN_A1") && current.lastDoorRoom.Contains("PDLCIN_C2")){
+			return true; //Harley Predator (HQR)
 		}
 		
 		//---Other---
