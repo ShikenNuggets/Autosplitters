@@ -105,7 +105,7 @@ split{
 				//Ignore second cutscene in Steel Mill, but ONLY if we're in the Steel Mill (i.e. not w/Cat)
 			}else if(current.chapter == 3 && current.subChapter == 3 && current.lastDoorRoom.Contains("Museum_B1")){
 				//Ignore Gladiator Pit cutscene
-			}else if(current.chapter == 8 && current.subChapter == 0 && current.lastDoorRoom.Contains("Under_S2")){
+			}else if(current.chapter == 9 && current.lastDoorRoom.Contains("Under_S2")){
 				//Ignore Clayface cutscene
 			}else{
 				return true; //Split on all other cutscenes
@@ -124,6 +124,14 @@ split{
 			
 			if(current.chapter == 3 && current.subChapter == 2 && old.lastDoorRoom.Contains("Museum_S1")){
 				return true; //Grundy Skip/Jammer Skip
+			}
+			
+			if(old.lastDoorRoom.Contains("MadHatter_01")){
+				return true; //Split on leaving Mad Hatter (100%)
+			}else if(old.lastDoorRoom.Contains("Church") && current.chapter > 2){
+				return true; //Split on leaving Church revisit (100%)
+			}else if(current.chapter == 9 && old.lastDoorRoom.Contains("Under_C1")){
+				return true; //Underground Backtrack (100%)
 			}
 			
 			if(old.lastDoorRoom.Contains("PDLCSM")){
@@ -158,6 +166,10 @@ split{
 			return true; //Batsuit
 		}else if(current.chapter == 7 && old.character.Contains("Playable_Catwoman") && current.character.Contains("Playable_Batman")){
 			return true; //After Cat 3
+		}else if(current.chapter == 9 && current.lastDoorRoom.Contains("Museum_") && old.character.Contains("Playable_Catwoman") && current.character.Contains("Playable_Batman")){
+			return true; //After Cat 4
+		}else if(current.chapter == 9 && !current.lastDoorRoom.Contains("Under_S2") && old.character.Contains("Playable_Batman") && current.character.Contains("Playable_Catwoman")){
+			return true; //Before Catwoman Cleanup (not after Clayface)
 		}else if(old.character.Contains("Playable_Batman") && current.character.Contains("Playable_Robin")){
 			return true; //HQR
 		}else if(old.character.Contains("Playable_Robin") && current.character.Contains("Playable_Batman")){
