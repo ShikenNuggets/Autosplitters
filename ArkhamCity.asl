@@ -144,8 +144,8 @@ split{
 		//---Chapter Changes---
 		if(current.chapter == 3 && old.subChapter == 2 && current.subChapter == 3){
 			return true; //Start Jammers
-		}else if(current.chapter == 4 && old.subChapter == 1 && current.subChapter == 2){
-			return true; //Enter Fiona Predator
+		}else if(current.chapter == 4 && old.subChapter == 1 && current.subChapter == 2 && !old.lastDoorRoom.Contains("OW_")){
+			return true; //Enter Fiona Predator (only if Robin skip happened)
 		}else if(old.chapter < 6 && current.chapter == 7){
 			return true; //NG+ skip
 		}
@@ -153,6 +153,8 @@ split{
 		//---Area Changes---
 		if(current.chapter == 3 && current.subChapter == 3 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Museum_")){
 			return true; //Enter Museum 2 after jammers (not ideal but I can't figure out a better split point)
+		}else if(current.chapter == 4 && current.subChapter == 2 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Under_C1")){
+			return true; //Enter Underground after ninja chase
 		}else if(current.chapter == 6 && current.subChapter == 1 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Steel_C4")){
 			return true; //Enter Steel Mill 2 (but only if not doing Steel Mill 2 skip)
 		}else if(current.chapter == 7 && current.subChapter == 1 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Under_B5")){
