@@ -146,7 +146,7 @@ split{
 			return true; //Start Jammers
 		}else if(current.chapter == 4 && old.subChapter == 1 && current.subChapter == 2 && !old.lastDoorRoom.Contains("OW_")){
 			return true; //Enter Fiona Predator (only if Robin skip happened)
-		}else if(old.chapter < 6 && current.chapter == 7){
+		}else if(old.chapter != 0 && old.chapter < 6 && current.chapter == 7){
 			return true; //NG+ skip
 		}
 		
