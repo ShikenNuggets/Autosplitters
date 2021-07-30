@@ -165,8 +165,6 @@ split{
 		
 		if(old.lastDoorRoom.Contains("PDLCSM")){
 			return true; //Exit Steel Mill (HQR)
-		}else if(current.chapter == 2 && current.subChapter == 2 && old.lastDoorRoom.Contains("PDLCOW_")){
-			return true; //Enter Hideout (HQR)
 		}
 	}
 	
@@ -191,6 +189,8 @@ split{
 			return true; //Enter Steel Mill 2 (only if not doing Steel Mill 2 skip)
 		}else if(current.chapter == 7 && current.subChapter == 1 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Under_B5")){
 			return true; //Enter Underground after Hugo monologue
+		}else if(current.chapter == 2 && current.subChapter == 2 && old.lastDoorRoom.Contains("PDLCOW_") && !current.lastDoorRoom.Contains("OW_")){
+			return true; //Enter Hideout (HQR)
 		}else if(current.chapter == 3 && old.lastDoorRoom.Contains("PDLCIN_A1") && current.lastDoorRoom.Contains("PDLCIN_C2")){
 			return true; //Harley Predator (HQR)
 		}
