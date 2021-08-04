@@ -69,14 +69,6 @@ update{
 	if(current.mainMenu == 44 && vars.shouldStart != 0){
 		vars.shouldStart = 0;
 	}
-	
-	// DEBUG
-	if(old.currentLevel != current.currentLevel){
-		print("[BNM] currentLevel: " + current.currentLevel);
-	}
-	if(old.cutscenePlaying != current.cutscenePlaying){
-		print("[BNM] cutscenePlaying: " + current.cutscenePlaying);
-	}
 }
 
 start{
