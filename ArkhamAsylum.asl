@@ -96,7 +96,7 @@ split{
 		}else if(current.roomName == "Cell_B1"){
 			vars.flag4 = 0; // Reset Bat-Better-Claw flag, in case NMS
 			return true; // Harley
-		}else if(current.roomName == "Max_C1"){
+		}else if(current.lastRoom == "Max_C1"){
 			return true; //Did anyone catch the game last night (NMS)
 		}else if(current.roomName == "Cave_B5"){
 			return true; //Croc Start for NMS
