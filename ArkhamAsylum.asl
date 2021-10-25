@@ -1,6 +1,6 @@
-/********************************************
- * Batman: Arkham Asylum Auto-splitter v1.8 *
- ********************************************/
+/*******************************************
+ * Batman: Arkham Asylum Autosplitter v1.9 *
+ *******************************************/
 
 state("ShippingPC-BmGame", "Steam"){
 	int mainMenu		: 0x022C2DA4;
@@ -12,6 +12,7 @@ state("ShippingPC-BmGame", "Steam"){
 	byte showHUD		: 0x022B5504, 0xC, 0x1C, 0x39C, 0x1CC;
 	byte openingDoor	: 0x022B5504, 0xC, 0x1C, 0x682;
 	string30 roomName	: 0x022B5504, 0xC, 0x1C, 0x74C, 0x0; // Current area, with some exceptions
+	int transitionId	: 0x022C3CDC, 0x324, 0x0, 0x34, 0x9D0, 0xA30, 0x1D0;
 	int cutscenePlaying	: "binkw32.dll", 0x000233F0; // Cutscene Videos
 }
 
@@ -25,16 +26,20 @@ state("ShippingPC-BmGame", "Epic"){
 	byte showHUD		: 0x02245454, 0xC, 0x1C, 0x39C, 0x1CC;
 	byte openingDoor	: 0x02245454, 0xC, 0x1C, 0x682;
 	string30 roomName	: 0x02245454, 0xC, 0x1C, 0x74C, 0x0;
+	int transitionId	: 0x02245454, 0xC, 0x1C, 0x9D0, 0xA30, 0x1D0;
 	int cutscenePlaying	: "binkw32.dll", 0x000233F0;
 }
 
 startup{
+	settings.Add("endOnJoker", false, "Split at Titan Joker [Experimental]");
+	settings.SetToolTip("endOnJoker", "Splits at the end of the Titan Joker fight. Has not been thorougly tested, use at you rown risk.");
+	
 	vars.shouldStart = 0;
 	vars.flag1 = 0; // Heart Attack
 	vars.flag2 = 0; // Batclaw Skip
 	vars.flag3 = 0; // Double Titan
 	vars.flag4 = 0; // Bat-Better-Claw
-	vars.flag5 = 0; // Scarecrow 1, if you reload
+	vars.flag5 = 0; // End
 }
 
 init{
@@ -55,6 +60,7 @@ update{
 		vars.flag2 = 0;
 		vars.flag3 = 0;
 		vars.flag4 = 0;
+		vars.flag5 = 0;
 	}
 	
 	if(old.mainMenu == 44 && current.mainMenu == 43 && vars.shouldStart == 0){
@@ -136,6 +142,16 @@ split{
 		if(vars.flag4 == 0){
 			vars.flag4 = 1;
 			return true; // Bat-Better-Claw
+		}
+	}else if(settings["endOnJoker"] && current.roomName == "Visitor_B2" && old.transitionId != current.transitionId){
+		if(current.transitionId == 0){
+			vars.flag5 = 0; // Reset the flag so the split still works if you reload mid-fight
+		}else{
+			if(vars.flag5 == 5){
+				vars.flag5++;
+				return true; // End
+			}
+			vars.flag5++;
 		}
 	}
 }
