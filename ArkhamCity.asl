@@ -81,7 +81,7 @@ update{
 }
 
 start{
-	if(vars.state == 2 && current.chapter == 1){
+	if(vars.state == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
 		vars.state = 3;
 		return true;
 	}
