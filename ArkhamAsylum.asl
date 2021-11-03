@@ -31,9 +31,6 @@ state("ShippingPC-BmGame", "Epic"){
 }
 
 startup{
-	settings.Add("endOnJoker", false, "Split at Titan Joker [Experimental]");
-	settings.SetToolTip("endOnJoker", "Splits at the end of the Titan Joker fight. Has not been thorougly tested, use at your own risk.");
-	
 	vars.shouldStart = 0;
 	vars.flag1 = 0; // Heart Attack
 	vars.flag2 = 0; // Batclaw Skip
@@ -143,7 +140,7 @@ split{
 			vars.flag4 = 1;
 			return true; // Bat-Better-Claw
 		}
-	}else if(settings["endOnJoker"] && current.roomName == "Visitor_B2" && old.transitionId != current.transitionId){
+	}else if(current.roomName == "Visitor_B2" && old.transitionId != current.transitionId){
 		if(current.transitionId == 0){
 			vars.flag5 = 0; // Reset the flag so the split still works if you reload mid-fight
 		}else{
