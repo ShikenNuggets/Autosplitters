@@ -32,7 +32,7 @@ state("ShippingPC-BmGame", "Epic"){
 
 startup{
 	settings.Add("endOnJoker", false, "Split at Titan Joker [Experimental]");
-	settings.SetToolTip("endOnJoker", "Splits at the end of the Titan Joker fight. Has not been thorougly tested, use at you rown risk.");
+	settings.SetToolTip("endOnJoker", "Splits at the end of the Titan Joker fight. Has not been thorougly tested, use at your own risk.");
 	
 	vars.shouldStart = 0;
 	vars.flag1 = 0; // Heart Attack
@@ -95,7 +95,7 @@ split{
 			vars.flag1++;
 		}else if(current.roomName == "Medical_A"){
 			return true; // Dr. Skip
-		}else if(current.roomName == "Medical_B7"){
+		}else if(current.lastRoom == "Medical_B7"){
 			return true; // Bane
 		}else if(current.roomName == "Cell_B2"){
 			return true; // Warden
