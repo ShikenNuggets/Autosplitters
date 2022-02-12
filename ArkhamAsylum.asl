@@ -90,7 +90,7 @@ split{
 				return true; // Heart Attack
 			}
 			vars.flag1++;
-		}else if(current.roomName == "Medical_A"){
+		}else if(current.roomName == "Medical_A" || current.roomName == "Medical_C2"){
 			return true; // Dr. Skip
 		}else if(current.lastRoom == "Medical_B7"){
 			return true; // Bane
