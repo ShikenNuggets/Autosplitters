@@ -136,7 +136,7 @@ startup{
 	settings.Add("splitOnJoker", false, "Split at the end of the Main Story");
 
 	vars.splitPoints = new List<int>{
-		5, 10, 16, 20, 24, 26, 28, 31, 34, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
+		5, 10, 16, 20, 24, 26, 28, 31, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
 		64, 66, 67, 68, 69, 70, 73, 75, 77, 78, 79, 80, 82, 85, 87, 89, 90, 95, 96
 	};
 	vars.highestPercent = 0;
