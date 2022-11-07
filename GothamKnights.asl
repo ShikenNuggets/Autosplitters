@@ -14,6 +14,10 @@ state("GothamKnights-Win64-Shipping", "Steam 2022.10.27"){
 	byte loading	: 0x06EC9880, 0x0, 0x30, 0x138, 0x8, 0x140, 0x5C0, 0x490;
 }
 
+state("GothamKnights", "Steam 2022.11.07"){
+	byte loading	: 0x072A9168, 0x4B0, 0x0, 0x230, 0xC8, 0x8, 0x5F0, 0x490;
+}
+
 init{
 	print(modules.First().ModuleMemorySize.ToString());
 	switch(modules.First().ModuleMemorySize){
@@ -26,8 +30,11 @@ init{
 		case 0x1BB8E000:
 			version = "Steam 2022.10.27";
 			break;
+		case 0x1BFCD000:
+			version = "Steam 2022.11.07";
+			break;
 		default:
-			version = "Steam 2022.10.27";
+			version = "Steam 2022.11.07";
 			break;
 	}
 }
