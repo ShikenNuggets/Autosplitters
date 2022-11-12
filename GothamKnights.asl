@@ -15,7 +15,11 @@ state("GothamKnights-Win64-Shipping", "Steam 2022.10.27"){
 }
 
 state("GothamKnights", "Steam 2022.11.07"){
-	byte loading	: 0x072A9168, 0x4B0, 0x0, 0x230, 0xC8, 0x8, 0x5F0, 0x490;
+	byte loading	: 0x06ECA890, 0x0, 0x30, 0x20, 0x138, 0x2D0, 0x5F0, 0x490;
+}
+
+state("GothamKnights", "Epic 2022.11.07"){
+	byte loading	: 0x07092B70, 0x0, 0x38, 0x8, 0x150, 0x490;
 }
 
 init{
@@ -33,8 +37,9 @@ init{
 		case 0x1BFCD000:
 			version = "Steam 2022.11.07";
 			break;
+		case 0x1CE58000:
+			version = "Epic 2022.11.07";
 		default:
-			version = "Steam 2022.11.07";
 			break;
 	}
 }
