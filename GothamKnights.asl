@@ -19,7 +19,7 @@ state("GothamKnights", "Steam 2022.11.07"){
 }
 
 state("GothamKnights", "Steam 2022.11.17"){
-	byte loading	: 0x06EEB890, 0x0, 0x30, 0x20, 0x138, 0x2D0, 0x5F0, 0x490;
+	byte loading	: 0x06EEB890, 0x0, 0x140, 0x5F0, 0x490;
 }
 
 state("GothamKnights", "Epic 2022.11.07"){
