@@ -32,11 +32,11 @@ state("ShippingPC-BmGame", "Epic"){
 
 startup{
 	vars.shouldStart = 0;
-	vars.flag1 = 0; // Heart Attack
-	vars.flag2 = 0; // Batclaw Skip
-	vars.flag3 = 0; // Double Titan
-	vars.flag4 = 0; // Bat-Better-Claw
-	vars.flag5 = 0; // End
+	vars.heartAttackFlag = 0; // Heart Attack
+	vars.batclawSkipFlag = 0; // Batclaw Skip
+	vars.doubleTitanFlag = 0; // Double Titan
+	vars.ultraClawFlag = 0; // Bat-Better-Claw
+	vars.endFlag = 0; // End
 }
 
 init{
@@ -53,11 +53,11 @@ init{
 update{
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
-		vars.flag1 = 0;
-		vars.flag2 = 0;
-		vars.flag3 = 0;
-		vars.flag4 = 0;
-		vars.flag5 = 0;
+		vars.heartAttackFlag = 0;
+		vars.batclawSkipFlag = 0;
+		vars.doubleTitanFlag = 0;
+		vars.ultraClawFlag = 0;
+		vars.endFlag = 0;
 	}
 	
 	if(old.mainMenu == 44 && current.mainMenu == 43 && vars.shouldStart == 0){
@@ -85,11 +85,11 @@ split{
 		if(current.roomName == "Max_B4"){
 			return true; // Zsasz
 		}else if(current.roomName == "Max_C5"){
-			if(vars.flag1 == 1){
-				vars.flag1++;
+			if(vars.heartAttackFlag == 1){
+				vars.heartAttackFlag++;
 				return true; // Heart Attack
 			}
-			vars.flag1++;
+			vars.heartAttackFlag++;
 		}else if(current.roomName == "Medical_A" || current.roomName == "Medical_C2"){
 			return true; // Dr. Skip
 		}else if(current.lastRoom == "Medical_B7"){
@@ -97,7 +97,7 @@ split{
 		}else if(current.roomName == "Cell_B2"){
 			return true; // Warden
 		}else if(current.roomName == "Cell_B1"){
-			vars.flag4 = 0; // Reset Bat-Better-Claw flag, in case NMS
+			vars.ultraClawFlag = 0; // Reset Bat-Better-Claw flag, in case NMS
 			return true; // Harley
 		}else if(current.lastRoom == "Max_C1"){
 			return true; //Did anyone catch the game last night (NMS)
@@ -106,18 +106,18 @@ split{
 		}else if(current.roomName == "Garden_B7"){
 			return true; // Ivy
 		}else if(current.roomName == "Visitor_C1" || current.roomName == "Visitor_B1"){
-			if(vars.flag3 == 1){
-				vars.flag3++;
+			if(vars.doubleTitanFlag == 1){
+				vars.doubleTitanFlag++;
 				return true; // Double Titan
 			}
-			vars.flag3++;
+			vars.doubleTitanFlag++;
 		}
 	}else if(old.roomName == "Medical_S1" && current.roomName == "Medical_B5"){
 		return true; // Scarecrow 1
 	}else if(string.IsNullOrWhiteSpace(old.roomName) && current.roomName == "Medical_B5"){
 		return true; // Scarecrow 1, if you reload
-	}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.flag2 == 0 && current.batmanX > 0){
-		vars.flag2 = 1;
+	}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.batclawSkipFlag == 0 && current.batmanX > 0){
+		vars.batclawSkipFlag = 1;
 		return true; // Batclaw Skip, does not split in NMS
 	}else if(old.roomName == "Admin_B1" && current.roomName == "Admin_C9"){
 		return true; //Wayne Manor (NMS)
@@ -136,19 +136,19 @@ split{
 	}else if(current.lastRoom == "Garden_B5" && old.lineLauncher != current.lineLauncher){
 		return true; // Line Launcher
 	}else if(current.roomName == "Cave_B1_Desc" && old.batclaw != current.batclaw){
-		if(vars.flag4 == 0){
-			vars.flag4 = 1;
+		if(vars.ultraClawFlag == 0){
+			vars.ultraClawFlag = 1;
 			return true; // Bat-Better-Claw
 		}
 	}else if(current.roomName == "Visitor_B2" && old.transitionId != current.transitionId){
 		if(current.transitionId == 0){
-			vars.flag5 = 0; // Reset the flag so the split still works if you reload mid-fight
+			vars.endFlag = 0; // Reset the flag so the split still works if you reload mid-fight
 		}else{
-			if(vars.flag5 == 5){
-				vars.flag5++;
+			if(vars.endFlag == 5){
+				vars.endFlag++;
 				return true; // End
 			}
-			vars.flag5++;
+			vars.endFlag++;
 		}
 	}
 }
