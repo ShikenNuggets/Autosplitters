@@ -33,6 +33,7 @@ state("ShippingPC-BmGame", "Epic"){
 startup{
 	vars.shouldStart = 0;
 	vars.heartAttackFlag = 0; // Heart Attack
+	vars.batmobileFlag = 0; // Batmobile
 	vars.batclawSkipFlag = 0; // Batclaw Skip
 	vars.doubleTitanFlag = 0; // Double Titan
 	vars.ultraClawFlag = 0; // Bat-Better-Claw
@@ -54,6 +55,7 @@ update{
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
 		vars.heartAttackFlag = 0;
+		vars.batmobileFlag = 0;
 		vars.batclawSkipFlag = 0;
 		vars.doubleTitanFlag = 0;
 		vars.ultraClawFlag = 0;
@@ -131,7 +133,8 @@ split{
 		return true; // Killer Croc (Leaving the Croc area)
 	}else if(old.roomName == "Cave_C6" && current.roomName == "Overworld_A1"){
 		return true; // Leaving Elevator
-	}else if(current.roomName == "Overworld_A2" && old.gel != current.gel){
+	}else if(current.roomName == "Overworld_A2" && old.gel != current.gel && vars.batmobileFlag == 0){
+		vars.batmobileFlag++;
 		return true; // Batmobile
 	}else if(current.lastRoom == "Garden_B5" && old.lineLauncher != current.lineLauncher){
 		return true; // Line Launcher
