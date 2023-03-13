@@ -34,6 +34,10 @@ state("GothamKnights", "Steam 2023.02.14"){
 	byte loading	: 0x0714C5E0, 0x0, 0x38, 0x8, 0x150, 0x490;
 }
 
+state("GothamKnights", "Steam 2023.03.06"){
+	byte loading	: 0x071E9630, 0x140, 0x5F8, 0x490;
+}
+
 state("GothamKnights", "Epic 2022.11.07"){
 	byte loading	: 0x07092B70, 0x0, 0x38, 0x8, 0x150, 0x490;
 }
@@ -52,6 +56,10 @@ state("GothamKnights", "Epic 2022.12.14"){
 
 state("GothamKnights", "Epic 2023.02.14"){
 	byte loading	: 0x07187E58, 0x140, 0x5F8, 0x490;
+}
+
+state("GothamKnights", "Epic 2023.03.06"){
+	byte loading	: 0x0718E298, 0x140, 0x5F8, 0x490;
 }
 
 init{
@@ -80,6 +88,9 @@ init{
 		case 0x1C53F000:
 			version = "Steam 2023.02.14";
 			break;
+		case 0x1BDA3000:
+			version = "Steam 2023.03.06";
+			break;
 		case 0x1CE58000:
 			version = "Epic 2022.11.07";
 			break;
@@ -94,6 +105,9 @@ init{
 			break;
 		case 0x1CEB9000:
 			version = "Epic 2023.02.14";
+			break;
+		case 0x1BFDF000:
+			version = "Epic 2023.03.06";
 			break;
 		default:
 			print("Unrecognized Module Size: " + modules.First().ModuleMemorySize.ToString());
