@@ -11,6 +11,7 @@ state("BatmanAC", "Steam"){
 	int cutscenePlaying		: 0x012CAB74;
 	int inMainMenu			: 0x0151BF2C;
 	string50 lastDoorRoom	: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x5c, 0x0;
+	string50 persistentLevel: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x8c, 0x0;
 	string50 currentLevel	: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x98, 0x0;
 	byte chapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 	byte subChapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
@@ -25,6 +26,7 @@ state("BatmanAC", "Epic"){
 	int cutscenePlaying		: 0x012B55D4;
 	int inMainMenu			: 0x0150BA2C;
 	string50 lastDoorRoom	: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x5c, 0x0;
+	string50 persistentLevel: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x8c, 0x0;
 	string50 currentLevel	: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x98, 0x0;
 	byte chapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 	byte subChapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
@@ -34,7 +36,7 @@ startup{
 	settings.Add("startAfterSkin", false, "Start After Skin Select");
 	settings.SetToolTip("startAfterSkin", "If you wish to play with a skin, you'll need to enable this setting. If this setting is enabled, you'll need to open the skin select screen every time for the auto start to work, even if you're choosing the default skin.");
 	
-	settings.Add("legacyMode", true, "Legacy Mode [Not Recommended]");
+	settings.Add("legacyMode", false, "Legacy Mode [Not Recommended]");
 	settings.SetToolTip("legacyMode", "Enables the old autosplitter settings, for those who wish to continue using them. If you don't know what this is, don't use it.");
 	
 	settings.Add("splitOnCutscene", false, "Split on Cutscenes", "legacyMode");
@@ -149,7 +151,7 @@ split{
 	
 	//---Loads---
 	if(old.isLoading == 0 && current.isLoading == 1){
-		if(current.chapter >= 2 && old.lastDoorRoom.Contains("Church_")){
+		if(((current.chapter == 2 && current.subChapter == 2) || current.chapter > 2) && old.persistentLevel.Contains("Church")){
 			return true; //Enter Church Tower + Exit Church Revisit (100%)
 		}else if(current.chapter == 3 && current.subChapter == 2 && old.lastDoorRoom.Contains("GCPD_")){
 			return true; //Exit GCPD 1
@@ -187,7 +189,7 @@ split{
 			return true; //Enter Underground after ninja chase
 		}else if(current.chapter == 6 && current.subChapter == 1 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Steel_C4")){
 			return true; //Enter Steel Mill 2 (only if not doing Steel Mill 2 skip)
-		}else if(current.chapter == 7 && current.subChapter == 1 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Under_B5")){
+		}else if(current.chapter == 7 && old.lastDoorRoom.Contains("OW_") && current.lastDoorRoom.Contains("Under_B5")){
 			return true; //Enter Underground after Hugo monologue
 		}else if(current.chapter == 2 && current.subChapter == 2 && old.lastDoorRoom.Contains("PDLCOW_") && !current.lastDoorRoom.Contains("OW_")){
 			return true; //Enter Hideout (HQR)
