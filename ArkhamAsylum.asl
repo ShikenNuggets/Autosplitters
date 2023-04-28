@@ -37,6 +37,8 @@ startup{
 	vars.batclawSkipFlag = 0; // Batclaw Skip
 	vars.doubleTitanFlag = 0; // Double Titan
 	vars.ultraClawFlag = 0; // Bat-Better-Claw
+	vars.harleyFlag = 0;
+	vars.ivyFlag = 0;
 	vars.endFlag = 0; // End
 }
 
@@ -59,6 +61,8 @@ update{
 		vars.batclawSkipFlag = 0;
 		vars.doubleTitanFlag = 0;
 		vars.ultraClawFlag = 0;
+		vars.harleyFlag = 0;
+		vars.ivyFlag = 0;
 		vars.endFlag = 0;
 	}
 	
@@ -100,12 +104,14 @@ split{
 			return true; // Warden
 		}else if(current.roomName == "Cell_B1"){
 			vars.ultraClawFlag = 0; // Reset Bat-Better-Claw flag, in case NMS
+			vars.harleyFlag = 1;
 			return true; // Harley
 		}else if(current.lastRoom == "Max_C1"){
 			return true; //Did anyone catch the game last night (NMS)
 		}else if(current.roomName == "Cave_B5"){
 			return true; //Croc Start for NMS
 		}else if(current.roomName == "Garden_B7"){
+			vars.ivyFlag = 1;
 			return true; // Ivy
 		}else if(current.roomName == "Visitor_C1" || current.roomName == "Visitor_B1"){
 			if(vars.doubleTitanFlag == 1){
@@ -127,7 +133,7 @@ split{
 		return true; //End Scarecrow 2 (NMS)
 	}else if(old.roomName == "Admin_C1" && current.roomName == "Overworld_A3"){
 		return true; // Bell Skip (Leaving the Mansion)
-	}else if(old.roomName == "Cave_C1_Desc" && current.roomName == "Cave_B5"){
+	}else if(old.roomName == "Cave_C1_Desc" && current.roomName == "Cave_B5" && vars.ivyFlag == 0){
 		return true; // Croc Start
 	}else if(old.roomName == "Cave_B5" && current.roomName == "Cave_C1_Desc"){
 		return true; // Killer Croc (Leaving the Croc area)
@@ -152,6 +158,21 @@ split{
 				return true; // End
 			}
 			vars.endFlag++;
+		}
+	}
+	
+	//Hundo Splits - Hundo backtracks all start after getting the ultra claw
+	if(vars.harleyFlag == 1 && vars.ultraClawFlag == 1){
+		if(vars.ivyFlag == 0 && old.roomName == "Medical_C5" && current.roomName == "Overworld_A1"){
+			return true; //Medical Backtrack (only splits before Ivy)
+		}else if(old.roomName == "Cave_C2" && current.roomName == "Max_B1"){
+			return true; //Sewer Backtrack
+		}else if(old.roomName == "Max_C8" && current.roomName == "Overworld_C0"){
+			return true; //IT Backtrack
+		}else if(old.roomName == "Garden_C1" && current.roomName == "Overworld_A3"){
+			return true; //Garden Backtrack
+		}else if(old.roomName == "Cell_C6" && current.roomName == "Overworld_A1"){
+			return true; //Pen Backtrack
 		}
 	}
 }
