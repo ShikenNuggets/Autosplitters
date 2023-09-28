@@ -42,6 +42,10 @@ state("GothamKnights", "Steam 2023.04.27"){
 	byte loading	: 0x0719E8E8, 0x0, 0x38, 0x8, 0x150, 0x490;
 }
 
+state("GothamKnights", "Steam 2023.09.26"){
+	byte loading	: 0x072CC650, 0x140, 0x5F8, 0x490;
+}
+
 state("GothamKnights", "Epic 2022.11.07"){
 	byte loading	: 0x07092B70, 0x0, 0x38, 0x8, 0x150, 0x490;
 }
@@ -101,6 +105,9 @@ init{
 			break;
 		case 472993792:
 			version = "Steam 2023.04.27";
+			break;
+		case 478765056:
+			version = "Steam 2023.09.26";
 			break;
 		case 0x1CE58000:
 			version = "Epic 2022.11.07";
