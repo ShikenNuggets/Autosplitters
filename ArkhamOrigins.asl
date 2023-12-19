@@ -218,6 +218,8 @@ split{
 				return true; // Bane HQ
 			} else if(current.Chapter == 7 && old.SubChapter == 1 && current.SubChapter == 2){
 				return true; // Talk to Gordon inside Bridge
+			} else if(current.Chapter == 7 && old.SubChapter == 2 && current.SubChapter == 3){
+				return true; // Bomb 3
 			} else if(current.Chapter == 8 && old.SubChapter == 0 && current.SubChapter == 1 && "BatcaveHQ_A1".Equals(old.LastDoorRoom)){
 				return true; // Return to Blackgate
 			}
