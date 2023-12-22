@@ -41,6 +41,7 @@ startup{
 	vars.t = 0;
 	vars.state = 0;
 	vars.cooldown = 3000;
+	vars.bridgeLoadCount = 0;
 	vars.splitOnce = new Dictionary<string, bool>(){
 		{"Lacey", false},
 		{"Bank", false},
@@ -53,7 +54,8 @@ startup{
 		{"BridgeSkip", false},
 		{"BombRoom", false},
 		{"Panopticon", false},
-		{"Bird", false}
+		{"Bird", false},
+		{"Church", false}
 	};
 }
 
@@ -123,10 +125,11 @@ split{
 	if(old.isLoading == 0 && current.isLoading == 1){
 		if(current.Chapter == 3 && current.SubChapter == 2 && "PoliceStation_A1".Equals(current.LastDoorRoom)){
 			return true; // Exit GCPD
-		} else if(!vars.splitOnce["BridgeSkip"] && "Bridge_A3".Equals(current.CurrentLevel) && current.Chapter == 7 && current.SubChapter == 2){
-			vars.splitOnce["BridgeSkip"] = true;
-			return true; // Bridge skip
-		} 
+		} else if(current.Chapter == 7 && current.SubChapter == 1 && !string.IsNullOrWhiteSpace(current.CurrentLevel) && "Bridge_A3".Equals(current.CurrentLevel)){
+			vars.bridgeLoadCount++;
+		} else if(current.Chapter == 7 && current.SubChapter == 2 && !string.IsNullOrWhiteSpace(current.CurrentLevel) && "GothamBridge_C1".Equals(current.CurrentLevel)){
+			vars.bridgeLoadCount++;
+		}
 	}
 	
 	// Area Changes
@@ -140,7 +143,7 @@ split{
 		} else if(!vars.splitOnce["Lacey"] && "NewGotham_A9".Equals(old.LastDoorRoom) && "Appartment_S0".Equals(current.LastDoorRoom)){
 			vars.splitOnce["Lacey"] = true;
 			return true; // Enter Lacey Towers
-		} else if(!vars.splitOnce["Bank"] && "Bank_A1".Equals(old.LastDoorRoom) && "OldGotham_F1".Equals(current.LastDoorRoom)){
+		} else if(!vars.splitOnce["Bank"] && "Bank_A1".Equals(old.LastDoorRoom) && "OldGotham_F1".Equals(current.LastDoorRoom) && current.Chapter == 4){
 			vars.splitOnce["Bank"] = true;
 			return true; // Exit Bank
 		} else if(!vars.splitOnce["SteelMill"] && "OldGotham_C4".Equals(old.LastDoorRoom) && "SteelMill_A1".Equals(current.LastDoorRoom)){
@@ -155,10 +158,13 @@ split{
 			return true; // Joker's Funhouse
 		} else if("PoliceStation_C3".Equals(old.CurrentLevel) && "PoliceStation_B2".Equals(current.CurrentLevel) && current.Chapter == 7){
 			return true; // Autopsy Report in Sewers
-		} else if(!vars.splitOnce["BombRoom"] && "GothamBridge_C1".Equals(old.LastDoorRoom) && "GothamBridge_B1".Equals(current.LastDoorRoom) 
+		} else if(!vars.splitOnce["BridgeSkip"] && "OpenWorld".Equals(old.PersistentLevel) && "GothamBridge".Equals(current.PersistentLevel) && vars.bridgeLoadCount == 2){
+			vars.splitOnce["BridgeSkip"] = true;
+			return true; // Bridge Skip
+		} else if(!vars.splitOnce["BombRoom"] && "GothamBridge_C1".Equals(old.CurrentLevel) && "GothamBridge_B1".Equals(current.CurrentLevel) 
 					&& current.Chapter == 7 && current.SubChapter == 2){
 			vars.splitOnce["BombRoom"] = true;
-			return true; // Enter bomb room
+			return true; // Bomb room pred
 		} else if(!vars.splitOnce["Panopticon"] && "Prison_C5".Equals(old.LastDoorRoom) && "Prison_B3".Equals(current.LastDoorRoom) && current.Chapter == 8){
 			vars.splitOnce["Panopticon"] = true;
 			return true; // Prison door to fight after saving Harely
@@ -179,7 +185,8 @@ split{
 		} else if(!vars.splitOnce["ExitSteelMill"] && current.Chapter > 6 && "SteelMill".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
 			vars.splitOnce["ExitSteelMill"] = true;
 			return true; // Exit Steel Mill (backtrack)
-		} else if("OpenWorld".Equals(old.PersistentLevel) && "Church".Equals(current.PersistentLevel)){
+		} else if(!vars.splitOnce["Church"] && "OpenWorld".Equals(old.PersistentLevel) && "Church".Equals(current.PersistentLevel)){
+			vars.splitOnce["Church"] = true;
 			return true; // Blackmask
 		} else if(!vars.splitOnce["Deadshot"] && current.Chapter == 7 && current.SubChapter == 1){
 			if("Bank".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
