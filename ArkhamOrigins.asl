@@ -44,6 +44,7 @@ startup{
 	vars.bridgeLoadCount = 0;
 	vars.splitOnce = new Dictionary<string, bool>(){
 		{"Lacey", false},
+		{"GCPD", false},
 		{"Bank", false},
 		{"Sewersii", false},
 		{"Funhouse", false},
@@ -104,8 +105,8 @@ split{
 			return false; // Stop split on use batcomputer and fast travel out of batcave for the first time
 		} else if("PoliceStation".Equals(current.PersistentLevel) && current.Chapter == 4){
 			return false; // Stop split on sewers cutscene
-		} else if(("NewGotham_T1".Equals(current.LastDoorRoom) || "OldGotham_A1".Equals(current.LastDoorRoom)
-					|| current.LastDoorRoom.Contains("Bridge_")) && current.Chapter == 7 && current.SubChapter == 1){
+		} else if(("NewGotham_T1".Equals(current.LastDoorRoom) || "NewGotham_A1".Equals(current.LastDoorRoom) || "OldGotham_E4".Equals(current.CurrentLevel)
+					|| current.CurrentLevel.Contains("Bridge_")) && current.Chapter == 7 && current.SubChapter == 1){
 			return false; // Prevent split on distract firefly cutscene
 		} else if("GothamBridge".Equals(current.PersistentLevel) && current.Chapter == 8){
 			return false; // Prevent extra cutscene after firefly
@@ -188,11 +189,12 @@ split{
 		} else if(!vars.splitOnce["Church"] && "OpenWorld".Equals(old.PersistentLevel) && "Church".Equals(current.PersistentLevel)){
 			vars.splitOnce["Church"] = true;
 			return true; // Blackmask
-		} else if(!vars.splitOnce["Deadshot"] && current.Chapter == 7 && current.SubChapter == 1){
+		} else if(!vars.splitOnce["Deadshot"] && current.Chapter == 7 && current.SubChapter == 1 
+					&& vars.EnterExit("OpenWorld", "Bank", old.PersistentLevel, current.PersistentLevel)){
 			if("Bank".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
 				vars.splitOnce["Deadshot"] = true; // Deadshot
 			}
-			return vars.EnterExit("OpenWorld", "Bank", old.PersistentLevel, current.PersistentLevel);
+			return true;
 		} else if(!vars.splitOnce["Bird"] && "SleazyClub".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
 			vars.splitOnce["Bird"] = true;
 			return true; // Bird
@@ -208,7 +210,8 @@ split{
 				return true; // Enter Final Offer
 			} else if(current.Chapter == 2 && old.SubChapter == 1 && current.SubChapter == 2){
 				return true; // Elevator after casino in Final Offer
-			} else if (current.Chapter == 3 && old.SubChapter == 0 && current.SubChapter == 1 && "NewGotham_C1".Equals(old.CurrentLevel)){
+			} else if (!vars.splitOnce["GCPD"] && current.Chapter == 3 && old.SubChapter == 0 && current.SubChapter == 1){
+				vars.splitOnce["GCPD"] = true;
 				return true; // Enter GCPD for the first time
 			} else if (current.Chapter == 3 && old.SubChapter == 1 && current.SubChapter == 2){
 				return true; // Pickup disruptor
