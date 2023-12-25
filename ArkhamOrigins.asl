@@ -56,7 +56,8 @@ startup{
 		{"BombRoom", false},
 		{"Panopticon", false},
 		{"Bird", false},
-		{"Church", false}
+		{"Church", false},
+		{"TN1", false}
 	};
 }
 
@@ -65,10 +66,10 @@ update{
 		vars.state = 1; //Just left the menu
 	} else if(vars.state == 1 && current.Chapter == 1 && current.SubChapter < 1){
 		if(old.Cutscene == 1 && current.Cutscene == 0 && !current.Character.Contains("BruceWayne")){
-			vars.state = 2; //Cutscene ended after leaving the menu
+			vars.state = 2; //Start main story
 		} else if (settings["cchStart"] && old.bCinematicMode == 135508224 && current.bCinematicMode == 135270656 
 					&& current.Character.Contains("BruceWayne")){
-			vars.state = 4;
+			vars.state = 4; // Start CCH
 		}
 	} else if(vars.state != 0 && old.MainMenu == 0 && current.MainMenu == 1){
 		vars.state = 0; //Returned to the menu
@@ -83,9 +84,6 @@ start{
 		vars.state = 5;
 		return true;
 	}
-	// Potential CCH start
-	//bCinematicMode->135508224
-	//bCinematicMode->135270656
 }
 
 split{
@@ -114,6 +112,12 @@ split{
 			return false; // Splashdown
 		} else if("RegentHotel_B3".Equals(current.LastDoorRoom) && current.Chapter == 6 && current.SubChapter == 2){
 			return false; // Bane start cutscene
+		} else if("Prison_S3".Equals(current.CurrentLevel) && current.Chapter == 8 && current.SubChapter == 2){
+			if(!vars.splitOnce["TN1"]){
+				vars.splitOnce["TN1"] = true;
+				return true;
+			}
+			return false; // Stop split on reloading TN-1 Bane
 		} else if("Prison".Equals(current.PersistentLevel) && current.Chapter == 9){
 			return false; // Endgame cutscene and post-credit cutscene
 		} else if("GothCorp_C3".Equals(current.CurrentLevel) && current.Chapter == 5){
@@ -150,7 +154,7 @@ split{
 		} else if(!vars.splitOnce["SteelMill"] && "OldGotham_C4".Equals(old.LastDoorRoom) && "SteelMill_A1".Equals(current.LastDoorRoom)){
 			vars.splitOnce["SteelMill"] = true;
 			return true; // Enter Steel Mill
-		} else if(!vars.splitOnce["Sewersii"] && ("NewGotham_T1".Equals(old.LastDoorRoom) || "NewGotham_C1".Equals(old.CurrentLevel)) 
+		} else if(!vars.splitOnce["Sewersii"] && ("NewGotham_T1".Equals(old.LastDoorRoom) || "NewGotham_C1".Equals(old.LastDoorRoom)) 
 					&& "PoliceStation_C7".Equals(current.LastDoorRoom) && current.Chapter == 7){
 			vars.splitOnce["Sewersii"] = true;
 			return true; // Enter Sewers II
