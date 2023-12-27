@@ -1,7 +1,6 @@
 /*********************************************
  * Batman: Arkham Origins Autosplitter v3.0  *
- * Memory addresses found by JohnStephenEvil *
- * Code by GreenBat                          *
+ * By GreenBat                               *
  *********************************************/
 
 state("BatmanOrigins"){
@@ -26,9 +25,6 @@ startup{
 	
 	settings.Add("sc", true, "Split on Cutscenes");
 	
-	settings.Add("sp", true, "Prevent Superfluous Splits");
-	settings.SetToolTip("sp", "Add a 3 second cooldown after cutscene splits to prevent unwanted splits");
-	
 	settings.Add("cch", true, "CCH");
 	settings.Add("cchStart", true, "Auto-Start", "cch");
 	settings.SetToolTip("cchStart", "Enables Auto-start for CCH, you must use a +5.3s offset");
@@ -38,7 +34,7 @@ startup{
 				|| (interior.Equals(prev) && exterior.Equals(curr));
 	};
 	vars.EnterExit = EnterExit;
-	vars.t = 0;
+	vars.lastCutscene = 0;
 	vars.state = 0;
 	vars.cooldown = 3000;
 	vars.bridgeLoadCount = 0;
@@ -52,7 +48,6 @@ startup{
 		{"ExitSteelMill", false},
 		{"BaneHQ", false},
 		{"Deadshot", false},
-		{"BridgeSkip", false},
 		{"BombRoom", false},
 		{"Panopticon", false},
 		{"Bird", false},
@@ -87,18 +82,20 @@ start{
 }
 
 split{
-	//Disable cooldown if we're not using it
-	if(settings["sp"] && settings["sc"]){
-		if(old.Cutscene == 1 && current.Cutscene == 0){
-			vars.t = Environment.TickCount;
-			return false;
-		} else if(old.Cutscene == 0 && current.Cutscene == 1 && Environment.TickCount - vars.t < vars.cooldown){
-			return false;
-		}
+	// Once cutscene ends save current time and wait for cooldown
+	if(settings["sc"] && old.Cutscene == 1 && current.Cutscene == 0){
+		vars.lastCutscene = Environment.TickCount;
+		return false;
 	}
 	
 	// Cutscenes
 	if(settings["sc"] && old.Cutscene == 0 && current.Cutscene == 1){
+		// Wait for cooldown before splitting on the next cutscene
+		// Used as fast travelling has multiple cutscenes back-to-back
+		if(Environment.TickCount - vars.lastCutscene < vars.cooldown){
+			return false;
+		}
+		
 		if("BatCaveHQ".Equals(current.PersistentLevel) && current.Chapter == 2 && current.SubChapter == 0){
 			return false; // Stop split on use batcomputer and fast travel out of batcave for the first time
 		} else if("PoliceStation".Equals(current.PersistentLevel) && current.Chapter == 4){
@@ -130,9 +127,9 @@ split{
 	if(old.isLoading == 0 && current.isLoading == 1){
 		if(current.Chapter == 3 && current.SubChapter == 2 && "PoliceStation_A1".Equals(current.LastDoorRoom)){
 			return true; // Exit GCPD
-		} else if(current.Chapter == 7 && current.SubChapter == 1 && !string.IsNullOrWhiteSpace(current.CurrentLevel) && "Bridge_A3".Equals(current.CurrentLevel)){
+		} else if(current.Chapter == 7 && current.SubChapter == 1 && "Bridge_A3".Equals(current.CurrentLevel) && vars.bridgeLoadCount < 2){
 			vars.bridgeLoadCount++;
-		} else if(current.Chapter == 7 && current.SubChapter == 2 && !string.IsNullOrWhiteSpace(current.CurrentLevel) && "GothamBridge_C1".Equals(current.CurrentLevel)){
+		} else if(current.Chapter == 7 && current.SubChapter == 2 && "GothamBridge_C1".Equals(current.CurrentLevel) && vars.bridgeLoadCount < 2){
 			vars.bridgeLoadCount++;
 		}
 	}
@@ -140,8 +137,8 @@ split{
 	// Area Changes
 	if((old.PersistentLevel != current.PersistentLevel && !(string.IsNullOrWhiteSpace(old.PersistentLevel) || string.IsNullOrWhiteSpace(current.PersistentLevel)))
 			|| (old.CurrentLevel != current.CurrentLevel  && !(string.IsNullOrWhiteSpace(old.CurrentLevel) || string.IsNullOrWhiteSpace(current.CurrentLevel)))
-			|| (old.LastDoorRoom != current.LastDoorRoom  && !(string.IsNullOrWhiteSpace(old.LastDoorRoom) || string.IsNullOrWhiteSpace(current.LastDoorRoom)))){
-		if(old.PersistentLevel.Contains("BatCaveHQ") && current.PersistentLevel.Contains("tower") && current.Chapter == 2){
+			|| old.LastDoorRoom != current.LastDoorRoom){
+		if("BatCaveHQ".Equals(old.PersistentLevel) && "tower".Equals(current.PersistentLevel) && current.Chapter == 2){
 			return true; // Enter Coventry GCR Tower
 		} else if("Tower_C1".Equals(old.CurrentLevel) && "NewGotham_A3".Equals(current.CurrentLevel) && current.Chapter == 2){
 			return true; // Exit GCR Tower
@@ -163,8 +160,9 @@ split{
 			return true; // Joker's Funhouse
 		} else if("PoliceStation_C3".Equals(old.CurrentLevel) && "PoliceStation_B2".Equals(current.CurrentLevel) && current.Chapter == 7){
 			return true; // Autopsy Report in Sewers
-		} else if(!vars.splitOnce["BridgeSkip"] && "OpenWorld".Equals(old.PersistentLevel) && "GothamBridge".Equals(current.PersistentLevel) && vars.bridgeLoadCount == 2){
-			vars.splitOnce["BridgeSkip"] = true;
+		} else if(vars.bridgeLoadCount == 2 && (("OpenWorld".Equals(old.PersistentLevel) && "GothamBridge".Equals(current.PersistentLevel)) 
+					|| (string.IsNullOrWhiteSpace(old.LastDoorRoom) && "GothamBridge_C1".Equals(current.LastDoorRoom)))){
+			vars.bridgeLoadCount++;
 			return true; // Bridge Skip
 		} else if(!vars.splitOnce["BombRoom"] && "GothamBridge_C1".Equals(old.CurrentLevel) && "GothamBridge_B1".Equals(current.CurrentLevel) 
 					&& current.Chapter == 7 && current.SubChapter == 2){
