@@ -148,11 +148,10 @@ split{
 		} else if(!vars.splitOnce["Bank"] && "Bank_A1".Equals(old.LastDoorRoom) && "OldGotham_F1".Equals(current.LastDoorRoom) && current.Chapter == 4){
 			vars.splitOnce["Bank"] = true;
 			return true; // Exit Bank
-		} else if(!vars.splitOnce["SteelMill"] && "OldGotham_C4".Equals(old.LastDoorRoom) && "SteelMill_A1".Equals(current.LastDoorRoom)){
+		} else if(!vars.splitOnce["SteelMill"] && !"SteelMill_A1".Equals(old.LastDoorRoom) && "SteelMill_A1".Equals(current.LastDoorRoom)){
 			vars.splitOnce["SteelMill"] = true;
 			return true; // Enter Steel Mill
-		} else if(!vars.splitOnce["Sewersii"] && ("NewGotham_T1".Equals(old.LastDoorRoom) || "NewGotham_C1".Equals(old.LastDoorRoom)) 
-					&& "PoliceStation_C7".Equals(current.LastDoorRoom) && current.Chapter == 7){
+		} else if(!vars.splitOnce["Sewersii"] && !"PoliceStation_C7".Equals(old.LastDoorRoom) && "PoliceStation_C7".Equals(current.LastDoorRoom) && current.Chapter == 7){
 			vars.splitOnce["Sewersii"] = true;
 			return true; // Enter Sewers II
 		} else if(!vars.splitOnce["Funhouse"] && "RegentHotel_A1".Equals(old.CurrentLevel) && "RegentHotel_B4".Equals(current.CurrentLevel)){
