@@ -216,7 +216,7 @@ split{
 	}
 	
 	//---Other---
-	if(current.lastDoorRoom.Contains("Under_S2") && old.clayface == current.clayface - 32){
+	if(!string.IsNullOrWhiteSpace(current.lastDoorRoom) && current.lastDoorRoom.Contains("Under_S2") && old.clayface == current.clayface - 32){
 		return true; //Clayface interaction
 	}
 }
