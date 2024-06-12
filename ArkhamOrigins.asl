@@ -64,19 +64,35 @@ update{
 			vars.state = 2; //Start main story
 		} else if (settings["cchStart"] && old.bCinematicMode == 135508224 && current.bCinematicMode == 135270656 
 					&& current.Character.Contains("BruceWayne")){
-			vars.state = 4; // Start CCH
+			vars.state = 2; // Start CCH
 		}
 	} else if(vars.state != 0 && old.MainMenu == 0 && current.MainMenu == 1){
 		vars.state = 0; //Returned to the menu
+	}
+	current.timerPhase = timer.CurrentPhase;
+	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
+		vars.splitOnce = new Dictionary<string, bool>(){
+			{"Lacey", false},
+			{"GCPD", false},
+			{"Bank", false},
+			{"Sewersii", false},
+			{"Funhouse", false},
+			{"SteelMill", false},
+			{"ExitSteelMill", false},
+			{"BaneHQ", false},
+			{"Deadshot", false},
+			{"BombRoom", false},
+			{"Panopticon", false},
+			{"Bird", false},
+			{"Church", false},
+			{"TN1", false}
+		};
 	}
 }
 
 start{
 	if(vars.state == 2){
 		vars.state = 3;
-		return true;
-	} else if(vars.state == 4){
-		vars.state = 5;
 		return true;
 	}
 }
