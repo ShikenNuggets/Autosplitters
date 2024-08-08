@@ -71,6 +71,7 @@ update{
 	}
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
+		vars.bridgeLoadCount = 0;
 		vars.splitOnce = new Dictionary<string, bool>(){
 			{"Lacey", false},
 			{"GCPD", false},
