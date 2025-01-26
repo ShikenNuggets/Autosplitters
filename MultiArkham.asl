@@ -229,54 +229,56 @@ startup{
 	settings.Add("pauseOnFillerSplits", true, "Pause On Filler Splits");
 	
 	//------------------- Asylum -----------------------//
-	vars.shouldStart = 0;
-	vars.heartAttackFlag = 0; // Heart Attack
-	vars.batmobileFlag = 0; // Batmobile
-	vars.batclawSkipFlag = 0; // Batclaw Skip
-	vars.doubleTitanFlag = 0; // Double Titan
-	vars.ultraClawFlag = 0; // Bat-Better-Claw
-	vars.harleyFlag = 0;
-	vars.ivyFlag = 0;
-	vars.endFlag = 0; // End
+	vars.asylumShouldStart = 0;
+	vars.asylumHeartAttackFlag = 0; // Heart Attack
+	vars.asylumBatmobileFlag = 0; // Batmobile
+	vars.asylumBatclawSkipFlag = 0; // Batclaw Skip
+	vars.asylumDoubleTitanFlag = 0; // Double Titan
+	vars.asylumUltraClawFlag = 0; // Bat-Better-Claw
+	vars.asylumHarleyFlag = 0;
+	vars.asylumIvyFlag = 0;
+	vars.asylumEndFlag = 0; // End
 	
 	//-------------------- City ------------------------//
+	settings.Add("asylum", true, "Asylum");
+	
 	settings.Add("city", true, "City");
-	settings.Add("startAfterSkin", false, "Start After Skin Select", "city");
-	settings.SetToolTip("startAfterSkin", "If you wish to play with a skin, you'll need to enable this setting. If this setting is enabled, you'll need to open the skin select screen every time for the auto start to work, even if you're choosing the default skin.");
+	settings.Add("city-startAfterSkin", false, "Start After Skin Select", "city");
+	settings.SetToolTip("city-startAfterSkin", "If you wish to play with a skin, you'll need to enable this setting. If this setting is enabled, you'll need to open the skin select screen every time for the auto start to work, even if you're choosing the default skin.");
 	
-	settings.Add("legacyMode", false, "Legacy Mode [Not Recommended]", "city");
-	settings.SetToolTip("legacyMode", "Enables the old autosplitter settings, for those who wish to continue using them. If you don't know what this is, don't use it.");
+	settings.Add("city-legacyMode", false, "Legacy Mode [Not Recommended]", "city");
+	settings.SetToolTip("city-legacyMode", "Enables the old autosplitter settings, for those who wish to continue using them. If you don't know what this is, don't use it.");
 	
-	settings.Add("splitOnCutscene", false, "Split on Cutscenes", "legacyMode");
-	settings.Add("splitOnLoads", false, "Split on Loads", "legacyMode");
-	settings.SetToolTip("splitOnLoads", "This will give you more split points, but loads can happen at unexpected times. Be ready to undo splits a lot.");
-	settings.Add("splitOnBatsuit", false, "Split on Batsuit", "legacyMode");
-	settings.Add("splitOnClayface", false, "Split on Clayface", "legacyMode");
+	settings.Add("city-splitOnCutscene", false, "Split on Cutscenes", "city-legacyMode");
+	settings.Add("city-splitOnLoads", false, "Split on Loads", "city-legacyMode");
+	settings.SetToolTip("city-splitOnLoads", "This will give you more split points, but loads can happen at unexpected times. Be ready to undo splits a lot.");
+	settings.Add("city-splitOnBatsuit", false, "Split on Batsuit", "city-legacyMode");
+	settings.Add("city-splitOnClayface", false, "Split on Clayface", "city-legacyMode");
 	
-	vars.state = 0;
-	vars.cutscenesThisChapter = 0;
+	vars.cityState = 0;
+	vars.cityCutscenesThisChapter = 0;
 	
 	//------------------ Origins -----------------------//
 	settings.Add("origins", true, "Origins");
-	settings.Add("skin", false, "Split on picking a skin", "origins");
-	settings.SetToolTip("skin", "Splits on picking a skin at the beginning of the game after Blackgate");
+	settings.Add("origins-skin", false, "Split on picking a skin", "origins");
+	settings.SetToolTip("origins-skin", "Splits on picking a skin at the beginning of the game after Blackgate");
 	
-	settings.Add("sc", true, "Split on Cutscenes", "origins");
+	settings.Add("origins-sc", true, "Split on Cutscenes", "origins");
 	
-	settings.Add("cch", true, "CCH", "origins");
-	settings.Add("cchStart", true, "Auto-Start", "cch");
-	settings.SetToolTip("cchStart", "Enables Auto-start for CCH, you must use a +5.3s offset");
+	settings.Add("origins-cch", true, "CCH", "origins");
+	settings.Add("origins-cchStart", true, "Auto-Start", "origins-cch");
+	settings.SetToolTip("origins-cchStart", "Enables Auto-start for CCH, you must use a +5.3s offset");
 	
 	Func<string, string, string, string, bool> EnterExit = (exterior, interior, prev, curr) => {
 		return (exterior.Equals(prev) && interior.Equals(curr)) 
 				|| (interior.Equals(prev) && exterior.Equals(curr));
 	};
-	vars.EnterExit = EnterExit;
-	vars.lastCutscene = 0;
-	vars.state = 0;
-	vars.cooldown = 3000;
-	vars.bridgeLoadCount = 0;
-	vars.splitOnce = new Dictionary<string, bool>(){
+	vars.originsEnterExit = EnterExit;
+	vars.originsLastCutscene = 0;
+	vars.originsState = 0;
+	vars.originsCooldown = 3000;
+	vars.originsBridgeLoadCount = 0;
+	vars.originsSplitOnce = new Dictionary<string, bool>(){
 		{"Lacey", false},
 		{"GCPD", false},
 		{"Bank", false},
@@ -295,19 +297,19 @@ startup{
 	
 	//------------------- Knight -----------------------//
 	settings.Add("knight", true, "Knight");
-	settings.Add("highDetail", false, "High Detail Mode [Not Recommended]", "knight");
-	settings.SetToolTip("highDetail", "Use every possible split point. Not recommended");
-	settings.Add("sideMissions", false, "Side Missions", "knight");
-	settings.Add("splitOnJoker", false, "Split at the end of the Main Story", "knight");
+	settings.Add("knight-highDetail", false, "High Detail Mode [Not Recommended]", "knight");
+	settings.SetToolTip("knight-highDetail", "Use every possible split point. Not recommended");
+	settings.Add("knight-sideMissions", false, "Side Missions", "knight");
+	settings.Add("knight-splitOnJoker", false, "Split at the end of the Main Story", "knight");
 
-	vars.splitPoints = new List<int>{
+	vars.knightSplitPoints = new List<int>{
 		5, 10, 16, 20, 24, 26, 28, 31, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
 		64, 66, 67, 68, 69, 70, 73, 75, 77, 78, 79, 80, 82, 85, 87, 89, 90, 95, 96
 	};
-	vars.highestPercent = 0;
-	vars.individualHighest = new List<byte>(new byte[18]);
+	vars.knightHighestPercent = 0;
+	vars.knightIndividualHighest = new List<byte>(new byte[18]);
 	
-	vars.sideMissionNames = new List<string>{
+	vars.knightSideMissionNames = new List<string>{
 		"Firecrews", "Pyg", "Drones", "ManBat", "Azrael",
 		"Firefly", "Penguin", "Bank", "Hush","Blackfire",
 		"DLC_Freeze", "DLC_MadHatter", "DLC_Ras", "DLC_Croc"
@@ -338,19 +340,19 @@ init{
 update{
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
-		vars.heartAttackFlag = 0;
-		vars.batmobileFlag = 0;
-		vars.batclawSkipFlag = 0;
-		vars.doubleTitanFlag = 0;
-		vars.ultraClawFlag = 0;
-		vars.harleyFlag = 0;
-		vars.ivyFlag = 0;
-		vars.endFlag = 0;
+		vars.asylumHeartAttackFlag = 0;
+		vars.asylumBatmobileFlag = 0;
+		vars.asylumBatclawSkipFlag = 0;
+		vars.asylumDoubleTitanFlag = 0;
+		vars.asylumUltraClawFlag = 0;
+		vars.asylumHarleyFlag = 0;
+		vars.asylumIvyFlag = 0;
+		vars.asylumEndFlag = 0;
 		
-		vars.cutscenesThisChapter = 0;
+		vars.cityCutscenesThisChapter = 0;
 		
-		vars.bridgeLoadCount = 0;
-		vars.splitOnce = new Dictionary<string, bool>(){
+		vars.originsBridgeLoadCount = 0;
+		vars.originsSplitOnce = new Dictionary<string, bool>(){
 			{"Lacey", false},
 			{"GCPD", false},
 			{"Bank", false},
@@ -367,160 +369,160 @@ update{
 			{"TN1", false}
 		};
 		
-		vars.highestPercent = current.storyPercentage;
+		vars.knightHighestPercent = current.storyPercentage;
 		
-		vars.individualHighest = new List<byte>();
-		if(vars.sideMissionNames.Contains(current.sideMission1Name)){
-			vars.individualHighest.Add(current.sideMission1);
+		vars.knightIndividualHighest = new List<byte>();
+		if(vars.knightSideMissionNames.Contains(current.sideMission1Name)){
+			vars.knightIndividualHighest.Add(current.sideMission1);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission2Name)){
-			vars.individualHighest.Add(current.sideMission2);
+		if(vars.knightSideMissionNames.Contains(current.sideMission2Name)){
+			vars.knightIndividualHighest.Add(current.sideMission2);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission3Name)){
-			vars.individualHighest.Add(current.sideMission3);
+		if(vars.knightSideMissionNames.Contains(current.sideMission3Name)){
+			vars.knightIndividualHighest.Add(current.sideMission3);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission4Name)){
-			vars.individualHighest.Add(current.sideMission4);
+		if(vars.knightSideMissionNames.Contains(current.sideMission4Name)){
+			vars.knightIndividualHighest.Add(current.sideMission4);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission5Name)){
-			vars.individualHighest.Add(current.sideMission5);
+		if(vars.knightSideMissionNames.Contains(current.sideMission5Name)){
+			vars.knightIndividualHighest.Add(current.sideMission5);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission6Name)){
-			vars.individualHighest.Add(current.sideMission6);
+		if(vars.knightSideMissionNames.Contains(current.sideMission6Name)){
+			vars.knightIndividualHighest.Add(current.sideMission6);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission7Name)){
-			vars.individualHighest.Add(current.sideMission7);
+		if(vars.knightSideMissionNames.Contains(current.sideMission7Name)){
+			vars.knightIndividualHighest.Add(current.sideMission7);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission8Name)){
-			vars.individualHighest.Add(current.sideMission8);
+		if(vars.knightSideMissionNames.Contains(current.sideMission8Name)){
+			vars.knightIndividualHighest.Add(current.sideMission8);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission9Name)){
-			vars.individualHighest.Add(current.sideMission9);
+		if(vars.knightSideMissionNames.Contains(current.sideMission9Name)){
+			vars.knightIndividualHighest.Add(current.sideMission9);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission10Name)){
-			vars.individualHighest.Add(current.sideMission10);
+		if(vars.knightSideMissionNames.Contains(current.sideMission10Name)){
+			vars.knightIndividualHighest.Add(current.sideMission10);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission11Name)){
-			vars.individualHighest.Add(current.sideMission11);
+		if(vars.knightSideMissionNames.Contains(current.sideMission11Name)){
+			vars.knightIndividualHighest.Add(current.sideMission11);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission12Name)){
-			vars.individualHighest.Add(current.sideMission12);
+		if(vars.knightSideMissionNames.Contains(current.sideMission12Name)){
+			vars.knightIndividualHighest.Add(current.sideMission12);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission13Name)){
-			vars.individualHighest.Add(current.sideMission13);
+		if(vars.knightSideMissionNames.Contains(current.sideMission13Name)){
+			vars.knightIndividualHighest.Add(current.sideMission13);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission14Name)){
-			vars.individualHighest.Add(current.sideMission14);
+		if(vars.knightSideMissionNames.Contains(current.sideMission14Name)){
+			vars.knightIndividualHighest.Add(current.sideMission14);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission15Name)){
-			vars.individualHighest.Add(current.sideMission15);
+		if(vars.knightSideMissionNames.Contains(current.sideMission15Name)){
+			vars.knightIndividualHighest.Add(current.sideMission15);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission16Name)){
-			vars.individualHighest.Add(current.sideMission16);
+		if(vars.knightSideMissionNames.Contains(current.sideMission16Name)){
+			vars.knightIndividualHighest.Add(current.sideMission16);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission17Name)){
-			vars.individualHighest.Add(current.sideMission17);
+		if(vars.knightSideMissionNames.Contains(current.sideMission17Name)){
+			vars.knightIndividualHighest.Add(current.sideMission17);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
-		if(vars.sideMissionNames.Contains(current.sideMission18Name)){
-			vars.individualHighest.Add(current.sideMission18);
+		if(vars.knightSideMissionNames.Contains(current.sideMission18Name)){
+			vars.knightIndividualHighest.Add(current.sideMission18);
 		}else{
-			vars.individualHighest.Add(0);
+			vars.knightIndividualHighest.Add(0);
 		}
 	}
 	
 	//------------------- Asylum -----------------------//
 	if(game.ProcessName.ToLower() == "shippingpc-bmgame"){
-		if(old.mainMenu == 44 && current.mainMenu == 43 && vars.shouldStart == 0){
-			vars.shouldStart = 1; // Left Main Menu
-		}else if(current.lastRoom == "Max_C0" && old.cutscenePlaying == 1 && current.cutscenePlaying == 0 && vars.shouldStart == 1){
-			vars.shouldStart = 2; // Cutscene Ended, in Intro Walk Area
-		}else if(current.lastRoom == "Max_B3" && old.showHUD == current.showHUD - 2 && vars.shouldStart == 1){
-			vars.shouldStart = 2; // Entered Intro Fight Area, HUD was allocated
+		if(old.mainMenu == 44 && current.mainMenu == 43 && vars.asylumShouldStart == 0){
+			vars.asylumShouldStart = 1; // Left Main Menu
+		}else if(current.lastRoom == "Max_C0" && old.cutscenePlaying == 1 && current.cutscenePlaying == 0 && vars.asylumShouldStart == 1){
+			vars.asylumShouldStart = 2; // Cutscene Ended, in Intro Walk Area
+		}else if(current.lastRoom == "Max_B3" && old.showHUD == current.showHUD - 2 && vars.asylumShouldStart == 1){
+			vars.asylumShouldStart = 2; // Entered Intro Fight Area, HUD was allocated
 		}
 		
-		if(current.mainMenu == 44 && vars.shouldStart != 0){
-			vars.shouldStart = 0;
+		if(current.mainMenu == 44 && vars.asylumShouldStart != 0){
+			vars.asylumShouldStart = 0;
 		}
 	//-------------------- City ------------------------//
 	}else if(game.ProcessName.ToLower() == "batmanac"){
-		if(settings["startAfterSkin"] && vars.state == 0 && current.skin == 1){
-			vars.state = 4;
-		}else if(vars.state == 0 && old.inMainMenu == 1 && current.inMainMenu == 0){
-			vars.state = 1;
-		}else if(!settings["startAfterSkin"] && vars.state == 1 && old.cutscenePlaying == 1 && current.cutscenePlaying == 0){
-			vars.state = 2;
-		}else if(vars.state == 4 && old.isReloading == 0 && current.isReloading == 1){
-			vars.state = 2;
-		}else if(vars.state != 0 && old.inMainMenu == 0 && current.inMainMenu == 1){
-			vars.state = 0;
+		if(settings["startAfterSkin"] && vars.cityState == 0 && current.skin == 1){
+			vars.cityState = 4;
+		}else if(vars.cityState == 0 && old.inMainMenu == 1 && current.inMainMenu == 0){
+			vars.cityState = 1;
+		}else if(!settings["startAfterSkin"] && vars.cityState == 1 && old.cutscenePlaying == 1 && current.cutscenePlaying == 0){
+			vars.cityState = 2;
+		}else if(vars.cityState == 4 && old.isReloading == 0 && current.isReloading == 1){
+			vars.cityState = 2;
+		}else if(vars.cityState != 0 && old.inMainMenu == 0 && current.inMainMenu == 1){
+			vars.cityState = 0;
 		}
 	//------------------ Origins -----------------------//
 	}else if(game.ProcessName.ToLower() == "batmanorigins"){
-		if(vars.state == 0 && old.MainMenu == 1 && current.MainMenu == 0){
-			vars.state = 1; //Just left the menu
-		}else if(vars.state == 1 && current.Chapter == 1 && current.SubChapter < 1){
+		if(vars.originsState == 0 && old.MainMenu == 1 && current.MainMenu == 0){
+			vars.originsState = 1; //Just left the menu
+		}else if(vars.originsState == 1 && current.Chapter == 1 && current.SubChapter < 1){
 			if(old.Cutscene == 1 && current.Cutscene == 0 && !current.Character.Contains("BruceWayne")){
-				vars.state = 2; //Start main story
+				vars.originsState = 2; //Start main story
 			}else if (settings["cchStart"] && old.bCinematicMode == 135508224 && current.bCinematicMode == 135270656 
 						&& current.Character.Contains("BruceWayne")){
-				vars.state = 2; // Start CCH
+				vars.originsState = 2; // Start CCH
 			}
-		}else if(vars.state != 0 && old.MainMenu == 0 && current.MainMenu == 1){
-			vars.state = 0; //Returned to the menu
+		}else if(vars.originsState != 0 && old.MainMenu == 0 && current.MainMenu == 1){
+			vars.originsState = 0; //Returned to the menu
 		}
 	}
 }
 
 start{
 	//------------------- Asylum -----------------------//
-	if(game.ProcessName.ToLower() == "shippingpc-bmgame" && vars.shouldStart == 2){
-		vars.shouldStart = 0;
+	if(settings["asylum"] && game.ProcessName.ToLower() == "shippingpc-bmgame" && vars.asylumShouldStart == 2){
+		vars.asylumShouldStart = 0;
 		return true;
 	}
 	
 	//-------------------- City ------------------------//
-	if(game.ProcessName.ToLower() == "batmanac" && vars.state == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
-		vars.state = 3;
+	if(settings["city"] && game.ProcessName.ToLower() == "batmanac" && vars.cityState == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
+		vars.cityState = 3;
 		return true;
 	}
 	
 	//------------------ Origins -----------------------//
-	if(game.ProcessName.ToLower() == "batmanorigins" && vars.state == 2){
-		vars.state = 3;
+	if(settings["origins"] && game.ProcessName.ToLower() == "batmanorigins" && vars.originsState == 2){
+		vars.originsState = 3;
 		return true;
 	}
 }
@@ -529,16 +531,22 @@ split{
 	//--------------------------------------------------//
 	//------------------- Asylum -----------------------//
 	//--------------------------------------------------//
-	if(game.ProcessName.ToLower() == "shippingpc-bmgame"){
+	if(settings["asylum"] && game.ProcessName.ToLower() == "shippingpc-bmgame"){
+		print(vars.asylumShouldStart.ToString());
+		if(vars.asylumShouldStart == 2){
+			vars.asylumShouldStart = 0;
+			return true;
+		}
+		
 		if(old.cutscenePlaying == 0 && current.cutscenePlaying == 1){
 			if(current.roomName == "Max_B4"){
 				return true; // Zsasz
 			}else if(current.roomName == "Max_C5"){
-				if(vars.heartAttackFlag == 1){
-					vars.heartAttackFlag++;
+				if(vars.asylumHeartAttackFlag == 1){
+					vars.asylumHeartAttackFlag++;
 					return true; // Heart Attack
 				}
-				vars.heartAttackFlag++;
+				vars.asylumHeartAttackFlag++;
 			}else if(current.roomName == "Medical_A" || current.roomName == "Medical_C2"){
 				return true; // Dr. Skip
 			}else if(current.lastRoom == "Medical_B7"){
@@ -546,29 +554,29 @@ split{
 			}else if(current.roomName == "Cell_B2"){
 				return true; // Warden
 			}else if(current.roomName == "Cell_B1"){
-				vars.ultraClawFlag = 0; // Reset Bat-Better-Claw flag, in case NMS
-				vars.harleyFlag = 1;
+				vars.asylumUltraClawFlag = 0; // Reset Bat-Better-Claw flag, in case NMS
+				vars.asylumHarleyFlag = 1;
 				return true; // Harley
 			}else if(current.lastRoom == "Max_C1"){
 				return true; //Did anyone catch the game last night (NMS)
 			}else if(current.roomName == "Cave_B5"){
 				return true; //Croc Start for NMS
 			}else if(current.roomName == "Garden_B7"){
-				vars.ivyFlag = 1;
+				vars.asylumIvyFlag = 1;
 				return true; // Ivy
 			}else if(current.roomName == "Visitor_C1" || current.roomName == "Visitor_B1"){
-				if(vars.doubleTitanFlag == 1){
-					vars.doubleTitanFlag++;
+				if(vars.asylumDoubleTitanFlag == 1){
+					vars.asylumDoubleTitanFlag++;
 					return true; // Double Titan
 				}
-				vars.doubleTitanFlag++;
+				vars.asylumDoubleTitanFlag++;
 			}
 		}else if(old.roomName == "Medical_S1" && current.roomName == "Medical_B5"){
 			return true; // Scarecrow 1
 		}else if(string.IsNullOrWhiteSpace(old.roomName) && current.roomName == "Medical_B5"){
 			return true; // Scarecrow 1, if you reload
-		}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.batclawSkipFlag == 0 && current.batmanX > 0){
-			vars.batclawSkipFlag = 1;
+		}else if(current.roomName == "Admin_C1" && old.openingDoor == current.openingDoor - 2 && current.batclaw == 0 && vars.asylumBatclawSkipFlag == 0 && current.batmanX > 0){
+			vars.asylumBatclawSkipFlag = 1;
 			return true; // Batclaw Skip, does not split in NMS
 		}else if(old.roomName == "Admin_B1" && current.roomName == "Admin_C9"){
 			return true; //Wayne Manor (NMS)
@@ -576,37 +584,37 @@ split{
 			return true; //End Scarecrow 2 (NMS)
 		}else if(old.roomName == "Admin_C1" && current.roomName == "Overworld_A3"){
 			return true; // Bell Skip (Leaving the Mansion)
-		}else if(old.roomName == "Cave_C1_Desc" && current.roomName == "Cave_B5" && vars.ivyFlag == 0){
+		}else if(old.roomName == "Cave_C1_Desc" && current.roomName == "Cave_B5" && vars.asylumIvyFlag == 0){
 			return true; // Croc Start
 		}else if(old.roomName == "Cave_B5" && current.roomName == "Cave_C1_Desc"){
 			return true; // Killer Croc (Leaving the Croc area)
 		}else if(old.roomName == "Cave_C6" && current.roomName == "Overworld_A1"){
 			return true; // Leaving Elevator
-		}else if(current.roomName == "Overworld_A2" && old.gel != current.gel && vars.batmobileFlag == 0){
-			vars.batmobileFlag++;
+		}else if(current.roomName == "Overworld_A2" && old.gel != current.gel && vars.asylumBatmobileFlag == 0){
+			vars.asylumBatmobileFlag++;
 			return true; // Batmobile
 		}else if(current.lastRoom == "Garden_B5" && old.lineLauncher != current.lineLauncher){
 			return true; // Line Launcher
 		}else if(current.roomName == "Cave_B1_Desc" && old.batclaw != current.batclaw){
-			if(vars.ultraClawFlag == 0){
-				vars.ultraClawFlag = 1;
+			if(vars.asylumUltraClawFlag == 0){
+				vars.asylumUltraClawFlag = 1;
 				return true; // Bat-Better-Claw
 			}
 		}else if(current.roomName == "Visitor_B2" && old.transitionId != current.transitionId){
 			if(current.transitionId == 0){
-				vars.endFlag = 0; // Reset the flag so the split still works if you reload mid-fight
+				vars.asylumEndFlag = 0; // Reset the flag so the split still works if you reload mid-fight
 			}else{
-				if(vars.endFlag == 5){
-					vars.endFlag++;
+				if(vars.asylumEndFlag == 5){
+					vars.asylumEndFlag++;
 					return true; // End
 				}
-				vars.endFlag++;
+				vars.asylumEndFlag++;
 			}
 		}
 		
 		//Hundo Splits - Hundo backtracks all start after getting the ultra claw
-		if(vars.harleyFlag == 1 && vars.ultraClawFlag == 1){
-			if(vars.ivyFlag == 0 && old.roomName == "Medical_C5" && current.roomName == "Overworld_A1"){
+		if(vars.asylumHarleyFlag == 1 && vars.asylumUltraClawFlag == 1){
+			if(vars.asylumIvyFlag == 0 && old.roomName == "Medical_C5" && current.roomName == "Overworld_A1"){
 				return true; //Medical Backtrack (only splits before Ivy)
 			}else if(old.roomName == "Cave_C2" && current.roomName == "Max_B1"){
 				return true; //Sewer Backtrack
@@ -621,7 +629,12 @@ split{
 	//--------------------------------------------------//
 	//-------------------- City ------------------------//
 	//--------------------------------------------------//
-	}else if(game.ProcessName.ToLower() == "batmanac"){
+	}else if(settings["city"] && game.ProcessName.ToLower() == "batmanac"){
+		if(vars.cityState == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
+			vars.cityState = 3;
+			return true;
+		}
+		
 		bool anyLegacySettingsEnabled = settings["splitOnCutscene"] || settings["splitOnLoads"] || settings["splitOnBatsuit"] || settings["splitOnClayface"];
 		if(settings["legacyMode"] && anyLegacySettingsEnabled){
 			if(settings["splitOnCutscene"] && old.cutscenePlaying == 0 && current.cutscenePlaying == 1){
@@ -662,15 +675,15 @@ split{
 		//0 usually just means a quit to menu happened, so ignore that
 		//There's only one cutscene in chapter 9 (and it probably means a quit to menu in NG+), so ignore that too
 		if(old.chapter != current.chapter && current.chapter != 0 && current.chapter != 9){
-			vars.cutscenesThisChapter = 0;
+			vars.cityCutscenesThisChapter = 0;
 		}
 		
 		//---Cutscenes---
 		if(old.cutscenePlaying == 0 && current.cutscenePlaying == 1){
-			vars.cutscenesThisChapter++;
+			vars.cityCutscenesThisChapter++;
 			if(current.chapter == 1 && current.subChapter == 2 && old.currentLevel.Contains("Court_")){
 				//Ignore Courthouse 1 and 2
-			}else if(current.chapter == 3 && current.subChapter == 1 && old.currentLevel.Contains("Steel_") && vars.cutscenesThisChapter > 1){
+			}else if(current.chapter == 3 && current.subChapter == 1 && old.currentLevel.Contains("Steel_") && vars.cityCutscenesThisChapter > 1){
 				//Ignore second cutscene in Steel Mill, but ONLY if we're in the Steel Mill (i.e. not w/Cat)
 			}else if(current.chapter == 3 && current.subChapter == 3 && current.lastDoorRoom.Contains("Museum_B1")){
 				//Ignore Gladiator Pit cutscene
@@ -754,10 +767,15 @@ split{
 	//--------------------------------------------------//
 	//------------------ Origins -----------------------//
 	//--------------------------------------------------//
-	}else if(game.ProcessName.ToLower() == "batmanorigins"){
+	}else if(settings["origins"] && game.ProcessName.ToLower() == "batmanorigins"){
+		if(vars.originsState == 2){
+			vars.originsState = 3;
+			return true;
+		}
+		
 		// Once cutscene ends save current time and wait for cooldown
 		if(settings["sc"] && old.Cutscene == 1 && current.Cutscene == 0){
-			vars.lastCutscene = Environment.TickCount;
+			vars.originsLastCutscene = Environment.TickCount;
 			return false;
 		}
 		
@@ -765,7 +783,7 @@ split{
 		if(settings["sc"] && old.Cutscene == 0 && current.Cutscene == 1){
 			// Wait for cooldown before splitting on the next cutscene
 			// Used as fast travelling has multiple cutscenes back-to-back
-			if(Environment.TickCount - vars.lastCutscene < vars.cooldown){
+			if(Environment.TickCount - vars.originsLastCutscene < vars.originsCooldown){
 				return false;
 			}
 			
@@ -783,8 +801,8 @@ split{
 			} else if("RegentHotel_B3".Equals(current.LastDoorRoom) && current.Chapter == 6 && current.SubChapter == 2){
 				return false; // Bane start cutscene
 			} else if("Prison_S3".Equals(current.CurrentLevel) && current.Chapter == 8 && current.SubChapter == 2){
-				if(!vars.splitOnce["TN1"]){
-					vars.splitOnce["TN1"] = true;
+				if(!vars.originsSplitOnce["TN1"]){
+					vars.originsSplitOnce["TN1"] = true;
 					return true;
 				}
 				return false; // Stop split on reloading TN-1 Bane
@@ -800,10 +818,10 @@ split{
 		if(old.isLoading == 0 && current.isLoading == 1){
 			if(current.Chapter == 3 && current.SubChapter == 2 && "PoliceStation_A1".Equals(current.LastDoorRoom)){
 				return true; // Exit GCPD
-			} else if(current.Chapter == 7 && current.SubChapter == 1 && "Bridge_A3".Equals(current.CurrentLevel) && vars.bridgeLoadCount < 2){
-				vars.bridgeLoadCount++;
-			} else if(current.Chapter == 7 && current.SubChapter == 2 && "GothamBridge_C1".Equals(current.CurrentLevel) && vars.bridgeLoadCount < 2){
-				vars.bridgeLoadCount++;
+			}else if(current.Chapter == 7 && current.SubChapter == 1 && "Bridge_A3".Equals(current.CurrentLevel) && vars.originsBridgeLoadCount < 2){
+				vars.originsBridgeLoadCount++;
+			}else if(current.Chapter == 7 && current.SubChapter == 2 && "GothamBridge_C1".Equals(current.CurrentLevel) && vars.originsBridgeLoadCount < 2){
+				vars.originsBridgeLoadCount++;
 			}
 		}
 		
@@ -815,20 +833,20 @@ split{
 				return true; // Enter Coventry GCR Tower
 			} else if("Tower_C1".Equals(old.CurrentLevel) && "NewGotham_A3".Equals(current.CurrentLevel) && current.Chapter == 2){
 				return true; // Exit GCR Tower
-			} else if(!vars.splitOnce["Lacey"] && "NewGotham_A9".Equals(old.LastDoorRoom) && "Appartment_S0".Equals(current.LastDoorRoom)){
-				vars.splitOnce["Lacey"] = true;
+			} else if(!vars.originsSplitOnce["Lacey"] && "NewGotham_A9".Equals(old.LastDoorRoom) && "Appartment_S0".Equals(current.LastDoorRoom)){
+				vars.originsSplitOnce["Lacey"] = true;
 				return true; // Enter Lacey Towers
-			} else if(!vars.splitOnce["Bank"] && "Bank_A1".Equals(old.LastDoorRoom) && "OldGotham_F1".Equals(current.LastDoorRoom) && current.Chapter == 4){
-				vars.splitOnce["Bank"] = true;
+			} else if(!vars.originsSplitOnce["Bank"] && "Bank_A1".Equals(old.LastDoorRoom) && "OldGotham_F1".Equals(current.LastDoorRoom) && current.Chapter == 4){
+				vars.originsSplitOnce["Bank"] = true;
 				return true; // Exit Bank
-			} else if(!vars.splitOnce["SteelMill"] && !"SteelMill_A1".Equals(old.LastDoorRoom) && "SteelMill_A1".Equals(current.LastDoorRoom)){
-				vars.splitOnce["SteelMill"] = true;
+			} else if(!vars.originsSplitOnce["SteelMill"] && !"SteelMill_A1".Equals(old.LastDoorRoom) && "SteelMill_A1".Equals(current.LastDoorRoom)){
+				vars.originsSplitOnce["SteelMill"] = true;
 				return true; // Enter Steel Mill
-			} else if(!vars.splitOnce["Sewersii"] && !"PoliceStation_C7".Equals(old.LastDoorRoom) && "PoliceStation_C7".Equals(current.LastDoorRoom) && current.Chapter == 7){
-				vars.splitOnce["Sewersii"] = true;
+			} else if(!vars.originsSplitOnce["Sewersii"] && !"PoliceStation_C7".Equals(old.LastDoorRoom) && "PoliceStation_C7".Equals(current.LastDoorRoom) && current.Chapter == 7){
+				vars.originsSplitOnce["Sewersii"] = true;
 				return true; // Enter Sewers II
-			} else if(!vars.splitOnce["Funhouse"] && "RegentHotel_A1".Equals(old.CurrentLevel) && "RegentHotel_B4".Equals(current.CurrentLevel)){
-				vars.splitOnce["Funhouse"] = true;
+			} else if(!vars.originsSplitOnce["Funhouse"] && "RegentHotel_A1".Equals(old.CurrentLevel) && "RegentHotel_B4".Equals(current.CurrentLevel)){
+				vars.originsSplitOnce["Funhouse"] = true;
 				return true; // Joker's Funhouse
 			} else if("PoliceStation_C3".Equals(old.CurrentLevel) && "PoliceStation_B2".Equals(current.CurrentLevel) && current.Chapter == 7){
 				return true; // Autopsy Report in Sewers
@@ -836,12 +854,12 @@ split{
 						|| (string.IsNullOrWhiteSpace(old.LastDoorRoom) && "GothamBridge_C1".Equals(current.LastDoorRoom)))){
 				vars.bridgeLoadCount++;
 				return true; // Bridge Skip
-			} else if(!vars.splitOnce["BombRoom"] && "GothamBridge_C1".Equals(old.CurrentLevel) && "GothamBridge_B1".Equals(current.CurrentLevel) 
+			} else if(!vars.originsSplitOnce["BombRoom"] && "GothamBridge_C1".Equals(old.CurrentLevel) && "GothamBridge_B1".Equals(current.CurrentLevel) 
 						&& current.Chapter == 7 && current.SubChapter == 2){
-				vars.splitOnce["BombRoom"] = true;
+				vars.originsSplitOnce["BombRoom"] = true;
 				return true; // Bomb room pred
-			} else if(!vars.splitOnce["Panopticon"] && "Prison_C5".Equals(old.LastDoorRoom) && "Prison_B3".Equals(current.LastDoorRoom) && current.Chapter == 8){
-				vars.splitOnce["Panopticon"] = true;
+			} else if(!vars.originsSplitOnce["Panopticon"] && "Prison_C5".Equals(old.LastDoorRoom) && "Prison_B3".Equals(current.LastDoorRoom) && current.Chapter == 8){
+				vars.originsSplitOnce["Panopticon"] = true;
 				return true; // Prison door to fight after saving Harely
 			}
 			// CCH
@@ -857,20 +875,20 @@ split{
 				return true; // Defeat Mad Hatter
 			} else if("Shiva".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
 				return true; // Shiva first/final test
-			} else if(!vars.splitOnce["ExitSteelMill"] && current.Chapter > 6 && "SteelMill".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
-				vars.splitOnce["ExitSteelMill"] = true;
+			} else if(!vars.originsSplitOnce["ExitSteelMill"] && current.Chapter > 6 && "SteelMill".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
+				vars.originsSplitOnce["ExitSteelMill"] = true;
 				return true; // Exit Steel Mill (backtrack)
-			} else if(!vars.splitOnce["Church"] && "OpenWorld".Equals(old.PersistentLevel) && "Church".Equals(current.PersistentLevel)){
-				vars.splitOnce["Church"] = true;
+			} else if(!vars.originsSplitOnce["Church"] && "OpenWorld".Equals(old.PersistentLevel) && "Church".Equals(current.PersistentLevel)){
+				vars.originsSplitOnce["Church"] = true;
 				return true; // Blackmask
-			} else if(!vars.splitOnce["Deadshot"] && current.Chapter == 7 && current.SubChapter == 1 
-						&& vars.EnterExit("OpenWorld", "Bank", old.PersistentLevel, current.PersistentLevel)){
+			} else if(!vars.originsSplitOnce["Deadshot"] && current.Chapter == 7 && current.SubChapter == 1 
+						&& vars.originsEnterExit("OpenWorld", "Bank", old.PersistentLevel, current.PersistentLevel)){
 				if("Bank".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
-					vars.splitOnce["Deadshot"] = true; // Deadshot
+					vars.originsSplitOnce["Deadshot"] = true; // Deadshot
 				}
 				return true;
-			} else if(!vars.splitOnce["Bird"] && "SleazyClub".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
-				vars.splitOnce["Bird"] = true;
+			} else if(!vars.originsSplitOnce["Bird"] && "SleazyClub".Equals(old.PersistentLevel) && "OpenWorld".Equals(current.PersistentLevel)){
+				vars.originsSplitOnce["Bird"] = true;
 				return true; // Bird
 			} else if("OpenWorld".Equals(old.PersistentLevel) && "Enigma".Equals(current.PersistentLevel) && current.Chapter == 9){
 				return true; // Finish Enigma
@@ -884,8 +902,8 @@ split{
 					return true; // Enter Final Offer
 				} else if(current.Chapter == 2 && old.SubChapter == 1 && current.SubChapter == 2){
 					return true; // Elevator after casino in Final Offer
-				} else if (!vars.splitOnce["GCPD"] && current.Chapter == 3 && old.SubChapter == 0 && current.SubChapter == 1){
-					vars.splitOnce["GCPD"] = true;
+				} else if (!vars.originsSplitOnce["GCPD"] && current.Chapter == 3 && old.SubChapter == 0 && current.SubChapter == 1){
+					vars.originsSplitOnce["GCPD"] = true;
 					return true; // Enter GCPD for the first time
 				} else if (current.Chapter == 3 && old.SubChapter == 1 && current.SubChapter == 2){
 					return true; // Pickup disruptor
@@ -897,8 +915,8 @@ split{
 					return true; // Splashdown
 				} else if(current.Chapter == 7 && current.SubChapter == 0 && old.SideChapter == 4 && current.SideChapter == 5){
 					return true; // Anarky (100%)
-				} else if(!vars.splitOnce["BaneHQ"] && current.Chapter == 7 && current.SubChapter == 1 && (old.Chapter < 7 || old.SubChapter == 0)){
-					vars.splitOnce["BaneHQ"] = true;
+				} else if(!vars.originsSplitOnce["BaneHQ"] && current.Chapter == 7 && current.SubChapter == 1 && (old.Chapter < 7 || old.SubChapter == 0)){
+					vars.originsSplitOnce["BaneHQ"] = true;
 					return true; // Bane HQ
 				} else if(current.Chapter == 7 && old.SubChapter == 1 && current.SubChapter == 2){
 					return true; // Talk to Gordon inside Bridge
@@ -936,66 +954,66 @@ split{
 	//--------------------------------------------------//
 	//------------------- Knight -----------------------//
 	//--------------------------------------------------//
-	}else if(game.ProcessName.ToLower() == "batmanak"){
-		if(current.storyPercentage > vars.highestPercent){
-			vars.highestPercent = current.storyPercentage;
-			if(settings["highDetail"] || vars.splitPoints.Contains(current.storyPercentage)){
+	}else if(settings["knight"] && game.ProcessName.ToLower() == "batmanak"){	
+		if(current.storyPercentage > vars.knightHighestPercent){
+			vars.knightHighestPercent = current.storyPercentage;
+			if(settings["highDetail"] || vars.knightSplitPoints.Contains(current.storyPercentage)){
 				return true;
 			}
 		}else if(settings["sideMissions"]){
-			if(vars.sideMissionNames.Contains(current.sideMission1Name) && vars.individualHighest[0] < current.sideMission1){
-				vars.individualHighest[0] = current.sideMission1;
+			if(vars.knightSideMissionNames.Contains(current.sideMission1Name) && vars.knightIndividualHighest[0] < current.sideMission1){
+				vars.knightIndividualHighest[0] = current.sideMission1;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission2Name) && vars.individualHighest[1] < current.sideMission2){
-				vars.individualHighest[1] = current.sideMission2;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission2Name) && vars.knightIndividualHighest[1] < current.sideMission2){
+				vars.knightIndividualHighest[1] = current.sideMission2;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission3Name) && vars.individualHighest[2] < current.sideMission3){
-				vars.individualHighest[2] = current.sideMission3;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission3Name) && vars.knightIndividualHighest[2] < current.sideMission3){
+				vars.knightIndividualHighest[2] = current.sideMission3;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission4Name) && vars.individualHighest[3] < current.sideMission4){
-				vars.individualHighest[3] = current.sideMission4;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission4Name) && vars.knightIndividualHighest[3] < current.sideMission4){
+				vars.knightIndividualHighest[3] = current.sideMission4;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission5Name) && vars.individualHighest[4] < current.sideMission5){
-				vars.individualHighest[4] = current.sideMission5;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission5Name) && vars.knightIndividualHighest[4] < current.sideMission5){
+				vars.knightIndividualHighest[4] = current.sideMission5;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission6Name) && vars.individualHighest[5] < current.sideMission6){
-				vars.individualHighest[5] = current.sideMission6;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission6Name) && vars.knightIndividualHighest[5] < current.sideMission6){
+				vars.knightIndividualHighest[5] = current.sideMission6;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission7Name) && vars.individualHighest[6] < current.sideMission7){
-				vars.individualHighest[6] = current.sideMission7;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission7Name) && vars.knightIndividualHighest[6] < current.sideMission7){
+				vars.knightIndividualHighest[6] = current.sideMission7;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission8Name) && vars.individualHighest[7] < current.sideMission8){
-				vars.individualHighest[7] = current.sideMission8;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission8Name) && vars.knightIndividualHighest[7] < current.sideMission8){
+				vars.knightIndividualHighest[7] = current.sideMission8;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission9Name) && vars.individualHighest[8] < current.sideMission9){
-				vars.individualHighest[8] = current.sideMission9;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission9Name) && vars.knightIndividualHighest[8] < current.sideMission9){
+				vars.knightIndividualHighest[8] = current.sideMission9;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission10Name) && vars.individualHighest[9] < current.sideMission10){
-				vars.individualHighest[9] = current.sideMission10;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission10Name) && vars.knightIndividualHighest[9] < current.sideMission10){
+				vars.knightIndividualHighest[9] = current.sideMission10;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission11Name) && vars.individualHighest[10] < current.sideMission11){
-				vars.individualHighest[10] = current.sideMission11;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission11Name) && vars.knightIndividualHighest[10] < current.sideMission11){
+				vars.knightIndividualHighest[10] = current.sideMission11;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission12Name) && vars.individualHighest[11] < current.sideMission12){
-				vars.individualHighest[11] = current.sideMission12;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission12Name) && vars.knightIndividualHighest[11] < current.sideMission12){
+				vars.knightIndividualHighest[11] = current.sideMission12;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission13Name) && vars.individualHighest[12] < current.sideMission13){
-				vars.individualHighest[12] = current.sideMission13;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission13Name) && vars.knightIndividualHighest[12] < current.sideMission13){
+				vars.knightIndividualHighest[12] = current.sideMission13;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission14Name) && vars.individualHighest[13] < current.sideMission14){
-				vars.individualHighest[13] = current.sideMission14;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission14Name) && vars.knightIndividualHighest[13] < current.sideMission14){
+				vars.knightIndividualHighest[13] = current.sideMission14;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission15Name) && vars.individualHighest[14] < current.sideMission15){
-				vars.individualHighest[14] = current.sideMission15;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission15Name) && vars.knightIndividualHighest[14] < current.sideMission15){
+				vars.knightIndividualHighest[14] = current.sideMission15;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission16Name) && vars.individualHighest[15] < current.sideMission16){
-				vars.individualHighest[15] = current.sideMission16;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission16Name) && vars.knightIndividualHighest[15] < current.sideMission16){
+				vars.knightIndividualHighest[15] = current.sideMission16;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission17Name) && vars.individualHighest[16] < current.sideMission17){
-				vars.individualHighest[16] = current.sideMission17;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission17Name) && vars.knightIndividualHighest[16] < current.sideMission17){
+				vars.knightIndividualHighest[16] = current.sideMission17;
 				return true;
-			}else if(vars.sideMissionNames.Contains(current.sideMission18Name) && vars.individualHighest[17] < current.sideMission18){
-				vars.individualHighest[17] = current.sideMission18;
+			}else if(vars.knightSideMissionNames.Contains(current.sideMission18Name) && vars.knightIndividualHighest[17] < current.sideMission18){
+				vars.knightIndividualHighest[17] = current.sideMission18;
 				return true;
 			}
 		}
@@ -1012,14 +1030,7 @@ isLoading{
 		return timer.CurrentSplitIndex % 2 != 0;
 	}else if(settings["pauseOdd"]){
 		return timer.CurrentSplitIndex % 2 == 0;
-	}else if(settings["pauseOnFillerSplits"]){
-		print(timer.CurrentSplit.Name);
-		return vars.fillerSplitNames.Contains(timer.CurrentSplit.Name.ToLower());
 	}
-
-	if(settings["pauseOnFillerSplits"] && (timer.CurrentSplit.Name == "." || timer.CurrentSplit.Name == "-.")){
-		return true;
-	}else{
-		return false;
-	}
+	
+	return settings["pauseOnFillerSplits"] && vars.fillerSplitNames.Contains(timer.CurrentSplit.Name.ToLower());
 }
