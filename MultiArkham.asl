@@ -229,6 +229,7 @@ startup{
 	settings.Add("pauseOnFillerSplits", true, "Pause On Filler Splits");
 	
 	//------------------- Asylum -----------------------//
+	vars.asylumStarted = false;
 	vars.asylumShouldStart = 0;
 	vars.asylumHeartAttackFlag = 0; // Heart Attack
 	vars.asylumBatmobileFlag = 0; // Batmobile
@@ -257,6 +258,7 @@ startup{
 	settings.Add("city-splitOnBatsuit", false, "Split on Batsuit", "city-legacyMode");
 	settings.Add("city-splitOnClayface", false, "Split on Clayface", "city-legacyMode");
 	
+	vars.cityStarted = false;
 	vars.cityState = 0;
 	vars.cityCutscenesThisChapter = 0;
 	
@@ -276,6 +278,8 @@ startup{
 		return (exterior.Equals(prev) && interior.Equals(curr)) 
 				|| (interior.Equals(prev) && exterior.Equals(curr));
 	};
+	
+	vars.originsStarted = false;
 	vars.originsEnterExit = EnterExit;
 	vars.originsLastCutscene = 0;
 	vars.originsState = 0;
@@ -343,6 +347,7 @@ init{
 update{
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
+		vars.asylumStarted = false;
 		vars.asylumHeartAttackFlag = 0;
 		vars.asylumBatmobileFlag = 0;
 		vars.asylumBatclawSkipFlag = 0;
@@ -352,8 +357,10 @@ update{
 		vars.asylumIvyFlag = 0;
 		vars.asylumEndFlag = 0;
 		
+		vars.cityStarted = false;
 		vars.cityCutscenesThisChapter = 0;
 		
+		vars.originsStarted = false;
 		vars.originsBridgeLoadCount = 0;
 		vars.originsSplitOnce = new Dictionary<string, bool>(){
 			{"Lacey", false},
@@ -513,18 +520,21 @@ update{
 start{
 	//------------------- Asylum -----------------------//
 	if(settings["asylum"] && game.ProcessName.ToLower() == "shippingpc-bmgame" && vars.asylumShouldStart == 2){
+		vars.asylumStarted = true;
 		vars.asylumShouldStart = 0;
 		return true;
 	}
 	
 	//-------------------- City ------------------------//
 	if(settings["city"] && game.ProcessName.ToLower() == "batmanac" && vars.cityState == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
+		vars.cityStarted = true;
 		vars.cityState = 3;
 		return true;
 	}
 	
 	//------------------ Origins -----------------------//
 	if(settings["origins"] && game.ProcessName.ToLower() == "batmanorigins" && vars.originsState == 2){
+		vars.originsStarted = true;
 		vars.originsState = 3;
 		return true;
 	}
@@ -536,8 +546,13 @@ split{
 	//--------------------------------------------------//
 	if(settings["asylum"] && game.ProcessName.ToLower() == "shippingpc-bmgame"){
 		if(settings["asylum-startSplit"] && vars.asylumShouldStart == 2){
+			vars.asylumStarted = true;
 			vars.asylumShouldStart = 0;
 			return true;
+		}
+		
+		if(settings["asylum-startSplit"] && !vars.asylumStarted){
+			return false; //Don't check any other split points if the run has not actually started
 		}
 		
 		if(old.cutscenePlaying == 0 && current.cutscenePlaying == 1){
@@ -633,8 +648,13 @@ split{
 	//--------------------------------------------------//
 	}else if(settings["city"] && game.ProcessName.ToLower() == "batmanac"){
 		if(settings["city-startSplit"] && vars.cityState == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
+			vars.cityStarted = true;
 			vars.cityState = 3;
 			return true;
+		}
+		
+		if(settings["city-startSplit"] && !vars.cityStarted){
+			return false; //Don't check any other split points if the run has not actually started
 		}
 		
 		bool anyLegacySettingsEnabled = settings["splitOnCutscene"] || settings["splitOnLoads"] || settings["splitOnBatsuit"] || settings["splitOnClayface"];
@@ -771,8 +791,13 @@ split{
 	//--------------------------------------------------//
 	}else if(settings["origins"] && game.ProcessName.ToLower() == "batmanorigins"){
 		if(settings["origins-startSplit"] && vars.originsState == 2){
+			vars.originsStarted = true;
 			vars.originsState = 3;
 			return true;
+		}
+		
+		if(settings["origins-startSplit"] && !vars.originsStarted){
+			return false; //Don't check any other split points if the run has not actually started
 		}
 		
 		// Once cutscene ends save current time and wait for cooldown
