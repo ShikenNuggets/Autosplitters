@@ -241,8 +241,10 @@ startup{
 	
 	//-------------------- City ------------------------//
 	settings.Add("asylum", true, "Asylum");
+	settings.Add("asylum-startSplit", true, "Split on Start", "asylum");
 	
 	settings.Add("city", true, "City");
+	settings.Add("city-startSplit", true, "Split on Start", "city");
 	settings.Add("city-startAfterSkin", false, "Start After Skin Select", "city");
 	settings.SetToolTip("city-startAfterSkin", "If you wish to play with a skin, you'll need to enable this setting. If this setting is enabled, you'll need to open the skin select screen every time for the auto start to work, even if you're choosing the default skin.");
 	
@@ -260,6 +262,7 @@ startup{
 	
 	//------------------ Origins -----------------------//
 	settings.Add("origins", true, "Origins");
+	settings.Add("origins-startSplit", true, "Split on Start", "origins");
 	settings.Add("origins-skin", false, "Split on picking a skin", "origins");
 	settings.SetToolTip("origins-skin", "Splits on picking a skin at the beginning of the game after Blackgate");
 	
@@ -532,8 +535,7 @@ split{
 	//------------------- Asylum -----------------------//
 	//--------------------------------------------------//
 	if(settings["asylum"] && game.ProcessName.ToLower() == "shippingpc-bmgame"){
-		print(vars.asylumShouldStart.ToString());
-		if(vars.asylumShouldStart == 2){
+		if(settings["asylum-startSplit"] && vars.asylumShouldStart == 2){
 			vars.asylumShouldStart = 0;
 			return true;
 		}
@@ -630,7 +632,7 @@ split{
 	//-------------------- City ------------------------//
 	//--------------------------------------------------//
 	}else if(settings["city"] && game.ProcessName.ToLower() == "batmanac"){
-		if(vars.cityState == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
+		if(settings["city-startSplit"] && vars.cityState == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
 			vars.cityState = 3;
 			return true;
 		}
@@ -768,7 +770,7 @@ split{
 	//------------------ Origins -----------------------//
 	//--------------------------------------------------//
 	}else if(settings["origins"] && game.ProcessName.ToLower() == "batmanorigins"){
-		if(vars.originsState == 2){
+		if(settings["origins-startSplit"] && vars.originsState == 2){
 			vars.originsState = 3;
 			return true;
 		}
