@@ -347,7 +347,6 @@ init{
 update{
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
-		vars.asylumStarted = false;
 		vars.asylumHeartAttackFlag = 0;
 		vars.asylumBatmobileFlag = 0;
 		vars.asylumBatclawSkipFlag = 0;
@@ -357,10 +356,8 @@ update{
 		vars.asylumIvyFlag = 0;
 		vars.asylumEndFlag = 0;
 		
-		vars.cityStarted = false;
 		vars.cityCutscenesThisChapter = 0;
 		
-		vars.originsStarted = false;
 		vars.originsBridgeLoadCount = 0;
 		vars.originsSplitOnce = new Dictionary<string, bool>(){
 			{"Lacey", false},
@@ -381,96 +378,82 @@ update{
 		
 		vars.knightHighestPercent = current.storyPercentage;
 		
-		vars.knightIndividualHighest = new List<byte>();
-		if(vars.knightSideMissionNames.Contains(current.sideMission1Name)){
-			vars.knightIndividualHighest.Add(current.sideMission1);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission2Name)){
-			vars.knightIndividualHighest.Add(current.sideMission2);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission3Name)){
-			vars.knightIndividualHighest.Add(current.sideMission3);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission4Name)){
-			vars.knightIndividualHighest.Add(current.sideMission4);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission5Name)){
-			vars.knightIndividualHighest.Add(current.sideMission5);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission6Name)){
-			vars.knightIndividualHighest.Add(current.sideMission6);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission7Name)){
-			vars.knightIndividualHighest.Add(current.sideMission7);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission8Name)){
-			vars.knightIndividualHighest.Add(current.sideMission8);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission9Name)){
-			vars.knightIndividualHighest.Add(current.sideMission9);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission10Name)){
-			vars.knightIndividualHighest.Add(current.sideMission10);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission11Name)){
-			vars.knightIndividualHighest.Add(current.sideMission11);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission12Name)){
-			vars.knightIndividualHighest.Add(current.sideMission12);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission13Name)){
-			vars.knightIndividualHighest.Add(current.sideMission13);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission14Name)){
-			vars.knightIndividualHighest.Add(current.sideMission14);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission15Name)){
-			vars.knightIndividualHighest.Add(current.sideMission15);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission16Name)){
-			vars.knightIndividualHighest.Add(current.sideMission16);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission17Name)){
-			vars.knightIndividualHighest.Add(current.sideMission17);
-		}else{
-			vars.knightIndividualHighest.Add(0);
-		}
-		if(vars.knightSideMissionNames.Contains(current.sideMission18Name)){
-			vars.knightIndividualHighest.Add(current.sideMission18);
-		}else{
-			vars.knightIndividualHighest.Add(0);
+		vars.knightIndividualHighest = new List<byte>(){
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		};
+		
+		if(game.ProcessName.ToLower() == "batmanak"){
+			if(vars.knightSideMissionNames.Contains(current.sideMission1Name)){
+				vars.knightIndividualHighest[0] = current.sideMission1;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission2Name)){
+				vars.knightIndividualHighest[1] = current.sideMission2;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission3Name)){
+				vars.knightIndividualHighest[2] = current.sideMission3;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission4Name)){
+				vars.knightIndividualHighest[3] = current.sideMission4;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission5Name)){
+				vars.knightIndividualHighest[4] = current.sideMission5;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission6Name)){
+				vars.knightIndividualHighest[5] = current.sideMission6;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission7Name)){
+				vars.knightIndividualHighest[6] = current.sideMission7;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission8Name)){
+				vars.knightIndividualHighest[7] = current.sideMission8;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission9Name)){
+				vars.knightIndividualHighest[8] = current.sideMission9;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission10Name)){
+				vars.knightIndividualHighest[9] = current.sideMission10;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission11Name)){
+				vars.knightIndividualHighest[10] = current.sideMission11;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission12Name)){
+				vars.knightIndividualHighest[11] = current.sideMission12;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission13Name)){
+				vars.knightIndividualHighest[12] = current.sideMission13;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission14Name)){
+				vars.knightIndividualHighest[13] = current.sideMission14;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission15Name)){
+				vars.knightIndividualHighest[14] = current.sideMission15;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission16Name)){
+				vars.knightIndividualHighest[15] = current.sideMission16;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission17Name)){
+				vars.knightIndividualHighest[16] = current.sideMission17;
+			}
+			
+			if(vars.knightSideMissionNames.Contains(current.sideMission18Name)){
+				vars.knightIndividualHighest[17] = current.sideMission18;
+			}
 		}
 	}
 	
@@ -489,11 +472,11 @@ update{
 		}
 	//-------------------- City ------------------------//
 	}else if(game.ProcessName.ToLower() == "batmanac"){
-		if(settings["startAfterSkin"] && vars.cityState == 0 && current.skin == 1){
+		if(settings["city-startAfterSkin"] && vars.cityState == 0 && current.skin == 1){
 			vars.cityState = 4;
 		}else if(vars.cityState == 0 && old.inMainMenu == 1 && current.inMainMenu == 0){
 			vars.cityState = 1;
-		}else if(!settings["startAfterSkin"] && vars.cityState == 1 && old.cutscenePlaying == 1 && current.cutscenePlaying == 0){
+		}else if(!settings["city-startAfterSkin"] && vars.cityState == 1 && old.cutscenePlaying == 1 && current.cutscenePlaying == 0){
 			vars.cityState = 2;
 		}else if(vars.cityState == 4 && old.isReloading == 0 && current.isReloading == 1){
 			vars.cityState = 2;
@@ -507,7 +490,7 @@ update{
 		}else if(vars.originsState == 1 && current.Chapter == 1 && current.SubChapter < 1){
 			if(old.Cutscene == 1 && current.Cutscene == 0 && !current.Character.Contains("BruceWayne")){
 				vars.originsState = 2; //Start main story
-			}else if (settings["cchStart"] && old.bCinematicMode == 135508224 && current.bCinematicMode == 135270656 
+			}else if (settings["origins-cchStart"] && old.bCinematicMode == 135508224 && current.bCinematicMode == 135270656 
 						&& current.Character.Contains("BruceWayne")){
 				vars.originsState = 2; // Start CCH
 			}
@@ -520,21 +503,18 @@ update{
 start{
 	//------------------- Asylum -----------------------//
 	if(settings["asylum"] && game.ProcessName.ToLower() == "shippingpc-bmgame" && vars.asylumShouldStart == 2){
-		vars.asylumStarted = true;
 		vars.asylumShouldStart = 0;
 		return true;
 	}
 	
 	//-------------------- City ------------------------//
 	if(settings["city"] && game.ProcessName.ToLower() == "batmanac" && vars.cityState == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
-		vars.cityStarted = true;
 		vars.cityState = 3;
 		return true;
 	}
 	
 	//------------------ Origins -----------------------//
 	if(settings["origins"] && game.ProcessName.ToLower() == "batmanorigins" && vars.originsState == 2){
-		vars.originsStarted = true;
 		vars.originsState = 3;
 		return true;
 	}
@@ -546,12 +526,11 @@ split{
 	//--------------------------------------------------//
 	if(settings["asylum"] && game.ProcessName.ToLower() == "shippingpc-bmgame"){
 		if(settings["asylum-startSplit"] && vars.asylumShouldStart == 2){
-			vars.asylumStarted = true;
 			vars.asylumShouldStart = 0;
 			return true;
 		}
 		
-		if(settings["asylum-startSplit"] && !vars.asylumStarted){
+		if(vars.timerPaused){
 			return false; //Don't check any other split points if the run has not actually started
 		}
 		
@@ -648,27 +627,26 @@ split{
 	//--------------------------------------------------//
 	}else if(settings["city"] && game.ProcessName.ToLower() == "batmanac"){
 		if(settings["city-startSplit"] && vars.cityState == 2 && current.chapter == 1 && !current.currentLevel.Contains("Court")){
-			vars.cityStarted = true;
 			vars.cityState = 3;
 			return true;
 		}
 		
-		if(settings["city-startSplit"] && !vars.cityStarted){
+		if(vars.timerPaused){
 			return false; //Don't check any other split points if the run has not actually started
 		}
 		
-		bool anyLegacySettingsEnabled = settings["splitOnCutscene"] || settings["splitOnLoads"] || settings["splitOnBatsuit"] || settings["splitOnClayface"];
-		if(settings["legacyMode"] && anyLegacySettingsEnabled){
-			if(settings["splitOnCutscene"] && old.cutscenePlaying == 0 && current.cutscenePlaying == 1){
+		bool anyLegacySettingsEnabled = settings["city-splitOnCutscene"] || settings["city-splitOnLoads"] || settings["city-splitOnBatsuit"] || settings["city-splitOnClayface"];
+		if(settings["city-legacyMode"] && anyLegacySettingsEnabled){
+			if(settings["city-splitOnCutscene"] && old.cutscenePlaying == 0 && current.cutscenePlaying == 1){
 				return true;
 			}
-			if(settings["splitOnLoads"] && old.isLoading == 0 && current.isLoading == 1){
+			if(settings["city-splitOnLoads"] && old.isLoading == 0 && current.isLoading == 1){
 				return true;
 			}
-			if(settings["splitOnBatsuit"] && old.character.Contains("Playable_BruceWayne") && current.character.Contains("Playable_Batman")){
+			if(settings["city-splitOnBatsuit"] && old.character.Contains("Playable_BruceWayne") && current.character.Contains("Playable_Batman")){
 				return true;
 			}
-			if(settings["splitOnClayface"] && current.currentLevel.Contains("Under_S2") && old.clayface == current.clayface - 32){
+			if(settings["city-splitOnClayface"] && current.currentLevel.Contains("Under_S2") && old.clayface == current.clayface - 32){
 				return true;
 			}
 			
@@ -796,18 +774,18 @@ split{
 			return true;
 		}
 		
-		if(settings["origins-startSplit"] && !vars.originsStarted){
+		if(vars.timerPaused){
 			return false; //Don't check any other split points if the run has not actually started
 		}
 		
 		// Once cutscene ends save current time and wait for cooldown
-		if(settings["sc"] && old.Cutscene == 1 && current.Cutscene == 0){
+		if(settings["origins-sc"] && old.Cutscene == 1 && current.Cutscene == 0){
 			vars.originsLastCutscene = Environment.TickCount;
 			return false;
 		}
 		
 		// Cutscenes
-		if(settings["sc"] && old.Cutscene == 0 && current.Cutscene == 1){
+		if(settings["origins-sc"] && old.Cutscene == 0 && current.Cutscene == 1){
 			// Wait for cooldown before splitting on the next cutscene
 			// Used as fast travelling has multiple cutscenes back-to-back
 			if(Environment.TickCount - vars.originsLastCutscene < vars.originsCooldown){
@@ -965,7 +943,7 @@ split{
 		
 		// Character Changes
 		if(old.Character != current.Character && !(string.IsNullOrWhiteSpace(old.Character) || string.IsNullOrWhiteSpace(current.Character))){
-			if(settings["skin"] && old.Character.Contains("Playable_BatMan") && current.Character.Contains("Playable_Batman")){
+			if(settings["origins-skin"] && old.Character.Contains("Playable_BatMan") && current.Character.Contains("Playable_Batman")){
 				return true; // Split on picking skin
 			} else if(old.Character.Contains("Playable_DLCBruceWayne") && current.Character.Contains("Playable_BmCashReg")){
 				return true; // CCH Suit up
@@ -981,13 +959,17 @@ split{
 	//--------------------------------------------------//
 	//------------------- Knight -----------------------//
 	//--------------------------------------------------//
-	}else if(settings["knight"] && game.ProcessName.ToLower() == "batmanak"){	
+	}else if(settings["knight"] && game.ProcessName.ToLower() == "batmanak"){
+		if(vars.timerPaused){
+			return false; //Don't check or update split info if the run has not actually started
+		}
+		
 		if(current.storyPercentage > vars.knightHighestPercent){
 			vars.knightHighestPercent = current.storyPercentage;
-			if(settings["highDetail"] || vars.knightSplitPoints.Contains(current.storyPercentage)){
+			if(settings["knight-highDetail"] || vars.knightSplitPoints.Contains(current.storyPercentage)){
 				return true;
 			}
-		}else if(settings["sideMissions"]){
+		}else if(settings["knight-sideMissions"]){
 			if(vars.knightSideMissionNames.Contains(current.sideMission1Name) && vars.knightIndividualHighest[0] < current.sideMission1){
 				vars.knightIndividualHighest[0] = current.sideMission1;
 				return true;
@@ -1044,7 +1026,7 @@ split{
 				return true;
 			}
 		}
-		if(settings["splitOnJoker"]){
+		if(settings["knight-splitOnJoker"]){
 			if(current.currentLevel == "JokerBoss_B2" && old.jokerPunches > current.jokerPunches){
 				return true;
 			}
@@ -1054,10 +1036,14 @@ split{
 
 isLoading{
 	if(settings["pauseEven"]){
-		return timer.CurrentSplitIndex % 2 != 0;
+		vars.timerPaused = timer.CurrentSplitIndex % 2 != 0;
 	}else if(settings["pauseOdd"]){
-		return timer.CurrentSplitIndex % 2 == 0;
+		vars.timerPaused = timer.CurrentSplitIndex % 2 == 0;
+	}else if(settings["pauseOnFillerSplits"]){
+		vars.timerPaused = vars.fillerSplitNames.Contains(timer.CurrentSplit.Name.ToLower());
+	}else{
+		vars.timerPaused = false;
 	}
 	
-	return settings["pauseOnFillerSplits"] && vars.fillerSplitNames.Contains(timer.CurrentSplit.Name.ToLower());
+	return vars.timerPaused;
 }
