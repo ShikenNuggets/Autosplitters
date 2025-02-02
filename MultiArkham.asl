@@ -308,6 +308,7 @@ startup{
 	settings.SetToolTip("knight-highDetail", "Use every possible split point. Not recommended");
 	settings.Add("knight-sideMissions", false, "Side Missions", "knight");
 	settings.Add("knight-splitOnJoker", false, "Split at the end of the Main Story", "knight");
+	settings.Add("knight-splitOnRiddler", false, "Split on arresting Riddler", "knight");
 
 	vars.knightSplitPoints = new List<int>{
 		5, 10, 16, 20, 24, 26, 28, 31, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
@@ -321,6 +322,28 @@ startup{
 		"Firefly", "Penguin", "Bank", "Hush","Blackfire",
 		"DLC_Freeze", "DLC_MadHatter", "DLC_Ras", "DLC_Croc"
 	};
+	
+	vars.knightRiddlerDone = false;
+	
+	vars.knightUpdateSideMission = (Action<int, string, byte, bool>)((int idx, string name, byte progress, bool splitOnRiddler) => {
+		if(vars.knightSideMissionNames.Contains(name)){
+			vars.knightIndividualHighest[idx] = progress;
+		}else if(splitOnRiddler && "Riddler".Equals(name) && progress >= 100){
+			vars.knightRiddlerDone = true;
+		}
+	});
+	
+	vars.knightShouldSplitOnSideMission = (Func<int, string, byte, bool, bool>)((int idx, string name, byte progress, bool splitOnRiddler) => {
+		if(vars.knightSideMissionNames.Contains(name) && vars.knightIndividualHighest[idx] < progress){
+			vars.knightIndividualHighest[idx] = progress;
+			return true;
+		}else if(splitOnRiddler && "Riddler".Equals(name) && progress >= 100 && !vars.knightRiddlerDone){
+			vars.knightRiddlerDone = true;
+			return true;
+		}
+		
+		return false;
+	});
 }
 
 init{
@@ -382,78 +405,28 @@ update{
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 		};
 		
+		vars.knightRiddlerDone = false;
+		
 		if(game.ProcessName.ToLower() == "batmanak"){
-			if(vars.knightSideMissionNames.Contains(current.sideMission1Name)){
-				vars.knightIndividualHighest[0] = current.sideMission1;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission2Name)){
-				vars.knightIndividualHighest[1] = current.sideMission2;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission3Name)){
-				vars.knightIndividualHighest[2] = current.sideMission3;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission4Name)){
-				vars.knightIndividualHighest[3] = current.sideMission4;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission5Name)){
-				vars.knightIndividualHighest[4] = current.sideMission5;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission6Name)){
-				vars.knightIndividualHighest[5] = current.sideMission6;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission7Name)){
-				vars.knightIndividualHighest[6] = current.sideMission7;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission8Name)){
-				vars.knightIndividualHighest[7] = current.sideMission8;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission9Name)){
-				vars.knightIndividualHighest[8] = current.sideMission9;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission10Name)){
-				vars.knightIndividualHighest[9] = current.sideMission10;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission11Name)){
-				vars.knightIndividualHighest[10] = current.sideMission11;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission12Name)){
-				vars.knightIndividualHighest[11] = current.sideMission12;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission13Name)){
-				vars.knightIndividualHighest[12] = current.sideMission13;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission14Name)){
-				vars.knightIndividualHighest[13] = current.sideMission14;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission15Name)){
-				vars.knightIndividualHighest[14] = current.sideMission15;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission16Name)){
-				vars.knightIndividualHighest[15] = current.sideMission16;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission17Name)){
-				vars.knightIndividualHighest[16] = current.sideMission17;
-			}
-			
-			if(vars.knightSideMissionNames.Contains(current.sideMission18Name)){
-				vars.knightIndividualHighest[17] = current.sideMission18;
-			}
+			bool splitOnRiddler = settings["knight-splitOnRiddler"];
+			vars.knightUpdateSideMission(0, current.sideMission1Name, current.sideMission1, splitOnRiddler);
+			vars.knightUpdateSideMission(1, current.sideMission2Name, current.sideMission2, splitOnRiddler);
+			vars.knightUpdateSideMission(2, current.sideMission3Name, current.sideMission3, splitOnRiddler);
+			vars.knightUpdateSideMission(3, current.sideMission4Name, current.sideMission4, splitOnRiddler);
+			vars.knightUpdateSideMission(4, current.sideMission5Name, current.sideMission5, splitOnRiddler);
+			vars.knightUpdateSideMission(5, current.sideMission6Name, current.sideMission6, splitOnRiddler);
+			vars.knightUpdateSideMission(6, current.sideMission7Name, current.sideMission7, splitOnRiddler);
+			vars.knightUpdateSideMission(7, current.sideMission8Name, current.sideMission8, splitOnRiddler);
+			vars.knightUpdateSideMission(8, current.sideMission9Name, current.sideMission9, splitOnRiddler);
+			vars.knightUpdateSideMission(9, current.sideMission10Name, current.sideMission10, splitOnRiddler);
+			vars.knightUpdateSideMission(10, current.sideMission11Name, current.sideMission11, splitOnRiddler);
+			vars.knightUpdateSideMission(11, current.sideMission12Name, current.sideMission12, splitOnRiddler);
+			vars.knightUpdateSideMission(12, current.sideMission13Name, current.sideMission13, splitOnRiddler);
+			vars.knightUpdateSideMission(13, current.sideMission14Name, current.sideMission14, splitOnRiddler);
+			vars.knightUpdateSideMission(14, current.sideMission15Name, current.sideMission15, splitOnRiddler);
+			vars.knightUpdateSideMission(15, current.sideMission16Name, current.sideMission16, splitOnRiddler);
+			vars.knightUpdateSideMission(16, current.sideMission17Name, current.sideMission17, splitOnRiddler);
+			vars.knightUpdateSideMission(17, current.sideMission18Name, current.sideMission18, splitOnRiddler);
 		}
 	}
 	
@@ -970,59 +943,42 @@ split{
 				return true;
 			}
 		}else if(settings["knight-sideMissions"]){
-			if(vars.knightSideMissionNames.Contains(current.sideMission1Name) && vars.knightIndividualHighest[0] < current.sideMission1){
-				vars.knightIndividualHighest[0] = current.sideMission1;
+			bool splitOnRiddler = settings["knight-splitOnRiddler"];
+			if(vars.knightShouldSplitOnSideMission(0, current.sideMission1Name, current.sideMission1, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission2Name) && vars.knightIndividualHighest[1] < current.sideMission2){
-				vars.knightIndividualHighest[1] = current.sideMission2;
+			}else if(vars.knightShouldSplitOnSideMission(1, current.sideMission2Name, current.sideMission2, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission3Name) && vars.knightIndividualHighest[2] < current.sideMission3){
-				vars.knightIndividualHighest[2] = current.sideMission3;
+			}else if(vars.knightShouldSplitOnSideMission(2, current.sideMission3Name, current.sideMission3, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission4Name) && vars.knightIndividualHighest[3] < current.sideMission4){
-				vars.knightIndividualHighest[3] = current.sideMission4;
+			}else if(vars.knightShouldSplitOnSideMission(3, current.sideMission4Name, current.sideMission4, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission5Name) && vars.knightIndividualHighest[4] < current.sideMission5){
-				vars.knightIndividualHighest[4] = current.sideMission5;
+			}else if(vars.knightShouldSplitOnSideMission(4, current.sideMission5Name, current.sideMission5, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission6Name) && vars.knightIndividualHighest[5] < current.sideMission6){
-				vars.knightIndividualHighest[5] = current.sideMission6;
+			}else if(vars.knightShouldSplitOnSideMission(5, current.sideMission6Name, current.sideMission6, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission7Name) && vars.knightIndividualHighest[6] < current.sideMission7){
-				vars.knightIndividualHighest[6] = current.sideMission7;
+			}else if(vars.knightShouldSplitOnSideMission(6, current.sideMission7Name, current.sideMission7, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission8Name) && vars.knightIndividualHighest[7] < current.sideMission8){
-				vars.knightIndividualHighest[7] = current.sideMission8;
+			}else if(vars.knightShouldSplitOnSideMission(7, current.sideMission8Name, current.sideMission8, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission9Name) && vars.knightIndividualHighest[8] < current.sideMission9){
-				vars.knightIndividualHighest[8] = current.sideMission9;
+			}else if(vars.knightShouldSplitOnSideMission(8, current.sideMission9Name, current.sideMission9, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission10Name) && vars.knightIndividualHighest[9] < current.sideMission10){
-				vars.knightIndividualHighest[9] = current.sideMission10;
+			}else if(vars.knightShouldSplitOnSideMission(9, current.sideMission10Name, current.sideMission10, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission11Name) && vars.knightIndividualHighest[10] < current.sideMission11){
-				vars.knightIndividualHighest[10] = current.sideMission11;
+			}else if(vars.knightShouldSplitOnSideMission(10, current.sideMission11Name, current.sideMission11, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission12Name) && vars.knightIndividualHighest[11] < current.sideMission12){
-				vars.knightIndividualHighest[11] = current.sideMission12;
+			}else if(vars.knightShouldSplitOnSideMission(11, current.sideMission12Name, current.sideMission12, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission13Name) && vars.knightIndividualHighest[12] < current.sideMission13){
-				vars.knightIndividualHighest[12] = current.sideMission13;
+			}else if(vars.knightShouldSplitOnSideMission(12, current.sideMission13Name, current.sideMission13, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission14Name) && vars.knightIndividualHighest[13] < current.sideMission14){
-				vars.knightIndividualHighest[13] = current.sideMission14;
+			}else if(vars.knightShouldSplitOnSideMission(13, current.sideMission14Name, current.sideMission14, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission15Name) && vars.knightIndividualHighest[14] < current.sideMission15){
-				vars.knightIndividualHighest[14] = current.sideMission15;
+			}else if(vars.knightShouldSplitOnSideMission(14, current.sideMission15Name, current.sideMission15, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission16Name) && vars.knightIndividualHighest[15] < current.sideMission16){
-				vars.knightIndividualHighest[15] = current.sideMission16;
+			}else if(vars.knightShouldSplitOnSideMission(15, current.sideMission16Name, current.sideMission16, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission17Name) && vars.knightIndividualHighest[16] < current.sideMission17){
-				vars.knightIndividualHighest[16] = current.sideMission17;
+			}else if(vars.knightShouldSplitOnSideMission(16, current.sideMission17Name, current.sideMission17, splitOnRiddler)){
 				return true;
-			}else if(vars.knightSideMissionNames.Contains(current.sideMission18Name) && vars.knightIndividualHighest[17] < current.sideMission18){
-				vars.knightIndividualHighest[17] = current.sideMission18;
+			}else if(vars.knightShouldSplitOnSideMission(17, current.sideMission18Name, current.sideMission18, splitOnRiddler)){
 				return true;
 			}
 		}
