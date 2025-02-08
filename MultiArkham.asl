@@ -215,6 +215,8 @@ state("BatmanAK", "Epic"){
 }
 
 startup{
+	vars.timerPaused = false;
+	
 	//------------------ Multi-Game -----------------------//
 	vars.fillerSplitNames = new HashSet<string>{
 		".", "-.", "- .",
@@ -326,18 +328,20 @@ startup{
 	vars.knightRiddlerDone = false;
 	
 	vars.knightUpdateSideMission = (Action<int, string, byte, bool>)((int idx, string name, byte progress, bool splitOnRiddler) => {
-		if(vars.knightSideMissionNames.Contains(name)){
+		if(vars.knightSideMissionNames.Contains(name) && progress <= 100){
 			vars.knightIndividualHighest[idx] = progress;
-		}else if(splitOnRiddler && "Riddler".Equals(name) && progress >= 100){
+		}else if(splitOnRiddler && "Riddler".Equals(name) && progress == 100){
 			vars.knightRiddlerDone = true;
 		}
 	});
 	
 	vars.knightShouldSplitOnSideMission = (Func<int, string, byte, bool, bool>)((int idx, string name, byte progress, bool splitOnRiddler) => {
-		if(vars.knightSideMissionNames.Contains(name) && vars.knightIndividualHighest[idx] < progress){
+		if(vars.knightSideMissionNames.Contains(name) && vars.knightIndividualHighest[idx] < progress && progress <= 100){
+			print("[MASL] Split on Side");
 			vars.knightIndividualHighest[idx] = progress;
 			return true;
-		}else if(splitOnRiddler && "Riddler".Equals(name) && progress >= 100 && !vars.knightRiddlerDone){
+		}else if(splitOnRiddler && "Riddler".Equals(name) && progress == 100 && !vars.knightRiddlerDone){
+			print("[MASL] Split on Fiddler");
 			vars.knightRiddlerDone = true;
 			return true;
 		}
@@ -407,7 +411,7 @@ update{
 		
 		vars.knightRiddlerDone = false;
 		
-		if(game.ProcessName.ToLower() == "batmanak"){
+		if(game.ProcessName.ToLower() == "batmanak" && !vars.timerPaused){
 			bool splitOnRiddler = settings["knight-splitOnRiddler"];
 			vars.knightUpdateSideMission(0, current.sideMission1Name, current.sideMission1, splitOnRiddler);
 			vars.knightUpdateSideMission(1, current.sideMission2Name, current.sideMission2, splitOnRiddler);
@@ -940,6 +944,7 @@ split{
 		if(current.storyPercentage > vars.knightHighestPercent){
 			vars.knightHighestPercent = current.storyPercentage;
 			if(settings["knight-highDetail"] || vars.knightSplitPoints.Contains(current.storyPercentage)){
+				print("[MASL] Split on Main");
 				return true;
 			}
 		}else if(settings["knight-sideMissions"]){
