@@ -832,9 +832,9 @@ split{
 				return true; // Joker's Funhouse
 			} else if("PoliceStation_C3".Equals(old.CurrentLevel) && "PoliceStation_B2".Equals(current.CurrentLevel) && current.Chapter == 7){
 				return true; // Autopsy Report in Sewers
-			} else if(vars.bridgeLoadCount == 2 && (("OpenWorld".Equals(old.PersistentLevel) && "GothamBridge".Equals(current.PersistentLevel)) 
+			} else if(vars.originsBridgeLoadCount == 2 && (("OpenWorld".Equals(old.PersistentLevel) && "GothamBridge".Equals(current.PersistentLevel)) 
 						|| (string.IsNullOrWhiteSpace(old.LastDoorRoom) && "GothamBridge_C1".Equals(current.LastDoorRoom)))){
-				vars.bridgeLoadCount++;
+				vars.originsBridgeLoadCount++;
 				return true; // Bridge Skip
 			} else if(!vars.originsSplitOnce["BombRoom"] && "GothamBridge_C1".Equals(old.CurrentLevel) && "GothamBridge_B1".Equals(current.CurrentLevel) 
 						&& current.Chapter == 7 && current.SubChapter == 2){
