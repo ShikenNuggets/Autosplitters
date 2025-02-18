@@ -1,4 +1,4 @@
-//Multiple Arkham Games Autosplitter v0.2
+//Multiple Arkham Games Autosplitter v2.0
 //Pauses Game Time on certain splits
 //This is a temporary solution until we figure out proper auto-start and auto-end for every category
 
@@ -226,26 +226,25 @@ startup{
 		"{knight}.", "{knight} .", "start knight"
 	};
 	
-	settings.Add("pauseEven", false, "Pause On Even Splits [2, 4, 6]");
-	settings.Add("pauseOdd", false, "Pause On Odd Splits [1, 3, 5]");
-	settings.Add("pauseOnFillerSplits", true, "Pause On Filler Splits");
+	settings.Add("pauseEven", false, "Pause Game Time On Even Splits [2, 4, 6]");
+	settings.Add("pauseOdd", false, "Pause Game Time On Odd Splits [1, 3, 5]");
+	settings.Add("pauseOnFillerSplits", true, "Pause Game Time On Splits with \"Filler\" Names");
 	
 	//------------------- Asylum -----------------------//
-	vars.asylumStarted = false;
-	vars.asylumShouldStart = 0;
-	vars.asylumHeartAttackFlag = 0; // Heart Attack
-	vars.asylumBatmobileFlag = 0; // Batmobile
-	vars.asylumBatclawSkipFlag = 0; // Batclaw Skip
-	vars.asylumDoubleTitanFlag = 0; // Double Titan
-	vars.asylumUltraClawFlag = 0; // Bat-Better-Claw
-	vars.asylumHarleyFlag = 0;
-	vars.asylumIvyFlag = 0;
-	vars.asylumEndFlag = 0; // End
-	
-	//-------------------- City ------------------------//
 	settings.Add("asylum", true, "Asylum");
 	settings.Add("asylum-startSplit", true, "Split on Start", "asylum");
 	
+	vars.asylumShouldStart = 0;
+	vars.asylumHeartAttackFlag = 0;
+	vars.asylumBatmobileFlag = 0;
+	vars.asylumBatclawSkipFlag = 0;
+	vars.asylumDoubleTitanFlag = 0;
+	vars.asylumUltraClawFlag = 0;
+	vars.asylumHarleyFlag = 0;
+	vars.asylumIvyFlag = 0;
+	vars.asylumEndFlag = 0;
+	
+	//-------------------- City ------------------------//
 	settings.Add("city", true, "City");
 	settings.Add("city-startSplit", true, "Split on Start", "city");
 	settings.Add("city-startAfterSkin", false, "Start After Skin Select", "city");
@@ -260,7 +259,6 @@ startup{
 	settings.Add("city-splitOnBatsuit", false, "Split on Batsuit", "city-legacyMode");
 	settings.Add("city-splitOnClayface", false, "Split on Clayface", "city-legacyMode");
 	
-	vars.cityStarted = false;
 	vars.cityState = 0;
 	vars.cityCutscenesThisChapter = 0;
 	
@@ -281,7 +279,6 @@ startup{
 				|| (interior.Equals(prev) && exterior.Equals(curr));
 	};
 	
-	vars.originsStarted = false;
 	vars.originsEnterExit = EnterExit;
 	vars.originsLastCutscene = 0;
 	vars.originsState = 0;
@@ -337,11 +334,9 @@ startup{
 	
 	vars.knightShouldSplitOnSideMission = (Func<int, string, byte, bool, bool>)((int idx, string name, byte progress, bool splitOnRiddler) => {
 		if(vars.knightSideMissionNames.Contains(name) && vars.knightIndividualHighest[idx] < progress && progress <= 100){
-			print("[MASL] Split on Side");
 			vars.knightIndividualHighest[idx] = progress;
 			return true;
 		}else if(splitOnRiddler && "Riddler".Equals(name) && progress == 100 && !vars.knightRiddlerDone){
-			print("[MASL] Split on Fiddler");
 			vars.knightRiddlerDone = true;
 			return true;
 		}
@@ -746,7 +741,6 @@ split{
 	//--------------------------------------------------//
 	}else if(settings["origins"] && game.ProcessName.ToLower() == "batmanorigins"){
 		if(settings["origins-startSplit"] && vars.originsState == 2){
-			vars.originsStarted = true;
 			vars.originsState = 3;
 			return true;
 		}
@@ -941,13 +935,14 @@ split{
 			return false; //Don't check or update split info if the run has not actually started
 		}
 		
-		if(current.storyPercentage > vars.knightHighestPercent){
+		if(current.storyPercentage > vars.knightHighestPercent && current.storyPercentage <= 100){
 			vars.knightHighestPercent = current.storyPercentage;
 			if(settings["knight-highDetail"] || vars.knightSplitPoints.Contains(current.storyPercentage)){
-				print("[MASL] Split on Main");
 				return true;
 			}
-		}else if(settings["knight-sideMissions"]){
+		}
+		
+		if(settings["knight-sideMissions"]){
 			bool splitOnRiddler = settings["knight-splitOnRiddler"];
 			if(vars.knightShouldSplitOnSideMission(0, current.sideMission1Name, current.sideMission1, splitOnRiddler)){
 				return true;
@@ -987,6 +982,7 @@ split{
 				return true;
 			}
 		}
+
 		if(settings["knight-splitOnJoker"]){
 			if(current.currentLevel == "JokerBoss_B2" && old.jokerPunches > current.jokerPunches){
 				return true;
