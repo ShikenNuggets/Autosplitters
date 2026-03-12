@@ -2,7 +2,7 @@
  * Batman: Arkham Knight Auto Splitter v1.3		   *
  * By JohnStephenEvil, ShikenNuggets, and GreenBat *
  **************************************************/
-//updated by TpRedNinja
+
 state("BatmanAK", "Steam-Old"){
 	int storyPercentage			: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0x4EC; // Main Story Progression (0-100)
 	string50 currentLevel		: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0x18C, 0x0;
@@ -45,8 +45,7 @@ state("BatmanAK", "Steam-Old"){
 	int jokerPunches			: 0x03197080, 0x30, 0x84, 0xA9C, 0x1AA8;
 }
 
-state("BatmanAK", "Steam-Current")
-{
+state("BatmanAK", "Steam-Current"){
 	int storyPercentage			: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0x4EC; // Main Story Progression (0-100)
 	string50 currentLevel		: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0x18C, 0x0;
 	byte sideMission1			: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0x95;
@@ -86,22 +85,9 @@ state("BatmanAK", "Steam-Current")
 	byte sideMission18			: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA69;
 	string50 sideMission18Name	: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0311F508, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
-	// extra pointers
-	bool Knightfall 			: 0x03502E44, 0x34, 0x44, 0x1A8, 0x470, 0xA0, 0x40, 0xDC8; // 1 when pressing a/space on batsiginal for knightfall, 0 for everything else unless you pause the game when its 1
-	bool NGPlusStarted			: 0x0311F508, 0x8, 0x34, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x134; // 1 when you start NG+ and stays like that, 0 for before you start NG+
-	int Cutscene				: 0x03728F5C, 0x108; // a whole bunch of different numbers for cutscene's; 
-	int InNGPlus				: 0x0311F508, 0x84C, 0x0, 0x5C, 0x0D88; // 270598400 when in ng+, 2162944 when in ng and main menu
-	int OverallPercentage		: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C; // save file percentage (0-240)
-/*
-
-754,758,1010,1014 - nothing is consistent with these/i cant be bothered to right down every time they are that value; 
-But they are consistent in being the only numbers for ExtraCutscene
-*/
-
 }
 
-state("BatmanAK", "Epic")
-{
+state("BatmanAK", "Epic"){
 	int storyPercentage			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0x4EC;
 	string50 currentLevel		: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0x18C, 0x0;
 	byte sideMission1			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0x95;
@@ -141,40 +127,20 @@ state("BatmanAK", "Epic")
 	byte sideMission18			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA69;
 	string50 sideMission18Name	: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
-	// extra pointers
-	bool Knightfall 			: 0x035124EC, 0x34, 0xD44, 0xB68, 0x470, 0xA0, 0x40, 0xDC8;
-	bool NGPlusStarted			: 0x0318D5B8, 0x8, 0x34, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x134;
-	int Cutscene				: 0x03797024, 0x108;
-	int InNGPlus				: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x0D88;
-	int OverallPercentage		: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C;
 }
 
-startup
-{
+startup{
 	settings.Add("highDetail", false, "High Detail Mode [Not Recommended]");
 	settings.SetToolTip("highDetail", "Use every possible split point. Not recommended");
 	settings.Add("sideMissions", false, "Side Missions");
 	settings.Add("splitOnJoker", false, "Split at the end of the Main Story");
-	settings.Add("Knightfall first ending", false, "Knightfall First Ending");
-	settings.SetToolTip("Knightfall first ending", "Use this if you are speed-running Knightfall First Ending");
-	settings.Add("Knightfall full ending", false, "Knightfall Full Ending");
-	settings.SetToolTip("Knightfall full ending", "Use this if you are speed-running Knightfall Full Ending");
-	settings.Add("240%", false, "240%");
-	settings.SetToolTip("240%", "Use this if you are speed-running for 240% and want to split for side missions.\nNote if you only want the final split you do not need to enabled this as its built in without needing to turn on a setting.\nIf you have this enabled, disable sidemissions setting as this will split for sidemissions for both ng and ng+.\nFailure to disable sidemissions setting may cause unexpected behavior of the autosplitter.");
+
 	vars.splitPoints = new List<int>{
 		5, 10, 16, 20, 24, 26, 28, 31, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
 		64, 66, 67, 68, 69, 70, 73, 75, 77, 78, 79, 80, 82, 85, 87, 89, 90, 95, 96
 	};
 	vars.highestPercent = 0;
-	vars.TotalSideMissionsDone = 0;
 	vars.individualHighest = new List<byte>(new byte[18]);
-	vars.individualHighestNGPlus = new List<byte>(new byte[18]); /* need this for 240% since the pointers values reset and since the 
-	* split conditions are base off a list of if the pointer value is higher than the value saved in the list. So due to that for ng+
-	* since the pointers values reset the list would either need to be reset or we can have a separate list for ng+ and only use that one 
-	* for 240% and the normal one for everything else. I went with the second option since 240% we go back to ng to complete riddler so we 
-	* still need the normal list.
-	*/
-	vars.CompletedSideMissions = new List<bool>(new bool[18]);
 	
 	vars.sideMissionNames = new List<string>{
 		"Firecrews", "Pyg", "Drones", "ManBat", "Azrael",
@@ -183,8 +149,7 @@ startup
 	};
 }
 
-init
-{
+init{
 	print("Module Size: " + modules.First().ModuleMemorySize.ToString());
 	switch(modules.First().ModuleMemorySize){
 		case 0x8CD2000:
@@ -199,486 +164,172 @@ init
 	}
 }
 
-update
-{
-	// count the variable up also the bools so it doesnt double count if the value goes back down due to a crash or going to main menu.
-	if (settings["Knightfall full ending"] || settings["Knightfall first ending"])
-	{
-		if(current.sideMission1 == 100 && !vars.CompletedSideMissions[0]){
-			vars.CompletedSideMissions[0] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission2 == 100 && !vars.CompletedSideMissions[1]){
-			vars.CompletedSideMissions[1] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission3 == 100 && !vars.CompletedSideMissions[2]){
-			vars.CompletedSideMissions[2] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission4 == 100 && !vars.CompletedSideMissions[3]){
-			vars.CompletedSideMissions[3] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission5 == 100 && !vars.CompletedSideMissions[4]){
-			vars.CompletedSideMissions[4] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission6 == 100 && !vars.CompletedSideMissions[5]){
-			vars.CompletedSideMissions[5] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission7 == 100 && !vars.CompletedSideMissions[6]){
-			vars.CompletedSideMissions[6] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission8 == 100 && !vars.CompletedSideMissions[7]){
-			vars.CompletedSideMissions[7] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission9 == 100 && !vars.CompletedSideMissions[8]){
-			vars.CompletedSideMissions[8] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission10 == 100 && !vars.CompletedSideMissions[9]){
-			vars.CompletedSideMissions[9] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission11 == 100 && !vars.CompletedSideMissions[10]){
-			vars.CompletedSideMissions[10] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission12 == 100 && !vars.CompletedSideMissions[11]){
-			vars.CompletedSideMissions[11] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission13 == 100 && !vars.CompletedSideMissions[12]){
-			vars.CompletedSideMissions[12] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission14 == 100 && !vars.CompletedSideMissions[13]){
-			vars.CompletedSideMissions[13] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission15 == 100 && !vars.CompletedSideMissions[14]){
-			vars.CompletedSideMissions[14] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission16 == 100 && !vars.CompletedSideMissions[15]){
-			vars.CompletedSideMissions[15] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission17 == 100 && !vars.CompletedSideMissions[16]){
-			vars.CompletedSideMissions[16] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission18 == 100 && !vars.CompletedSideMissions[17]){
-			vars.CompletedSideMissions[17] = true;
-			vars.TotalSideMissionsDone++;
-		}
-	}
-}
-
-
-onStart
-{
-	// When the timer starts, reset these things
-	vars.highestPercent = current.storyPercentage;
-	if (settings["240%"]){ // only do this for 240%
-		vars.individualHighestNGPlus = new List<byte>();
+update{
+	current.timerPhase = timer.CurrentPhase;
+	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
+		// When the timer starts, reset these things
+		vars.highestPercent = current.storyPercentage;
+		
+		vars.individualHighest = new List<byte>();
 		if(vars.sideMissionNames.Contains(current.sideMission1Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission1);
+			vars.individualHighest.Add(current.sideMission1);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission2Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission2);
+			vars.individualHighest.Add(current.sideMission2);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission3Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission3);
+			vars.individualHighest.Add(current.sideMission3);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission4Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission4);
+			vars.individualHighest.Add(current.sideMission4);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission5Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission5);
+			vars.individualHighest.Add(current.sideMission5);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission6Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission6);
+			vars.individualHighest.Add(current.sideMission6);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission7Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission7);
+			vars.individualHighest.Add(current.sideMission7);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission8Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission8);
+			vars.individualHighest.Add(current.sideMission8);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission9Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission9);
+			vars.individualHighest.Add(current.sideMission9);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission10Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission10);
+			vars.individualHighest.Add(current.sideMission10);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission11Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission11);
+			vars.individualHighest.Add(current.sideMission11);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission12Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission12);
+			vars.individualHighest.Add(current.sideMission12);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission13Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission13);
+			vars.individualHighest.Add(current.sideMission13);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission14Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission14);
+			vars.individualHighest.Add(current.sideMission14);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission15Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission15);
+			vars.individualHighest.Add(current.sideMission15);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission16Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission16);
+			vars.individualHighest.Add(current.sideMission16);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission17Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission17);
+			vars.individualHighest.Add(current.sideMission17);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
 		if(vars.sideMissionNames.Contains(current.sideMission18Name)){
-			vars.individualHighestNGPlus.Add(current.sideMission18);
+			vars.individualHighest.Add(current.sideMission18);
 		}else{
-			vars.individualHighestNGPlus.Add(0);
+			vars.individualHighest.Add(0);
 		}
-	}
-	vars.individualHighest = new List<byte>();
-	vars.CompletedSideMissions = new List<bool>(new bool[18]);
-	if(vars.sideMissionNames.Contains(current.sideMission1Name)){
-		vars.individualHighest.Add(current.sideMission1);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission2Name)){
-		vars.individualHighest.Add(current.sideMission2);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission3Name)){
-		vars.individualHighest.Add(current.sideMission3);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission4Name)){
-		vars.individualHighest.Add(current.sideMission4);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission5Name)){
-		vars.individualHighest.Add(current.sideMission5);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission6Name)){
-		vars.individualHighest.Add(current.sideMission6);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission7Name)){
-		vars.individualHighest.Add(current.sideMission7);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission8Name)){
-		vars.individualHighest.Add(current.sideMission8);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission9Name)){
-		vars.individualHighest.Add(current.sideMission9);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission10Name)){
-		vars.individualHighest.Add(current.sideMission10);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission11Name)){
-		vars.individualHighest.Add(current.sideMission11);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission12Name)){
-		vars.individualHighest.Add(current.sideMission12);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission13Name)){
-		vars.individualHighest.Add(current.sideMission13);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission14Name)){
-		vars.individualHighest.Add(current.sideMission14);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission15Name)){
-		vars.individualHighest.Add(current.sideMission15);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission16Name)){
-		vars.individualHighest.Add(current.sideMission16);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission17Name)){
-		vars.individualHighest.Add(current.sideMission17);
-	}else{
-		vars.individualHighest.Add(0);
-	}
-	if(vars.sideMissionNames.Contains(current.sideMission18Name)){
-		vars.individualHighest.Add(current.sideMission18);
-	}else{
-		vars.individualHighest.Add(0);
 	}
 }
 
-split
-{
+split{
 	if(current.storyPercentage > vars.highestPercent){
 		vars.highestPercent = current.storyPercentage;
 		if(settings["highDetail"] || vars.splitPoints.Contains(current.storyPercentage)){
 			return true;
 		}
-	} else if(settings["sideMissions"]){
-		if(vars.sideMissionNames.Contains(current.sideMission1Name) && vars.individualHighest[0] < current.sideMission1) {
+	}else if(settings["sideMissions"]){
+		if(vars.sideMissionNames.Contains(current.sideMission1Name) && vars.individualHighest[0] < current.sideMission1){
 			vars.individualHighest[0] = current.sideMission1;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission2Name) && vars.individualHighest[1] < current.sideMission2) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission2Name) && vars.individualHighest[1] < current.sideMission2){
 			vars.individualHighest[1] = current.sideMission2;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission3Name) && vars.individualHighest[2] < current.sideMission3) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission3Name) && vars.individualHighest[2] < current.sideMission3){
 			vars.individualHighest[2] = current.sideMission3;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission4Name) && vars.individualHighest[3] < current.sideMission4) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission4Name) && vars.individualHighest[3] < current.sideMission4){
 			vars.individualHighest[3] = current.sideMission4;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission5Name) && vars.individualHighest[4] < current.sideMission5) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission5Name) && vars.individualHighest[4] < current.sideMission5){
 			vars.individualHighest[4] = current.sideMission5;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission6Name) && vars.individualHighest[5] < current.sideMission6) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission6Name) && vars.individualHighest[5] < current.sideMission6){
 			vars.individualHighest[5] = current.sideMission6;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission7Name) && vars.individualHighest[6] < current.sideMission7) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission7Name) && vars.individualHighest[6] < current.sideMission7){
 			vars.individualHighest[6] = current.sideMission7;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission8Name) && vars.individualHighest[7] < current.sideMission8) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission8Name) && vars.individualHighest[7] < current.sideMission8){
 			vars.individualHighest[7] = current.sideMission8;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission9Name) && vars.individualHighest[8] < current.sideMission9) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission9Name) && vars.individualHighest[8] < current.sideMission9){
 			vars.individualHighest[8] = current.sideMission9;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission10Name) && vars.individualHighest[9] < current.sideMission10) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission10Name) && vars.individualHighest[9] < current.sideMission10){
 			vars.individualHighest[9] = current.sideMission10;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission11Name) && vars.individualHighest[10] < current.sideMission11) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission11Name) && vars.individualHighest[10] < current.sideMission11){
 			vars.individualHighest[10] = current.sideMission11;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission12Name) && vars.individualHighest[11] < current.sideMission12) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission12Name) && vars.individualHighest[11] < current.sideMission12){
 			vars.individualHighest[11] = current.sideMission12;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission13Name) && vars.individualHighest[12] < current.sideMission13) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission13Name) && vars.individualHighest[12] < current.sideMission13){
 			vars.individualHighest[12] = current.sideMission13;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission14Name) && vars.individualHighest[13] < current.sideMission14) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission14Name) && vars.individualHighest[13] < current.sideMission14){
 			vars.individualHighest[13] = current.sideMission14;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission15Name) && vars.individualHighest[14] < current.sideMission15) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission15Name) && vars.individualHighest[14] < current.sideMission15){
 			vars.individualHighest[14] = current.sideMission15;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission16Name) && vars.individualHighest[15] < current.sideMission16) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission16Name) && vars.individualHighest[15] < current.sideMission16){
 			vars.individualHighest[15] = current.sideMission16;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission17Name) && vars.individualHighest[16] < current.sideMission17) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission17Name) && vars.individualHighest[16] < current.sideMission17){
 			vars.individualHighest[16] = current.sideMission17;
 			return true;
-		}else if(vars.sideMissionNames.Contains(current.sideMission18Name) && vars.individualHighest[17] < current.sideMission18) {
+		}else if(vars.sideMissionNames.Contains(current.sideMission18Name) && vars.individualHighest[17] < current.sideMission18){
 			vars.individualHighest[17] = current.sideMission18;
 			return true;
 		}
-	} else if (settings["240%"] ) // do this when we start ng+ since the values reset.
-		{
-			if (current.InNGPlus != 270598400) // check when we arent in ng+
-			{
-				if(vars.sideMissionNames.Contains(current.sideMission1Name) && vars.individualHighest[0] < current.sideMission1) {
-					vars.individualHighest[0] = current.sideMission1;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission2Name) && vars.individualHighest[1] < current.sideMission2) {
-					vars.individualHighest[1] = current.sideMission2;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission3Name) && vars.individualHighest[2] < current.sideMission3) {
-					vars.individualHighest[2] = current.sideMission3;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission4Name) && vars.individualHighest[3] < current.sideMission4) {
-					vars.individualHighest[3] = current.sideMission4;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission5Name) && vars.individualHighest[4] < current.sideMission5) {
-					vars.individualHighest[4] = current.sideMission5;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission6Name) && vars.individualHighest[5] < current.sideMission6) {
-					vars.individualHighest[5] = current.sideMission6;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission7Name) && vars.individualHighest[6] < current.sideMission7) {
-					vars.individualHighest[6] = current.sideMission7;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission8Name) && vars.individualHighest[7] < current.sideMission8) {
-					vars.individualHighest[7] = current.sideMission8;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission9Name) && vars.individualHighest[8] < current.sideMission9) {
-					vars.individualHighest[8] = current.sideMission9;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission10Name) && vars.individualHighest[9] < current.sideMission10) {
-					vars.individualHighest[9] = current.sideMission10;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission11Name) && vars.individualHighest[10] < current.sideMission11) {
-					vars.individualHighest[10] = current.sideMission11;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission12Name) && vars.individualHighest[11] < current.sideMission12) {
-					vars.individualHighest[11] = current.sideMission12;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission13Name) && vars.individualHighest[12] < current.sideMission13) {
-					vars.individualHighest[12] = current.sideMission13;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission14Name) && vars.individualHighest[13] < current.sideMission14) {
-					vars.individualHighest[13] = current.sideMission14;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission15Name) && vars.individualHighest[14] < current.sideMission15) {
-					vars.individualHighest[14] = current.sideMission15;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission16Name) && vars.individualHighest[15] < current.sideMission16) {
-					vars.individualHighest[15] = current.sideMission16;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission17Name) && vars.individualHighest[16] < current.sideMission17) {
-					vars.individualHighest[16] = current.sideMission17;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission18Name) && vars.individualHighest[17] < current.sideMission18) {
-					vars.individualHighest[17] = current.sideMission18;
-					return true;
-				}
-			}
-			if (current.InNGPlus == 270598400) // ng+ values start being tracked here since the pointers reset when you start ng+ so we need to use the separate list for ng+ and only check that one when we are in ng+ and the normal one for everything else.
-			{
-				if(vars.sideMissionNames.Contains(current.sideMission1Name) && vars.individualHighestNGPlus[0] < current.sideMission1) {
-					vars.individualHighestNGPlus[0] = current.sideMission1;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission2Name) && vars.individualHighestNGPlus[1] < current.sideMission2) {
-					vars.individualHighestNGPlus[1] = current.sideMission2;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission3Name) && vars.individualHighestNGPlus[2] < current.sideMission3) {
-					vars.individualHighestNGPlus[2] = current.sideMission3;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission4Name) && vars.individualHighestNGPlus[3] < current.sideMission4) {
-					vars.individualHighestNGPlus[3] = current.sideMission4;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission5Name) && vars.individualHighestNGPlus[4] < current.sideMission5) {
-					vars.individualHighestNGPlus[4] = current.sideMission5;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission6Name) && vars.individualHighestNGPlus[5] < current.sideMission6) {
-					vars.individualHighestNGPlus[5] = current.sideMission6;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission7Name) && vars.individualHighestNGPlus[6] < current.sideMission7) {
-					vars.individualHighestNGPlus[6] = current.sideMission7;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission8Name) && vars.individualHighestNGPlus[7] < current.sideMission8) {
-					vars.individualHighestNGPlus[7] = current.sideMission8;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission9Name) && vars.individualHighestNGPlus[8] < current.sideMission9) {
-					vars.individualHighestNGPlus[8] = current.sideMission9;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission10Name) && vars.individualHighestNGPlus[9] < current.sideMission10) {
-					vars.individualHighestNGPlus[9] = current.sideMission10;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission11Name) && vars.individualHighestNGPlus[10] < current.sideMission11) {
-					vars.individualHighestNGPlus[10] = current.sideMission11;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission12Name) && vars.individualHighestNGPlus[11] < current.sideMission12) {
-					vars.individualHighestNGPlus[11] = current.sideMission12;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission13Name) && vars.individualHighestNGPlus[12] < current.sideMission13) {
-					vars.individualHighestNGPlus[12] = current.sideMission13;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission14Name) && vars.individualHighestNGPlus[13] < current.sideMission14) {
-					vars.individualHighestNGPlus[13] = current.sideMission14;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission15Name) && vars.individualHighestNGPlus[14] < current.sideMission15) {
-					vars.individualHighestNGPlus[14] = current.sideMission15;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission16Name) && vars.individualHighestNGPlus[15] < current.sideMission16) {
-					vars.individualHighestNGPlus[15] = current.sideMission16;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission17Name) && vars.individualHighestNGPlus[16] < current.sideMission17) {
-					vars.individualHighestNGPlus[16] = current.sideMission17;
-					return true;
-				}else if(vars.sideMissionNames.Contains(current.sideMission18Name) && vars.individualHighestNGPlus[17] < current.sideMission18) {
-					vars.individualHighestNGPlus[17] = current.sideMission18;
-					return true;
-				}
-			}
-		}
-	
-	if(settings["splitOnJoker"]) {
+	}
+	if(settings["splitOnJoker"]){
 		if(current.currentLevel == "JokerBoss_B2" && old.jokerPunches > current.jokerPunches){
 			return true;
 		}
-	}
-	// full ending split ng and ng+
-	if (settings["Knightfall full ending"] && current.Knightfall && vars.TotalSideMissionsDone >= 14 && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == old.Cutscene + 4) {
-		print("Knightfall Full ending Splitted");
-		return true;		
-	} 
-	// full ending split ng only because thats the only cat that has it
-	if (settings["Knightfall first ending"] && current.Knightfall && vars.TotalSideMissionsDone >= 7 && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == old.Cutscene + 4) {
-		print("Knightfall First ending Splitted");
-		return true;			
-	}
-	// 240% split
-	if (current.OverallPercentage == 240 && old.OverallPercentage != 240) { // it can be this simple since it should only increase after the game saves which would be after the alfred dialogue ends
-		print("240% Split");
-		return true;
-	}
-}
-
-onReset
-{
-	if (vars.TotalSideMissionsDone > 0) {
-		vars.TotalSideMissionsDone = 0; // for when the player resets the timer and they have done some side missions but didn't complete the run or they did complete a run
 	}
 }
