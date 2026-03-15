@@ -85,7 +85,6 @@ state("BatmanAK", "Steam-Current"){
 	string50 sideMission18Name	: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0311F508, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
 	int OverallPercentage		: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C; // save file percentage (0-240)
-
 }
 
 state("BatmanAK", "Epic"){
@@ -142,7 +141,6 @@ startup{
 	};
 	vars.highestPercent = 0;
 	vars.individualHighest = new List<byte>(new byte[18]);
-	vars.CompletedSideMissions = new List<bool>(new bool[18]);
 	vars.sideMissionNames = new List<string>{
 		"Firecrews", "Pyg", "Drones", "ManBat", "Azrael",
 		"Firefly", "Penguin", "Bank", "Hush","Blackfire",
@@ -271,7 +269,7 @@ split{
 		if(settings["highDetail"] || vars.splitPoints.Contains(current.storyPercentage)){
 			return true;
 		}
-	} else if(settings["sideMissions"]){
+	}else if(settings["sideMissions"]){
 		if(vars.sideMissionNames.Contains(current.sideMission1Name) && vars.individualHighest[0] < current.sideMission1){
 			vars.individualHighest[0] = current.sideMission1;
 			return true;
@@ -328,7 +326,6 @@ split{
 			return true;
 		}
 	}
-	
 	if(settings["splitOnJoker"]){
 		if(current.currentLevel == "JokerBoss_B2" && old.jokerPunches > current.jokerPunches){
 			return true;
