@@ -2,6 +2,7 @@
  * Batman: Arkham Knight Auto Splitter v1.3		   *
  * By JohnStephenEvil, ShikenNuggets, GreenBat, and TpRedNinja *
  **************************************************/
+
 state("BatmanAK", "Steam-Old"){
 	int storyPercentage			: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0x4EC; // Main Story Progression (0-100)
 	string50 currentLevel		: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0x18C, 0x0;
@@ -142,7 +143,7 @@ startup{
 	};
 	vars.highestPercent = 0;
 	vars.individualHighest = new List<byte>(new byte[18]);
-
+	
 	vars.sideMissionNames = new List<string>{
 		"Firecrews", "Pyg", "Drones", "ManBat", "Azrael",
 		"Firefly", "Penguin", "Bank", "Hush","Blackfire",
