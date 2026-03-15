@@ -135,12 +135,14 @@ startup{
 	settings.SetToolTip("highDetail", "Use every possible split point. Not recommended");
 	settings.Add("sideMissions", false, "Side Missions");
 	settings.Add("splitOnJoker", false, "Split at the end of the Main Story");
+
 	vars.splitPoints = new List<int>{
 		5, 10, 16, 20, 24, 26, 28, 31, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
 		64, 66, 67, 68, 69, 70, 73, 75, 77, 78, 79, 80, 82, 85, 87, 89, 90, 95, 96
 	};
 	vars.highestPercent = 0;
 	vars.individualHighest = new List<byte>(new byte[18]);
+
 	vars.sideMissionNames = new List<string>{
 		"Firecrews", "Pyg", "Drones", "ManBat", "Azrael",
 		"Firefly", "Penguin", "Bank", "Hush","Blackfire",
