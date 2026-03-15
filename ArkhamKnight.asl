@@ -131,8 +131,7 @@ state("BatmanAK", "Epic"){
 	int OverallPercentage		: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C;
 }
 
-startup
-{
+startup{
 	settings.Add("highDetail", false, "High Detail Mode [Not Recommended]");
 	settings.SetToolTip("highDetail", "Use every possible split point. Not recommended");
 	settings.Add("sideMissions", false, "Side Missions");
@@ -151,8 +150,7 @@ startup
 	};
 }
 
-init
-{
+init{
 	print("Module Size: " + modules.First().ModuleMemorySize.ToString());
 	switch(modules.First().ModuleMemorySize){
 		case 0x8CD2000:
@@ -267,8 +265,7 @@ update{
 	}
 }
 
-split
-{
+split{
 	if(current.storyPercentage > vars.highestPercent){
 		vars.highestPercent = current.storyPercentage;
 		if(settings["highDetail"] || vars.splitPoints.Contains(current.storyPercentage)){
@@ -332,7 +329,7 @@ split
 		}
 	}
 	
-	if(settings["splitOnJoker"]) {
+	if(settings["splitOnJoker"]){
 		if(current.currentLevel == "JokerBoss_B2" && old.jokerPunches > current.jokerPunches){
 			return true;
 		}
