@@ -1,7 +1,7 @@
-/***************************************************
- * Batman: Arkham Knight Auto Splitter v1.3		   *
- * By JohnStephenEvil, ShikenNuggets, and GreenBat *
- **************************************************/
+/***************************************************************
+ * Batman: Arkham Knight Auto Splitter v1.3					   *
+ * By JohnStephenEvil, ShikenNuggets, GreenBat, and TpRedNinja *
+ ***************************************************************/
 
 state("BatmanAK", "Steam-Old"){
 	int storyPercentage			: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0x4EC; // Main Story Progression (0-100)
@@ -85,6 +85,7 @@ state("BatmanAK", "Steam-Current"){
 	byte sideMission18			: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA69;
 	string50 sideMission18Name	: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0311F508, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
+	int OverallPercentage		: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C; // save file percentage (0-240)
 }
 
 state("BatmanAK", "Epic"){
@@ -127,6 +128,7 @@ state("BatmanAK", "Epic"){
 	byte sideMission18			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA69;
 	string50 sideMission18Name	: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
+	int OverallPercentage		: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C;
 }
 
 startup{
@@ -332,4 +334,9 @@ split{
 			return true;
 		}
 	}
+	// 240% split
+	if(current.OverallPercentage == 240 && old.OverallPercentage != 240){
+		return true;
+	}
 }
+
