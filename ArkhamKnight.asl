@@ -1,7 +1,7 @@
-/***************************************************
- * Batman: Arkham Knight Auto Splitter v1.3		   *
+/***************************************************************
+ * Batman: Arkham Knight Auto Splitter v1.3					   *
  * By JohnStephenEvil, ShikenNuggets, GreenBat, and TpRedNinja *
- **************************************************/
+ ***************************************************************/
 
 state("BatmanAK", "Steam-Old"){
 	int storyPercentage			: 0x03197080, 0x0, 0x9C, 0x5AC, 0x614, 0x4EC; // Main Story Progression (0-100)
@@ -335,7 +335,7 @@ split{
 		}
 	}
 	// 240% split
-	if (current.OverallPercentage == 240 && old.OverallPercentage != 240) { // it can be this simple since it should only increase after the game saves which would be after the alfred dialogue ends
+	if(current.OverallPercentage == 240 && old.OverallPercentage != 240){
 		return true;
 	}
 }
