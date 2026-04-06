@@ -138,7 +138,6 @@ state("BatmanAK", "Epic"){
 	string50 sideMission18Name	: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
 	int OverallPercentage		: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C;
-	// extra pointers not part of the same base address as the rest of the pointers 
 	bool Knightfall 			: 0x035124EC, 0x34, 0xD44, 0xB68, 0x470, 0xA0, 0x40, 0xDC8;
 	int Cutscene				: 0x03797024, 0x108;
 }
@@ -161,6 +160,32 @@ startup{
 	vars.TotalSideMissionsDone = 0; // need this to ideally avoid double splits but even without it may not double split but just keeping it just in case
 	vars.CompletedSideMissions = new List<bool>(new bool[18]); // Need this to avoid side missions that are already done being counted twice as done and so if the game crashes the variable doesn't get messed up
 	vars.individualHighest = new List<byte>(new byte[18]);
+
+	// This list holds all side missions as tuples where:
+	// - Item1 is a function that returns the mission progress (byte) for a given game state
+	// - Item2 is a function that returns the mission name (string) for a given game state
+	// It allows us to loop through all side missions without writing repetitive if/else chains,
+	// keeping code compact while still tracking progress and names dynamically.
+	vars.sideMissions = new List<Tuple<Func<dynamic, byte>, Func<dynamic, string>>> {
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission1, s => s.sideMission1Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission2, s => s.sideMission2Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission3, s => s.sideMission3Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission4, s => s.sideMission4Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission5, s => s.sideMission5Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission6, s => s.sideMission6Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission7, s => s.sideMission7Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission8, s => s.sideMission8Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission9, s => s.sideMission9Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission10, s => s.sideMission10Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission11, s => s.sideMission11Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission12, s => s.sideMission12Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission13, s => s.sideMission13Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission14, s => s.sideMission14Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission15, s => s.sideMission15Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission16, s => s.sideMission16Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission17, s => s.sideMission17Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission18, s => s.sideMission18Name)
+	};
 	
 	vars.sideMissionNames = new List<string>{
 		"Firecrews", "Pyg", "Drones", "ManBat", "Azrael",
@@ -286,77 +311,13 @@ update{
 	}
 	// count the variable up also the bools so it doesn't double count if the value goes back down due to a crash or going to main menu.
 	if (settings["Knightfall full ending"] || settings["Knightfall first ending"]){
-		if(current.sideMission1 == 100 && !vars.CompletedSideMissions[0]){
-			vars.CompletedSideMissions[0] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission2 == 100 && !vars.CompletedSideMissions[1]){
-			vars.CompletedSideMissions[1] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission3 == 100 && !vars.CompletedSideMissions[2]){
-			vars.CompletedSideMissions[2] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission4 == 100 && !vars.CompletedSideMissions[3]){
-			vars.CompletedSideMissions[3] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission5 == 100 && !vars.CompletedSideMissions[4]){
-			vars.CompletedSideMissions[4] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission6 == 100 && !vars.CompletedSideMissions[5]){
-			vars.CompletedSideMissions[5] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission7 == 100 && !vars.CompletedSideMissions[6]){
-			vars.CompletedSideMissions[6] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission8 == 100 && !vars.CompletedSideMissions[7]){
-			vars.CompletedSideMissions[7] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission9 == 100 && !vars.CompletedSideMissions[8]){
-			vars.CompletedSideMissions[8] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission10 == 100 && !vars.CompletedSideMissions[9]){
-			vars.CompletedSideMissions[9] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission11 == 100 && !vars.CompletedSideMissions[10]){
-			vars.CompletedSideMissions[10] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission12 == 100 && !vars.CompletedSideMissions[11]){
-			vars.CompletedSideMissions[11] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission13 == 100 && !vars.CompletedSideMissions[12]){
-			vars.CompletedSideMissions[12] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission14 == 100 && !vars.CompletedSideMissions[13]){
-			vars.CompletedSideMissions[13] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission15 == 100 && !vars.CompletedSideMissions[14]){
-			vars.CompletedSideMissions[14] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission16 == 100 && !vars.CompletedSideMissions[15]){
-			vars.CompletedSideMissions[15] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission17 == 100 && !vars.CompletedSideMissions[16]){
-			vars.CompletedSideMissions[16] = true;
-			vars.TotalSideMissionsDone++;
-		}
-		if(current.sideMission18 == 100 && !vars.CompletedSideMissions[17]){
-			vars.CompletedSideMissions[17] = true;
-			vars.TotalSideMissionsDone++;
+		for (int i = 0; i < 18; i++){
+			var MissionName = vars.sideMissions[i].Item2(current);
+    		var MissionProgress = vars.sideMissions[i].Item1(current);
+			if (MissionProgress == 100 && !vars.CompletedSideMissions[i]){
+				vars.CompletedSideMissions[i] = true;
+				vars.TotalSideMissionsDone++;
+			}
 		}
 	}
 }
