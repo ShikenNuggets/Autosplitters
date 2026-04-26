@@ -86,7 +86,7 @@ state("BatmanAK", "Steam-Current"){
 	string50 sideMission18Name	: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0311F508, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
 	int OverallPercentage		: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C; // save file percentage (0-240)
-	bool Knightfall 			: 0x03502E44, 0x34, 0x44, 0x1A8, 0x470, 0xA0, 0x40, 0xDC8; // 1 when entering most of the time a un-skippable cutscene sometimes for skippable. Then 0 for any other state like skippable cutscene or not in a cutscene.
+	bool CinematicCutscene 		: 0x03502E44, 0x34, 0x44, 0x1A8, 0x470, 0xA0, 0x40, 0xDC8; // 1 when entering most of the time a un-skippable cutscene sometimes for skippable. Then 0 for any other state like skippable cutscene or not in a cutscene.
 	int Cutscene				: 0x03728F5C, 0x108; // I dont exactly know what its tracking but it seems to be consistent that 754 and 1010 are something related to not in a cutscene.
 	/* comment on Cutscene Continued
 	* 754 seems to be consistent this is no cutscene full gameplay, 1010 is like theirs some gameplay but its transitioning into or out of a cutscene.
@@ -138,7 +138,7 @@ state("BatmanAK", "Epic"){
 	string50 sideMission18Name	: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
 	int OverallPercentage		: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C;
-	bool Knightfall 			: 0x035124EC, 0x34, 0xD44, 0xB68, 0x470, 0xA0, 0x40, 0xDC8;
+	bool CinematicCutscene 		: 0x035124EC, 0x34, 0xD44, 0xB68, 0x470, 0xA0, 0x40, 0xDC8;
 	int Cutscene				: 0x03797024, 0x108;
 }
 
@@ -147,18 +147,12 @@ startup{
 	settings.SetToolTip("highDetail", "Use every possible split point. Not recommended");
 	settings.Add("sideMissions", false, "Side Missions");
 	settings.Add("splitOnJoker", false, "Split at the end of the Main Story");
-	settings.Add("Knightfall first ending", false, "Knightfall First Ending");
-	settings.SetToolTip("Knightfall first ending", "Use this if you are speed-running Knightfall First Ending");
-	settings.Add("Knightfall full ending", false, "Knightfall Full Ending");
-	settings.SetToolTip("Knightfall full ending", "Use this if you are speed-running Knightfall Full Ending");
 
 	vars.splitPoints = new List<int>{
 		5, 10, 16, 20, 24, 26, 28, 31, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
 		64, 66, 67, 68, 69, 70, 73, 75, 77, 78, 79, 80, 82, 85, 87, 89, 90, 95, 96
 	};
 	vars.highestPercent = 0;
-	vars.TotalSideMissionsDone = 0; // need this to ideally avoid double splits but even without it may not double split but just keeping it just in case
-	vars.CompletedSideMissions = new List<bool>(new bool[18]); // Need this to avoid side missions that are already done being counted twice as done and so if the game crashes the variable doesn't get messed up
 	vars.individualHighest = new List<byte>(new byte[18]);
 
 	// This list holds all side missions as tuples where:
@@ -213,9 +207,7 @@ update{
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
 		// When the timer starts, reset these things
-		vars.TotalSideMissionsDone = 0;
 		vars.highestPercent = current.storyPercentage;
-		vars.CompletedSideMissions = new List<bool>(new bool[18]);
 		
 		vars.individualHighest = new List<byte>();
 		if(vars.sideMissionNames.Contains(current.sideMission1Name)){
@@ -309,17 +301,6 @@ update{
 			vars.individualHighest.Add(0);
 		}
 	}
-	// count the variable up also the bools so it doesn't double count if the value goes back down due to a crash or going to main menu.
-	if (settings["Knightfall full ending"] || settings["Knightfall first ending"]){
-		for (int i = 0; i < 18; i++){
-			var MissionName = vars.sideMissions[i].Item2(current);
-    		var MissionProgress = vars.sideMissions[i].Item1(current);
-			if (MissionProgress == 100 && !vars.CompletedSideMissions[i]){
-				vars.CompletedSideMissions[i] = true;
-				vars.TotalSideMissionsDone++;
-			}
-		}
-	}
 }
 
 split{
@@ -391,11 +372,11 @@ split{
 		}
 	}
 	// full ending split ng and ng+
-	if (settings["Knightfall full ending"] && current.Knightfall && vars.TotalSideMissionsDone >= 14 && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
+	if (current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
 		return true;		
 	}
 	// full ending split ng only because thats the only cat that has it
-	if (settings["Knightfall first ending"] && current.Knightfall && vars.TotalSideMissionsDone >= 7 && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){ 
+	if (current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){ 
 		return true;			
 	}
 	// 240% split
