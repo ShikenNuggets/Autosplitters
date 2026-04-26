@@ -86,6 +86,15 @@ state("BatmanAK", "Steam-Current"){
 	string50 sideMission18Name	: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0311F508, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
 	int OverallPercentage		: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C; // save file percentage (0-240)
+	bool CinematicCutscene 		: 0x03502E44, 0x34, 0x44, 0x1A8, 0x470, 0xA0, 0x40, 0xDC8; // 1 when entering most of the time a un-skippable cutscene sometimes for skippable. Then 0 for any other state like skippable cutscene or not in a cutscene.
+	int Cutscene				: 0x03728F5C, 0x108; // I dont exactly know what its tracking but it seems to be consistent that 754 and 1010 are something related to not in a cutscene.
+	/* comment on Cutscene Continued
+	* 754 seems to be consistent this is no cutscene full gameplay, 1010 is like theirs some gameplay but its transitioning into or out of a cutscene.
+	* 758 seems to be in a cutscene or for like radio comms(thats skippable) like for when you are talking to Alfred after you complete everything and knightfall is ready.
+	* 1014 seems to be also in a cutscene but for like when its un-skippable.
+	* Then there's other values like 766 and 1022 which only happen during cutscenes for like a second or so.
+	* 766 may be related to Jason being in the cutscene specially at the end of the game with the truck crashing and with him saving you from scarecrow/
+	*/
 }
 
 state("BatmanAK", "Epic"){
@@ -129,6 +138,8 @@ state("BatmanAK", "Epic"){
 	string50 sideMission18Name	: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
 	int OverallPercentage		: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C;
+	bool CinematicCutscene 		: 0x035124EC, 0x34, 0xD44, 0xB68, 0x470, 0xA0, 0x40, 0xDC8;
+	int Cutscene				: 0x03797024, 0x108;
 }
 
 startup{
@@ -143,6 +154,32 @@ startup{
 	};
 	vars.highestPercent = 0;
 	vars.individualHighest = new List<byte>(new byte[18]);
+
+	// This list holds all side missions as tuples where:
+	// - Item1 is a function that returns the mission progress (byte) for a given game state
+	// - Item2 is a function that returns the mission name (string) for a given game state
+	// It allows us to loop through all side missions without writing repetitive if/else chains,
+	// keeping code compact while still tracking progress and names dynamically.
+	vars.sideMissions = new List<Tuple<Func<dynamic, byte>, Func<dynamic, string>>> {
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission1, s => s.sideMission1Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission2, s => s.sideMission2Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission3, s => s.sideMission3Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission4, s => s.sideMission4Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission5, s => s.sideMission5Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission6, s => s.sideMission6Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission7, s => s.sideMission7Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission8, s => s.sideMission8Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission9, s => s.sideMission9Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission10, s => s.sideMission10Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission11, s => s.sideMission11Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission12, s => s.sideMission12Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission13, s => s.sideMission13Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission14, s => s.sideMission14Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission15, s => s.sideMission15Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission16, s => s.sideMission16Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission17, s => s.sideMission17Name),
+		Tuple.Create<Func<dynamic, byte>, Func<dynamic, string>>(s => s.sideMission18, s => s.sideMission18Name)
+	};
 	
 	vars.sideMissionNames = new List<string>{
 		"Firecrews", "Pyg", "Drones", "ManBat", "Azrael",
@@ -333,6 +370,14 @@ split{
 		if(current.currentLevel == "JokerBoss_B2" && old.jokerPunches > current.jokerPunches){
 			return true;
 		}
+	}
+	// full ending split ng and ng+
+	if (current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
+		return true;		
+	}
+	// full ending split ng only because thats the only cat that has it
+	if (current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){ 
+		return true;			
 	}
 	// 240% split
 	if(current.OverallPercentage == 240 && old.OverallPercentage != 240){
