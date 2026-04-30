@@ -153,6 +153,8 @@ startup{
 		64, 66, 67, 68, 69, 70, 73, 75, 77, 78, 79, 80, 82, 85, 87, 89, 90, 95, 96
 	};
 	vars.highestPercent = 0;
+	vars.TotalSideMissionsDone = 0;
+	vars.CompletedSideMissions = new List<bool>(new bool[18]); // makes sure we dont count a side mission twice as completed
 	vars.individualHighest = new List<byte>(new byte[18]);
 
 	// This list holds all side missions as tuples where:
@@ -207,6 +209,8 @@ update{
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
 		// When the timer starts, reset these things
+		vars.TotalSideMissionsDone = 0;
+		vars.CompletedSideMissions = new List<bool>(new bool[18]);
 		vars.highestPercent = current.storyPercentage;
 		
 		vars.individualHighest = new List<byte>();
@@ -301,6 +305,15 @@ update{
 			vars.individualHighest.Add(0);
 		}
 	}
+	
+	for (int i = 0; i < 18; i++){
+		var MissionName = vars.sideMissions[i].Item2(current);
+		var MissionProgress = vars.sideMissions[i].Item1(current);
+		if (MissionProgress == 100 && !vars.CompletedSideMissions[i]){
+				vars.CompletedSideMissions[i] = true;
+				vars.TotalSideMissionsDone++;
+			}
+		}
 }
 
 split{
@@ -371,12 +384,12 @@ split{
 			return true;
 		}
 	}
-	// full ending split ng and ng+
-	if (current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
+	// first ending split
+	if (vars.TotalSideMissionsDone == 7 && current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
 		return true;		
 	}
-	// full ending split ng only because thats the only cat that has it
-	if (current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){ 
+	// full ending split
+	if (vars.TotalSideMissionsDone == 7 && current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){ 
 		return true;			
 	}
 	// 240% split
