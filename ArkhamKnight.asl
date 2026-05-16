@@ -86,7 +86,6 @@ state("BatmanAK", "Steam-Current"){
 	string50 sideMission18Name	: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0311F508, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
 	int OverallPercentage		: 0x0311F508, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C; // save file percentage (0-240)
-	bool CinematicCutscene 		: 0x03502E44, 0x34, 0x44, 0x1A8, 0x470, 0xA0, 0x40, 0xDC8; // 1 when entering most of the time a un-skippable cutscene sometimes for skippable. Then 0 for any other state like skippable cutscene or not in a cutscene.
 	int Cutscene				: 0x0311F508, 0x84C, 0x0, 0x108; // I dont exactly know what its tracking but it seems to be consistent that 754 and 1010 are something related to not in a cutscene.
 	/* comment on Cutscene Continued
 	* 754 seems to be consistent this is no cutscene full gameplay, 1010 is like theirs some gameplay but its transitioning into or out of a cutscene.
@@ -138,7 +137,6 @@ state("BatmanAK", "Epic"){
 	string50 sideMission18Name	: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x614, 0xA14, 0xA70, 0x0;
 	int jokerPunches			: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0xA9C, 0x1AA8;
 	int OverallPercentage		: 0x0318D5B8, 0x84C, 0x0, 0x5C, 0x9C, 0x5AC, 0x4D8, 0x36C, 0x13C;
-	bool CinematicCutscene 		: 0x035124EC, 0x34, 0xD44, 0xB68, 0x470, 0xA0, 0x40, 0xDC8;
 	int Cutscene				: 0x0318D5B8, 0x84C, 0x0, 0x108;
 }
 
@@ -385,11 +383,11 @@ split{
 		}
 	}
 	// first ending split
-	if (vars.TotalSideMissionsDone == 7 && current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
+	if (vars.TotalSideMissionsDone == 7 && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
 		return true;		
 	}
 	// full ending split
-	if (vars.TotalSideMissionsDone == 7 && current.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){ 
+	if (vars.TotalSideMissionsDone == 14 && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){ 
 		return true;			
 	}
 	// 240% split
