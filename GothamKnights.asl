@@ -1,6 +1,9 @@
-//Gotham Knights Load Remover v1.0
-//Created by ShikenNuggets
-//Pauses on load screens
+/***************************************************************
+ * Gotham Knights ASL Script
+ * Created by ShikenNuggets
+ * Updated By TpRedNinja
+***************************************************************/
+// Removes loads and auto splits when the night ends
 
 state("GothamKnights-Win64-Shipping", "Steam 2022.10.21"){
 	byte loading	: 0x072A1F88, 0x4B0, 0x0, 0x230, 0xC8, 0x8, 0x5F0, 0x490;
@@ -46,6 +49,11 @@ state("GothamKnights", "Steam 2023.09.26"){
 	byte loading	: 0x072CC650, 0x140, 0x5F8, 0x490;
 }
 
+state("GothamKnights", "Steam 2026.2.26"){
+	int CurrentNight	: 0x73F3EC8, 0x7C8, 0x80, 0x38, 0x0, 0x30, 0x278, 0x408; // the current night you are on.
+	byte loading 	: 0x071B6A30, 0x0, 0x358, 0xE8, 0x8, 0x3E8;
+}
+
 state("GothamKnights", "Epic 2022.11.07"){
 	byte loading	: 0x07092B70, 0x0, 0x38, 0x8, 0x150, 0x490;
 }
@@ -75,6 +83,7 @@ state("GothamKnights", "Epic 2023.04.27"){
 }
 
 init{
+	vars.version = "Unknown Version";
 	switch(modules.First().ModuleMemorySize){
 		case 0x1C70F000:
 			version = "Steam 2022.10.21";
@@ -109,6 +118,9 @@ init{
 		case 478765056:
 			version = "Steam 2023.09.26";
 			break;
+		case 129413120:
+			version = "Steam 2026.2.26";
+			break;
 		case 0x1CE58000:
 			version = "Epic 2022.11.07";
 			break;
@@ -134,8 +146,18 @@ init{
 			print("Unrecognized Module Size: " + modules.First().ModuleMemorySize.ToString());
 			break;
 	}
+	vars.version = version;
+}
+
+split
+{
+	// splits when reaching the next night
+	if (current.CurrentNight > old.CurrentNight && vars.version == "Steam 2026.2.26") {
+		return true;
+	}
 }
 
 isLoading{
+
 	return current.loading == 1;
 }
