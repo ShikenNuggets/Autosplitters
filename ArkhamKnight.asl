@@ -385,11 +385,11 @@ split{
 		}
 	}
 	// first ending split
-	if (vars.TotalSideMissionsDone == 7 && current.CinematicCutscene >= 1 && old.CinematicCutscene == 0 && !current.Paused && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
+	if (vars.TotalSideMissionsDone == 7 && current.CinematicCutscene != old.CinematicCutscene && !current.Paused && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
 		return true;		
 	}
 	// full ending split
-	if (vars.TotalSideMissionsDone >= 14 && current.CinematicCutscene >= 1 && old.CinematicCutscene == 0 && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
+	if (vars.TotalSideMissionsDone >= 14 && current.CinematicCutscene != old.CinematicCutscene && current.storyPercentage == 100 && current.currentLevel == "CityZ_17" && current.Cutscene == 758 && old.Cutscene == 754){
 		return true;			
 	}
 	// 240% split
