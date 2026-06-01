@@ -1,6 +1,7 @@
-//Batman: Arkham City Autosplitter v4.0
+//Batman: Arkham City Autosplitter v4.1
 //Created by ShikenNuggets and JohnStephenEvil
 //Splits in a bunch of places for a bunch of reasons
+//v4.1: Any% w/Cat final segment — Two-Face auto split (see PHASE1_TWO_FACE_HP.md for HP pointer)
 
 state("BatmanAC", "Steam"){
 	int isReloading			: 0x011711E8;
@@ -45,8 +46,18 @@ startup{
 	settings.Add("splitOnBatsuit", false, "Split on Batsuit", "legacyMode");
 	settings.Add("splitOnClayface", false, "Split on Clayface", "legacyMode");
 	
+	settings.Add("twoFaceHpConfigured", true, "Two-Face: auto-split on HP = 0 (Any% w/Cat)");
+	settings.SetToolTip("twoFaceHpConfigured", "Ends the run automatically the instant Two-Face's health reaches 0 on the final segment. Steam/GOG only (Epic needs its own pointer).");
+	settings.Add("twoFaceCutsceneFallback", true, "Two-Face: victory cutscene fallback");
+	settings.SetToolTip("twoFaceCutsceneFallback", "Backup trigger: also split when the victory cutscene starts as Catwoman in the Museum, in case the HP read is ever unavailable.");
+	
 	vars.state = 0;
 	vars.cutscenesThisChapter = 0;
+	vars.tfHpPtr = null;
+	vars.tfHp = 0;
+	vars.tfHpOld = 0;
+	vars.tfHpValid = false;
+	vars.tfHpOldValid = false;
 }
 
 init{
@@ -61,12 +72,40 @@ init{
 			version = "Epic";
 			break;
 	}
+	
+	// Two-Face HP pointer (found via Cheat Engine — see PHASE1_TWO_FACE_HP.md)
+	// 4-byte int health (max 20). Reaches and stays at 0 when Two-Face is defeated.
+	// CE path: "BatmanAC.exe"+0x0123E464 -> 0x2C4
+	vars.tfHpPtr = null;
+	if(version == "Steam"){
+		vars.tfHpPtr = new DeepPointer("BatmanAC.exe", 0x0123E464, 0x2C4);
+	}
+	// Epic: needs its own CE scan; relies on the victory-cutscene fallback until added.
 }
 
 update{
 	current.timerPhase = timer.CurrentPhase;
 	if(old.timerPhase.ToString() == "NotRunning" && current.timerPhase.ToString() == "Running"){
 		vars.cutscenesThisChapter = 0;
+	}
+	
+	// Read Two-Face HP safely (never let an invalid pointer break the other splits)
+	vars.tfHpOld = vars.tfHp;
+	vars.tfHpOldValid = vars.tfHpValid;
+	vars.tfHpValid = false;
+	if(vars.tfHpPtr != null){
+		try{
+			IntPtr tfAddr;
+			if(vars.tfHpPtr.DerefOffsets(game, out tfAddr)){
+				int tfVal;
+				if(game.ReadValue<int>(tfAddr, out tfVal)){
+					vars.tfHp = tfVal;
+					vars.tfHpValid = true;
+				}
+			}
+		}catch{
+			vars.tfHpValid = false;
+		}
 	}
 	
 	if(settings["startAfterSkin"] && vars.state == 0 && current.skin == 1){
@@ -218,5 +257,32 @@ split{
 	//---Other---
 	if(!string.IsNullOrWhiteSpace(current.lastDoorRoom) && current.lastDoorRoom.Contains("Under_S2") && old.clayface == current.clayface - 32){
 		return true; //Clayface interaction
+	}
+	
+	//---Final segment: Two-Face (Any% w/Cat)---
+	if(timer.CurrentSplitIndex == timer.Run.Count - 1){
+		bool twoFaceFinalSegment = timer.CurrentSplitName.Contains("Two-Face")
+			|| timer.CurrentSplitName.Contains("Two Face")
+			|| timer.CurrentSplitName.Contains("Twoface");
+		if(twoFaceFinalSegment && current.character.Contains("Playable_Catwoman")){
+			// HP hits 0 (the killing blow). Both reads must be valid so a momentary
+			// failed deref can't be mistaken for a real drop to 0.
+			if(settings["twoFaceHpConfigured"] && vars.tfHpOldValid && vars.tfHpValid && vars.tfHpOld > 0 && vars.tfHp <= 0){
+				return true; //Two-Face's health hit 0 — end run
+			}
+			// Victory cutscene in Museum (backup trigger)
+			if(settings["twoFaceCutsceneFallback"] && old.cutscenePlaying == 0 && current.cutscenePlaying == 1){
+				bool inMuseum = (!string.IsNullOrWhiteSpace(current.lastDoorRoom) && current.lastDoorRoom.Contains("Museum_"))
+					|| (!string.IsNullOrWhiteSpace(current.currentLevel) && current.currentLevel.Contains("Museum_"))
+					|| (!string.IsNullOrWhiteSpace(current.persistentLevel) && current.persistentLevel.Contains("Museum_"));
+				if(inMuseum){
+					return true;
+				}
+			}
+		}
+		// Cat 4 epilogue: Cat -> Batman after Two-Face (broader than stock After Cat 4 room check)
+		if(twoFaceFinalSegment && current.chapter == 9 && old.character.Contains("Playable_Catwoman") && current.character.Contains("Playable_Batman")){
+			return true;
+		}
 	}
 }
