@@ -306,14 +306,15 @@ update{
 		}
 	}
 	
-	for (int i = 0; i <= 13; i++){
+	for (int i = 0; i <= 13; i++) {
 		var MissionName = vars.sideMissions[i].Item2(current);
 		var MissionProgress = vars.sideMissions[i].Item1(current);
-		if (MissionProgress == 100 && !vars.CompletedSideMissions[i]){
+		var MissionProgressOld = vars.sideMissions[i].Item1(old);
+		if (MissionProgress == 100 && current.storyPercentage >= 59 && MissionProgressOld < 100 && MissionProgressOld >= 0 !vars.CompletedSideMissions[i]){
 				vars.CompletedSideMissions[i] = true;
 				vars.TotalSideMissionsDone++;
-			}
 		}
+	}
 }
 
 split{
