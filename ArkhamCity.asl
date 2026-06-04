@@ -235,13 +235,7 @@ split{
 	}
 	
 	//---Two-Face (Any% w/Cat)---
-	if(settings["twoFaceAutoSplit"]
-		&& current.chapter == 9
-		&& current.character.Contains("Playable_Catwoman")
-		&& !vars.tfSplitDone
-		&& vars.tfBossWasActive && current.tfBoss == 0
-		&& current.gameState == 0x02
-		&& game != null && !game.HasExited){
+	if(settings["twoFaceAutoSplit"] && current.chapter == 9 && current.character.Contains("Playable_Catwoman") && !vars.tfSplitDone && vars.tfBossWasActive && current.tfBoss == 0 && current.gameState == 0x02 && game != null && !game.HasExited){
 		vars.tfSplitDone = true;
 		return true; //Two-Face's health bar faded off screen
 	}
