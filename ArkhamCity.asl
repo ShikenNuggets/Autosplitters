@@ -1,6 +1,7 @@
 //Batman: Arkham City Autosplitter v4.0
 //Created by ShikenNuggets and JohnStephenEvil
 //Splits in a bunch of places for a bunch of reasons
+//V4.1 Splits on Two-Face healthbar disappearance
 
 state("BatmanAC", "Steam"){
 	int isReloading			: 0x011711E8;
@@ -15,6 +16,8 @@ state("BatmanAC", "Steam"){
 	string50 currentLevel	: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x98, 0x0;
 	byte chapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 	byte subChapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
+	int tfBoss				: 0x01263118, 0xC, 0x278, 0x30, 0x18, 0x3C;
+	byte gameState			: 0x012A5474, 0x18, 0x0, 0x60, 0x1EC;
 }
 
 state("BatmanAC", "Epic"){
@@ -30,6 +33,8 @@ state("BatmanAC", "Epic"){
 	string50 currentLevel	: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x98, 0x0;
 	byte chapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 	byte subChapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
+	int tfBoss				: 0x0124DD38, 0xC, 0x278, 0x30, 0x18, 0x3C;
+	byte gameState			: 0x01290094, 0x18, 0x0, 0x60, 0x1EC;
 }
 
 startup{
@@ -45,8 +50,13 @@ startup{
 	settings.Add("splitOnBatsuit", false, "Split on Batsuit", "legacyMode");
 	settings.Add("splitOnClayface", false, "Split on Clayface", "legacyMode");
 	
+	settings.Add("twoFaceAutoSplit", true, "Two-Face: auto-split on health bar disappearance (Any% w/Cat)");
+	settings.SetToolTip("twoFaceAutoSplit", "Splits the instant Two-Face's health bar fades off screen.");
+	
 	vars.state = 0;
 	vars.cutscenesThisChapter = 0;
+	vars.tfBossWasActive = false;
+	vars.tfSplitDone = false;
 }
 
 init{
@@ -67,7 +77,11 @@ update{
 	current.timerPhase = timer.CurrentPhase;
 	if(old.timerPhase.ToString() == "NotRunning" && current.timerPhase.ToString() == "Running"){
 		vars.cutscenesThisChapter = 0;
+		vars.tfBossWasActive = false;
+		vars.tfSplitDone = false;
 	}
+	
+	if(current.tfBoss != 0) vars.tfBossWasActive = true;
 	
 	if(settings["startAfterSkin"] && vars.state == 0 && current.skin == 1){
 		vars.state = 4;
@@ -218,5 +232,17 @@ split{
 	//---Other---
 	if(!string.IsNullOrWhiteSpace(current.lastDoorRoom) && current.lastDoorRoom.Contains("Under_S2") && old.clayface == current.clayface - 32){
 		return true; //Clayface interaction
+	}
+	
+	//---Two-Face (Any% w/Cat)---
+	if(settings["twoFaceAutoSplit"]
+		&& current.chapter == 9
+		&& current.character.Contains("Playable_Catwoman")
+		&& !vars.tfSplitDone
+		&& vars.tfBossWasActive && current.tfBoss == 0
+		&& current.gameState == 0x02
+		&& game != null && !game.HasExited){
+		vars.tfSplitDone = true;
+		return true; //Two-Face's health bar faded off screen
 	}
 }
