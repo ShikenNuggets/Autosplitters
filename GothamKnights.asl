@@ -1,6 +1,6 @@
-//Gotham Knights Load Remover v1.0
-//Created by ShikenNuggets
-//Pauses on load screens
+//Gotham Knights Autosplitter and Load Remover v1.1
+//Created by ShikenNuggets and TpRedNinja
+//Pauses on load screens and splits at the end of each night
 
 state("GothamKnights-Win64-Shipping", "Steam 2022.10.21"){
 	byte loading	: 0x072A1F88, 0x4B0, 0x0, 0x230, 0xC8, 0x8, 0x5F0, 0x490;
@@ -44,6 +44,11 @@ state("GothamKnights", "Steam 2023.04.27"){
 
 state("GothamKnights", "Steam 2023.09.26"){
 	byte loading	: 0x072CC650, 0x140, 0x5F8, 0x490;
+}
+
+state("GothamKnights", "Steam 2026.02.26"){
+	int CurrentNight	: 0x73F3EC8, 0x7C8, 0x80, 0x38, 0x0, 0x30, 0x278, 0x408;
+	byte loading 	: 0x071B6A30, 0x0, 0x358, 0xE8, 0x8, 0x3E8;
 }
 
 state("GothamKnights", "Epic 2022.11.07"){
@@ -109,6 +114,9 @@ init{
 		case 478765056:
 			version = "Steam 2023.09.26";
 			break;
+		case 129413120:
+			version = "Steam 2026.02.26";
+			break;
 		case 0x1CE58000:
 			version = "Epic 2022.11.07";
 			break;
@@ -133,6 +141,13 @@ init{
 		default:
 			print("Unrecognized Module Size: " + modules.First().ModuleMemorySize.ToString());
 			break;
+	}
+}
+
+split{
+	// splits when reaching the next night
+	if (current.CurrentNight > old.CurrentNight) {
+		return true;
 	}
 }
 
