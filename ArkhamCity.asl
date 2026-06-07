@@ -50,8 +50,6 @@ startup{
 	settings.Add("splitOnBatsuit", false, "Split on Batsuit", "legacyMode");
 	settings.Add("splitOnClayface", false, "Split on Clayface", "legacyMode");
 	
-	settings.Add("twoFaceAutoSplit", true, "Two-Face: auto-split on health bar disappearance (Any% w/Cat)");
-	settings.SetToolTip("twoFaceAutoSplit", "Splits the instant Two-Face's health bar fades off screen.");
 	
 	vars.state = 0;
 	vars.cutscenesThisChapter = 0;
@@ -81,7 +79,7 @@ update{
 		vars.tfSplitDone = false;
 	}
 	
-	if(current.tfBoss != 0) vars.tfBossWasActive = true;
+	if(current.chapter == 9 && current.character.Contains("Playable_Catwoman") && current.tfBoss != 0) vars.tfBossWasActive = true;
 	
 	if(settings["startAfterSkin"] && vars.state == 0 && current.skin == 1){
 		vars.state = 4;
@@ -218,8 +216,6 @@ split{
 			return true; //Batsuit
 		}else if(current.chapter == 7 && old.character.Contains("Playable_Catwoman") && current.character.Contains("Playable_Batman")){
 			return true; //After Cat 3
-		}else if(current.chapter == 9 && current.lastDoorRoom.Contains("Museum_") && old.character.Contains("Playable_Catwoman") && current.character.Contains("Playable_Batman")){
-			return true; //After Cat 4
 		}else if(current.chapter == 9 && !current.lastDoorRoom.Contains("Under_S2") && old.character.Contains("Playable_Batman") && current.character.Contains("Playable_Catwoman")){
 			return true; //Before Catwoman Cleanup (100%)
 		}else if(old.character.Contains("Playable_Batman") && current.character.Contains("Playable_Robin")){
@@ -235,7 +231,7 @@ split{
 	}
 	
 	//---Two-Face (Any% w/Cat)---
-	if(settings["twoFaceAutoSplit"] && current.chapter == 9 && current.character.Contains("Playable_Catwoman") && !vars.tfSplitDone && vars.tfBossWasActive && current.tfBoss == 0 && current.gameState == 0x02 && game != null && !game.HasExited){
+	if(current.chapter == 9 && current.lastDoorRoom.Contains("Museum_") && current.character.Contains("Playable_Catwoman") && !vars.tfSplitDone && vars.tfBossWasActive && current.tfBoss == 0 && current.gameState == 0x02){
 		vars.tfSplitDone = true;
 		return true; //Two-Face's health bar faded off screen
 	}
