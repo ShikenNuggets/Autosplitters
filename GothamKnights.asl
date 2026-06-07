@@ -83,7 +83,6 @@ state("GothamKnights", "Epic 2023.04.27"){
 }
 
 init{
-	vars.version = "Unknown Version";
 	switch(modules.First().ModuleMemorySize){
 		case 0x1C70F000:
 			version = "Steam 2022.10.21";
@@ -146,13 +145,12 @@ init{
 			print("Unrecognized Module Size: " + modules.First().ModuleMemorySize.ToString());
 			break;
 	}
-	vars.version = version;
 }
 
 split
 {
 	// splits when reaching the next night
-	if (current.CurrentNight > old.CurrentNight && vars.version == "Steam 2026.2.26") {
+	if (current.CurrentNight > old.CurrentNight) {
 		return true;
 	}
 }
