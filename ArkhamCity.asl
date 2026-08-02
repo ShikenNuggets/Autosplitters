@@ -1,5 +1,5 @@
-//Batman: Arkham City Autosplitter v4.0
-//Created by ShikenNuggets and JohnStephenEvil
+//Batman: Arkham City Autosplitter v4.1
+//Created by ShikenNuggets, JohnStephenEvil, and 30Puns
 //Splits in a bunch of places for a bunch of reasons
 
 state("BatmanAC", "Steam"){
@@ -15,6 +15,8 @@ state("BatmanAC", "Steam"){
 	string50 currentLevel	: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x98, 0x0;
 	byte chapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 	byte subChapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
+	int tfBoss				: 0x01263118, 0xC, 0x278, 0x30, 0x18, 0x3C;
+	byte gameState			: 0x012A5474, 0x18, 0x0, 0x60, 0x1EC;
 }
 
 state("BatmanAC", "Epic"){
@@ -30,6 +32,8 @@ state("BatmanAC", "Epic"){
 	string50 currentLevel	: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x98, 0x0;
 	byte chapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE6;
 	byte subChapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
+	int tfBoss				: 0x0124DD38, 0xC, 0x278, 0x30, 0x18, 0x3C;
+	byte gameState			: 0x01290094, 0x18, 0x0, 0x60, 0x1EC;
 }
 
 startup{
@@ -45,8 +49,11 @@ startup{
 	settings.Add("splitOnBatsuit", false, "Split on Batsuit", "legacyMode");
 	settings.Add("splitOnClayface", false, "Split on Clayface", "legacyMode");
 	
+	
 	vars.state = 0;
 	vars.cutscenesThisChapter = 0;
+	vars.tfBossWasActive = false;
+	vars.tfSplitDone = false;
 }
 
 init{
@@ -67,6 +74,12 @@ update{
 	current.timerPhase = timer.CurrentPhase;
 	if(old.timerPhase.ToString() == "NotRunning" && current.timerPhase.ToString() == "Running"){
 		vars.cutscenesThisChapter = 0;
+		vars.tfBossWasActive = false;
+		vars.tfSplitDone = false;
+	}
+	
+	if(current.chapter == 9 && current.character != null && current.character.Contains("Playable_Catwoman") && current.tfBoss != 0){
+		vars.tfBossWasActive = true;
 	}
 	
 	if(settings["startAfterSkin"] && vars.state == 0 && current.skin == 1){
@@ -204,8 +217,6 @@ split{
 			return true; //Batsuit
 		}else if(current.chapter == 7 && old.character.Contains("Playable_Catwoman") && current.character.Contains("Playable_Batman")){
 			return true; //After Cat 3
-		}else if(current.chapter == 9 && current.lastDoorRoom.Contains("Museum_") && old.character.Contains("Playable_Catwoman") && current.character.Contains("Playable_Batman")){
-			return true; //After Cat 4
 		}else if(current.chapter == 9 && !current.lastDoorRoom.Contains("Under_S2") && old.character.Contains("Playable_Batman") && current.character.Contains("Playable_Catwoman")){
 			return true; //Before Catwoman Cleanup (100%)
 		}else if(old.character.Contains("Playable_Batman") && current.character.Contains("Playable_Robin")){
@@ -218,5 +229,11 @@ split{
 	//---Other---
 	if(!string.IsNullOrWhiteSpace(current.lastDoorRoom) && current.lastDoorRoom.Contains("Under_S2") && old.clayface == current.clayface - 32){
 		return true; //Clayface interaction
+	}
+	
+	//---Two-Face (Any% w/Cat)---
+	if(current.chapter == 9 && current.lastDoorRoom.Contains("Museum_") && current.character.Contains("Playable_Catwoman") && !vars.tfSplitDone && vars.tfBossWasActive && current.tfBoss == 0 && current.gameState == 0x02){
+		vars.tfSplitDone = true;
+		return true; //Two-Face's health bar faded off screen
 	}
 }
