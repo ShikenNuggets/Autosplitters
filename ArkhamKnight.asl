@@ -310,7 +310,7 @@ update{
 		var MissionName = vars.sideMissions[i].Item2(current);
 		var MissionProgress = vars.sideMissions[i].Item1(current);
 		var MissionProgressOld = vars.sideMissions[i].Item1(old);
-		if (MissionProgress == 100 && current.storyPercentage >= 59 && MissionProgressOld < 100 && MissionProgressOld >= 0 !vars.CompletedSideMissions[i]){
+		if (MissionProgress == 100 && current.storyPercentage >= 59 && MissionProgressOld < 100 && MissionProgressOld >= 0 && !vars.CompletedSideMissions[i]){
 				vars.CompletedSideMissions[i] = true;
 				vars.TotalSideMissionsDone++;
 		}
