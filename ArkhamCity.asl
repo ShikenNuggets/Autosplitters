@@ -79,7 +79,9 @@ update{
 		vars.tfSplitDone = false;
 	}
 	
-	if(current.chapter == 9 && current.character.Contains("Playable_Catwoman") && current.tfBoss != 0) vars.tfBossWasActive = true;
+	if(current.chapter == 9 && current.character != null && current.character.Contains("Playable_Catwoman") && current.tfBoss != 0){
+		vars.tfBossWasActive = true;
+	}
 	
 	if(settings["startAfterSkin"] && vars.state == 0 && current.skin == 1){
 		vars.state = 4;
