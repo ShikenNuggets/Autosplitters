@@ -1,7 +1,6 @@
-//Batman: Arkham City Autosplitter v4.0
-//Created by ShikenNuggets and JohnStephenEvil
+//Batman: Arkham City Autosplitter v4.1
+//Created by ShikenNuggets, JohnStephenEvil, and 30Puns
 //Splits in a bunch of places for a bunch of reasons
-//V4.1 Splits on Two-Face healthbar disappearance
 
 state("BatmanAC", "Steam"){
 	int isReloading			: 0x011711E8;
