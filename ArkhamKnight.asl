@@ -307,18 +307,20 @@ update{
 	}
 	
 	if (current.storyPercentage == 100) {
-	  for (int i = 0; i <= vars.sideMissions.Count; i++) {
-	    if (vars.CompletedSideMissions[i]) continue;
-	    
-	    var MissionProgress = vars.sideMissions[i].Item1(current);
-	    var MissionProgressOld = vars.sideMissions[i].Item1(old);
-	
-	    if (MissionProgress != 100) continue;
-	    if (MissionProgressOld < 0 || MissionProgressOld > 100) continue;
-	    
-	    vars.CompletedSideMissions[i] = true;
-	    vars.TotalSideMissionsDone++;
-	  }
+		var limit = vars.sideMissions.Count - 1; // set limit to the last index of sideMissions
+		for (int i = 0; i <= limit; i++) {
+		if (vars.CompletedSideMissions[i]) continue; // if its completed, just skip
+		
+		var MissionProgress = vars.sideMissions[i].Item1(current);
+		var MissionProgressOld = vars.sideMissions[i].Item1(old);
+
+		if (MissionProgress != 100) continue; // if it doesn't equal 100, skip
+		if (MissionProgressOld < 0 || MissionProgressOld > 100) continue; // if the old value isn't a number from 0 to 100, skip
+
+		// everything else is good, mark it as completed and increment the total
+		vars.CompletedSideMissions[i] = true;
+		vars.TotalSideMissionsDone++;
+		}
 	}
 }
 
