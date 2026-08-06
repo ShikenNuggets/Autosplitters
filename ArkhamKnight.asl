@@ -147,7 +147,6 @@ startup{
 	settings.SetToolTip("highDetail", "Use every possible split point. Not recommended");
 	settings.Add("sideMissions", false, "Side Missions");
 	settings.Add("splitOnJoker", false, "Split at the end of the Main Story");
-	settings.Add("Debug", false);
 
 	vars.splitPoints = new List<int>{
 		5, 10, 16, 20, 24, 26, 28, 31, 37, 39, 40, 42, 45, 46, 50, 55, 58, 60, 63,
@@ -210,7 +209,6 @@ update{
 	current.timerPhase = timer.CurrentPhase;
 	if(current.timerPhase.ToString() == "Running" && old.timerPhase.ToString() == "NotRunning"){
 		// When the timer starts, reset these things
-		print("Resetting Side Mission Tracking");
 		vars.TotalSideMissionsDone = 0;
 		vars.CompletedSideMissions = new List<bool>(new bool[18]);
 		vars.highestPercent = current.storyPercentage;
