@@ -1,5 +1,5 @@
-//Batman: Arkham City Autosplitter v4.1
-//Created by ShikenNuggets, JohnStephenEvil, and 30Puns
+//Batman: Arkham City Autosplitter v4.2
+//Created by ShikenNuggets, JohnStephenEvil, 30Puns, and TpRedNinja
 //Splits in a bunch of places for a bunch of reasons
 
 state("BatmanAC", "Steam"){
@@ -17,6 +17,16 @@ state("BatmanAC", "Steam"){
 	byte subChapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
 	int tfBoss				: 0x01263118, 0xC, 0x278, 0x30, 0x18, 0x3C;
 	byte gameState			: 0x012A5474, 0x18, 0x0, 0x60, 0x1EC;
+	float DeadShotNG		: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x10C, 0x10;
+	float HushNG 			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x10C, 0x14;
+	float NoraNG			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x10C, 0x1C;
+	float DeadShotNGPlus	: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x10;
+	float HushNGPlus 		: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x14;
+	float NoraNGPlus		: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x1C;
+	int inPauseMenu			: 0x12D0548; // 1 when in pause menu, 0 when not
+	float CameraLocationX 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x48;
+	float CameraLocationY 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x4C;
+	float CameraLocationZ 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x50;
 }
 
 state("BatmanAC", "Epic"){
@@ -34,6 +44,16 @@ state("BatmanAC", "Epic"){
 	byte subChapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
 	int tfBoss				: 0x0124DD38, 0xC, 0x278, 0x30, 0x18, 0x3C;
 	byte gameState			: 0x01290094, 0x18, 0x0, 0x60, 0x1EC;
+	float DeadShotNG		: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x10C, 0x10;
+	float HushNG 			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x10C, 0x14;
+	float NoraNG			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x10C, 0x1C;
+	float DeadShotNGPlus	: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x10;
+	float HushNGPlus 		: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x14;
+	float NoraNGPlus		: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x1C;
+	//int inPauseMenu			: 0x; // need to find this value for epic version
+	float CameraLocationX 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x48;
+	float CameraLocationY 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x4C;
+	float CameraLocationZ 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x50;
 }
 
 startup{
@@ -49,11 +69,27 @@ startup{
 	settings.Add("splitOnBatsuit", false, "Split on Batsuit", "legacyMode");
 	settings.Add("splitOnClayface", false, "Split on Clayface", "legacyMode");
 	
-	
 	vars.state = 0;
 	vars.cutscenesThisChapter = 0;
 	vars.tfBossWasActive = false;
 	vars.tfSplitDone = false;
+
+	// list of side missions
+	//item 1 is for ng
+	//item 2 is for ng+
+	vars.SideMissions = new List<Tuple<Func<dynamic, float>, Func<dynamic, float>>>{
+		Tuple.Create<Func<dynamic, float>, Func<dynamic, float>>(s => s.DeadShotNG, s => s.DeadShotNGPlus),
+		Tuple.Create<Func<dynamic, float>, Func<dynamic, float>>(s => s.HushNG, s => s.HushNGPlus),
+		Tuple.Create<Func<dynamic, float>, Func<dynamic, float>>(s => s.NoraNG, s => s.NoraNGPlus)
+	};
+
+	// a variable to check if we have control of batman.
+	// this checks to make sure all of the following values are false:
+	// loading, reloading, cutscene, main menu, and pause menu
+	// 0 is the value for false for loading, cutscene, mainmenu and pause menu variables, 1 is for false for reloading
+	vars.hasControl = false;
+	// a variable for if the xyz has changed
+	vars.XYZChanged = false;
 }
 
 init{
@@ -71,6 +107,8 @@ init{
 }
 
 update{
+	vars.XYZChanged = current.CameraLocationX != old.CameraLocationX || current.CameraLocationY != old.CameraLocationY || current.CameraLocationZ != old.CameraLocationZ;
+	vars.hasControl = current.isLoading == 0 && current.isReloading == 1 && current.cutscenePlaying == 0 && current.inPauseMenu == 0  && current.inMainMenu == 0;
 	current.timerPhase = timer.CurrentPhase;
 	if(old.timerPhase.ToString() == "NotRunning" && current.timerPhase.ToString() == "Running"){
 		vars.cutscenesThisChapter = 0;
@@ -235,5 +273,18 @@ split{
 	if(current.chapter == 9 && current.lastDoorRoom.Contains("Museum_") && current.character.Contains("Playable_Catwoman") && !vars.tfSplitDone && vars.tfBossWasActive && current.tfBoss == 0 && current.gameState == 0x02){
 		vars.tfSplitDone = true;
 		return true; //Two-Face's health bar faded off screen
+	}
+
+	//---Side Missions---
+	for (int i = 0; i < vars.SideMissions.Count; i++){
+		if(((vars.SideMissions[i].Item1(current) == 100 && vars.SideMissions[i].Item1(old) != 100)|| 
+		(vars.SideMissions[i].Item2(current) == 100 && vars.SideMissions[i].Item2(old) != 100)) && vars.hasControl){
+			return true; //Split on any side mission being completed
+		}
+	}
+
+	//---Riddler Split---
+	if(vars.XYZChanged && current.currentLevel.Contains("Riddler_08")){
+		return true; //Split on Riddler Takedown
 	}
 }
