@@ -23,9 +23,6 @@ state("BatmanAC", "Steam"){
 	float DeadShotNGPlus	: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x10;
 	float HushNGPlus 		: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x14;
 	float NoraNGPlus		: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x1C;
-	int currentRingingPhone	: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x3F4;
-	int Zasz				: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x354, 0x28;
-	int inPauseMenu			: 0x12D0548; // 1 when in pause menu, 0 when not
 	float CameraLocationX 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x48;
 	float CameraLocationY 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x4C;
 	float CameraLocationZ 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x50;
@@ -52,9 +49,6 @@ state("BatmanAC", "Epic"){
 	float DeadShotNGPlus	: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x10;
 	float HushNGPlus 		: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x14;
 	float NoraNGPlus		: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x34C, 0x118, 0x1C;
-	int currentRingingPhone	: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x3F4;
-	int Zasz				: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0x354, 0x28;
-	//int inPauseMenu			: 0x; // need to find this value for epic version
 	float CameraLocationX 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x48;
 	float CameraLocationY 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x4C;
 	float CameraLocationZ 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x50;
@@ -73,12 +67,10 @@ startup{
 	settings.Add("splitOnBatsuit", false, "Split on Batsuit", "legacyMode");
 	settings.Add("splitOnClayface", false, "Split on Clayface", "legacyMode");
 	
-	
 	vars.state = 0;
 	vars.cutscenesThisChapter = 0;
 	vars.tfBossWasActive = false;
 	vars.tfSplitDone = false;
-	vars.isDoneFirstPhone = false;
 
 	// list of side missions
 	//item 1 is for ng
@@ -120,7 +112,6 @@ update{
 		vars.cutscenesThisChapter = 0;
 		vars.tfBossWasActive = false;
 		vars.tfSplitDone = false;
-		vars.isDoneFirstPhone = false;
 	}
 	
 	if(current.chapter == 9 && current.character != null && current.character.Contains("Playable_Catwoman") && current.tfBoss != 0){
@@ -284,19 +275,10 @@ split{
 
 	//---Side Missions---
 	for (int i = 0; i < vars.SideMissions.Count; i++){
-		if((vars.SideMissions[i].Item1(current) == 100 && vars.SideMissions[i].Item1(old) != 100 )|| 
-		(vars.SideMissions[i].Item2(current) == 100 && vars.SideMissions[i].Item2(old) != 100)){
+		if(((vars.SideMissions[i].Item1(current) == 100 && vars.SideMissions[i].Item1(old) != 100)|| 
+		(vars.SideMissions[i].Item2(current) == 100 && vars.SideMissions[i].Item2(old) != 100)) && vars.hasControl){
 			return true; //Split on any side mission being completed
 		}
-	}
-
-	//---Zasz Phone's WIP---
-	if(current.Zasz == 5 && old.Zasz != 5 && !vars.isDoneFirstPhone){
-		vars.isDoneFirstPhone = true;
-		return true; //Zasz Phone
-	} else if (current.gameState == 2 && (old.gameState == 0 || old.gameState == 3) && current.currentRingingPhone == -1 
-	&& old.currentRingingPhone != -1 && vars.hasControl == true && vars.isDoneFirstPhone == true) {
-		return true; //Split on phone ringing
 	}
 
 	//---Riddler Split---
