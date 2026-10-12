@@ -60,6 +60,7 @@ startup{
 	vars.cutscenesThisChapter = 0;
 	vars.tfBossWasActive = false;
 	vars.tfSplitDone = false;
+	vars.riddlerSplitDone = false;
 }
 
 init{
@@ -82,6 +83,7 @@ update{
 		vars.cutscenesThisChapter = 0;
 		vars.tfBossWasActive = false;
 		vars.tfSplitDone = false;
+		vars.riddlerSplitDone = false;
 	}
 	
 	if(current.chapter == 9 && current.character != null && current.character.Contains("Playable_Catwoman") && current.tfBoss != 0){
@@ -246,6 +248,9 @@ split{
 	//---Riddler Split 100%---
 	if(current.currentLevel.Contains("Riddler_08")){
 		// TODO: This is a bit of a hack but it works for now
-		return current.CameraLocationX != old.CameraLocationX || current.CameraLocationY != old.CameraLocationY || current.CameraLocationZ != old.CameraLocationZ;
+		if(!vars.riddlerSplitDone && (current.CameraLocationX != old.CameraLocationX || current.CameraLocationY != old.CameraLocationY || current.CameraLocationZ != old.CameraLocationZ)){
+			vars.riddlerSplitDone = true;
+			return true;
+		}
 	}
 }
