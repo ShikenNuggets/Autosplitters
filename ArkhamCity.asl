@@ -1,5 +1,5 @@
-//Batman: Arkham City Autosplitter v4.1
-//Created by ShikenNuggets, JohnStephenEvil, and 30Puns
+//Batman: Arkham City Autosplitter v4.2
+//Created by ShikenNuggets, JohnStephenEvil, 30Puns, and TpRedNinja
 //Splits in a bunch of places for a bunch of reasons
 
 state("BatmanAC", "Steam"){
@@ -17,6 +17,9 @@ state("BatmanAC", "Steam"){
 	byte subChapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
 	int tfBoss				: 0x01263118, 0xC, 0x278, 0x30, 0x18, 0x3C;
 	byte gameState			: 0x012A5474, 0x18, 0x0, 0x60, 0x1EC;
+	float CameraLocationX 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x48;
+	float CameraLocationY 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x4C;
+	float CameraLocationZ 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x50;
 }
 
 state("BatmanAC", "Epic"){
@@ -34,6 +37,9 @@ state("BatmanAC", "Epic"){
 	byte subChapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
 	int tfBoss				: 0x0124DD38, 0xC, 0x278, 0x30, 0x18, 0x3C;
 	byte gameState			: 0x01290094, 0x18, 0x0, 0x60, 0x1EC;
+	float CameraLocationX 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x48;
+	float CameraLocationY 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x4C;
+	float CameraLocationZ 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x50;
 }
 
 startup{
@@ -54,6 +60,7 @@ startup{
 	vars.cutscenesThisChapter = 0;
 	vars.tfBossWasActive = false;
 	vars.tfSplitDone = false;
+	vars.riddlerSplitDone = false;
 }
 
 init{
@@ -76,6 +83,7 @@ update{
 		vars.cutscenesThisChapter = 0;
 		vars.tfBossWasActive = false;
 		vars.tfSplitDone = false;
+		vars.riddlerSplitDone = false;
 	}
 	
 	if(current.chapter == 9 && current.character != null && current.character.Contains("Playable_Catwoman") && current.tfBoss != 0){
@@ -235,5 +243,14 @@ split{
 	if(current.chapter == 9 && current.lastDoorRoom.Contains("Museum_") && current.character.Contains("Playable_Catwoman") && !vars.tfSplitDone && vars.tfBossWasActive && current.tfBoss == 0 && current.gameState == 0x02){
 		vars.tfSplitDone = true;
 		return true; //Two-Face's health bar faded off screen
+	}
+
+	//---Riddler Split 100%---
+	if(current.currentLevel.Contains("Riddler_08")){
+		// TODO: This is a bit of a hack but it works for now
+		if(!vars.riddlerSplitDone && (current.CameraLocationX != old.CameraLocationX || current.CameraLocationY != old.CameraLocationY || current.CameraLocationZ != old.CameraLocationZ)){
+			vars.riddlerSplitDone = true;
+			return true;
+		}
 	}
 }
