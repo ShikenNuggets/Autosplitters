@@ -17,7 +17,6 @@ state("BatmanAC", "Steam"){
 	byte subChapter			: 0x01263118, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
 	int tfBoss				: 0x01263118, 0xC, 0x278, 0x30, 0x18, 0x3C;
 	byte gameState			: 0x012A5474, 0x18, 0x0, 0x60, 0x1EC;
-	int inPauseMenu			: 0x12D0548; // 1 when in pause menu, 0 when not
 	float CameraLocationX 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x48;
 	float CameraLocationY 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x4C;
 	float CameraLocationZ 	: 0x01263118, 0x20, 0x8C, 0x9A8, 0x50;
@@ -38,7 +37,6 @@ state("BatmanAC", "Epic"){
 	byte subChapter			: 0x0124DD38, 0x20, 0x8C, 0xC0, 0x484, 0x348, 0xE7;
 	int tfBoss				: 0x0124DD38, 0xC, 0x278, 0x30, 0x18, 0x3C;
 	byte gameState			: 0x01290094, 0x18, 0x0, 0x60, 0x1EC;
-	//int inPauseMenu			: 0x; // need to find this value for epic version
 	float CameraLocationX 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x48;
 	float CameraLocationY 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x4C;
 	float CameraLocationZ 	: 0x0124DD38, 0x20, 0x8C, 0x9A8, 0x50;
@@ -62,7 +60,6 @@ startup{
 	vars.cutscenesThisChapter = 0;
 	vars.tfBossWasActive = false;
 	vars.tfSplitDone = false;
-	vars.hasControl = false;
 	vars.XYZChanged = false;
 	
 }
@@ -83,7 +80,6 @@ init{
 
 update{
 	vars.XYZChanged = current.CameraLocationX != old.CameraLocationX || current.CameraLocationY != old.CameraLocationY || current.CameraLocationZ != old.CameraLocationZ;
-	vars.hasControl = current.isLoading == 0 && current.isReloading == 1 && current.cutscenePlaying == 0 && current.inPauseMenu == 0 && current.inMainMenu == 0;
 	current.timerPhase = timer.CurrentPhase;
 	if(old.timerPhase.ToString() == "NotRunning" && current.timerPhase.ToString() == "Running"){
 		vars.cutscenesThisChapter = 0;
