@@ -60,8 +60,6 @@ startup{
 	vars.cutscenesThisChapter = 0;
 	vars.tfBossWasActive = false;
 	vars.tfSplitDone = false;
-	vars.XYZChanged = false;
-	
 }
 
 init{
@@ -79,7 +77,6 @@ init{
 }
 
 update{
-	vars.XYZChanged = current.CameraLocationX != old.CameraLocationX || current.CameraLocationY != old.CameraLocationY || current.CameraLocationZ != old.CameraLocationZ;
 	current.timerPhase = timer.CurrentPhase;
 	if(old.timerPhase.ToString() == "NotRunning" && current.timerPhase.ToString() == "Running"){
 		vars.cutscenesThisChapter = 0;
@@ -247,7 +244,8 @@ split{
 	}
 
 	//---Riddler Split 100%---
-	if(vars.XYZChanged && current.currentLevel.Contains("Riddler_08")){
-		return true; //Split on Riddler Takedown
+	if(current.currentLevel.Contains("Riddler_08")){
+		// TODO: This is a bit of a hack but it works for now
+		return current.CameraLocationX != old.CameraLocationX || current.CameraLocationY != old.CameraLocationY || current.CameraLocationZ != old.CameraLocationZ;
 	}
 }
